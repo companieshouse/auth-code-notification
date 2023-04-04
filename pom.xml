@@ -16,7 +16,6 @@
     <log4j.version>2.17.2</log4j.version>
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
-    <org.mapstruct.version>1.5.0.RC1</org.mapstruct.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -72,13 +71,6 @@
         <configuration>
           <source>11</source>
           <target>11</target>
-          <annotationProcessorPaths>
-            <path>
-              <groupId>org.mapstruct</groupId>
-              <artifactId>mapstruct-processor</artifactId>
-              <version>${org.mapstruct.version}</version>
-            </path>
-          </annotationProcessorPaths>
         </configuration>
       </plugin>
     </plugins>
