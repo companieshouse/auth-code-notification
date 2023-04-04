@@ -1,0 +1,6 @@
+app_name: auth-code-notification
+group: api
+
+weight: 90
+routes:
+  1: ^/auth-code-notification/*
