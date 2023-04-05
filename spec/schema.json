@@ -2,7 +2,7 @@
   "openapi": "3.0.9",
   "info": {
     "title": "Companies House - Auth Code Notification",
-    "description": "",
+    "description": "This API provides email notifications in response to new auth code requests.",
     "version": "1.0.0"
   },
   "servers": [
