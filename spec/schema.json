@@ -1,0 +1,20 @@
+{
+  "openapi": "3.0.9",
+  "info": {
+    "title": "Companies House - Auth Code Notification",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.companieshouse.gov.uk/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Auth Code Notification"
+    }
+  ],
+  "paths": {},
+  "components": {}
+}
