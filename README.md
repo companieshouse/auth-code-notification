@@ -16,7 +16,7 @@ To check out and build the service:
 3. Run ./bin/chs-dev development enable auth-code-notification (this will allow you to make changes).
 4. Run docker using "tilt up" in the docker-chs-development directory.
 5. Use space-bar in the command line to open tilt window - wait for auth-code-notification to become green.
-7. The service should be accessible using this url: http://chs.local/auth-code-notification
+7. The service should be accessible using this url: http://api.chs.local/auth-code-notification
 
 These instructions are for a local docker environment.
 
