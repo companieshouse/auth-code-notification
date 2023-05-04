@@ -26,3 +26,5 @@ else
     source "${APP_DIR}/app_env"
 
 fi
+
+exec java ${JAVA_MEM_ARGS} -jar ${PROXY_ARGS} -Dserver.port="${PORT}" "${APP_DIR}/auth-code-notification.jar"
