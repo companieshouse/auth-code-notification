@@ -15,6 +15,59 @@
       "name": "Auth Code Notification"
     }
   ],
-  "paths": {},
-  "components": {}
+  "paths": {
+    "/company/{company_number}/auth-code/send-email": {
+      "post": {
+        "summary": "Obtain email and send auth code for company specified",
+        "parameters": [
+          {
+            "name": "company_number",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendEmailRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Auth code sent"
+          },
+          "401": {
+            "description": "Unauthorised"
+          },
+          "404": {
+            "description": "Company not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SendEmailRequest": {
+        "required": [
+          "auth_code"
+        ],
+        "type": "object",
+        "properties": {
+          "auth_code": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
 }
