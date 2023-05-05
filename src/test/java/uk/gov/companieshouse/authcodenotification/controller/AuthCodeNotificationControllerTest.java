@@ -4,14 +4,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class AuthCodeNotificationControllerTest {
+class AuthCodeNotificationControllerTest {
 
     @Test
-    public void testSendEmailReturnsSuccess (){
+    void testSendEmailReturnsSuccess (){
 
         AuthCodeNotificationController controller = new AuthCodeNotificationController();
-        ResponseEntity<Object> responseEntity = controller.sendEmail();
+        ResponseEntity<Object> responseEntity = controller.sendEmail("abc","012345657");
         assertEquals( 200, responseEntity.getStatusCode().value() );
-
     }
 }
