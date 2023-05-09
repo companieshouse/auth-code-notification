@@ -19,8 +19,9 @@ public class PrivateDataRetrievalService {
     @Autowired
     private ApiClientService apiClientService;
 
-    public OverseasEntityDataApi getOverseasEntityData(String companyNumber)
+    public OverseasEntityDataApi getOverseasEntityData(String requestId, String companyNumber)
             throws ServiceException {
+        DataMap dataMap = new DataMap.Builder().companyNumber(companyNumber).build();
         try {
             OverseasEntityDataApi overseasEntityDataApi = apiClientService
                     .getInternalApiClient()
@@ -29,13 +30,12 @@ public class PrivateDataRetrievalService {
                     .execute()
                     .getData();
 
-            DataMap dataMap = new DataMap.Builder().companyNumber(companyNumber).build();
-            ApiLogger.info("Retrieving overseas entity data for company number ",  dataMap.getLogMap());
+            ApiLogger.infoContext(requestId, "Retrieving overseas entity data",  dataMap.getLogMap());
 
             return overseasEntityDataApi;
         } catch (URIValidationException | IOException e) {
-            var message = "Error Retrieving overseas entity data for " + companyNumber;
-            ApiLogger.errorContext(message, e);
+            var message = "Error retrieving overseas entity data";
+            ApiLogger.errorContext(requestId, message, e, dataMap.getLogMap());
             throw new ServiceException(e.getMessage(), e);
         }
     }

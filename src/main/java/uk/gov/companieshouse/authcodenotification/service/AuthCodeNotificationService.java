@@ -17,7 +17,7 @@ public class AuthCodeNotificationService {
         DataMap dataMap = new DataMap.Builder().companyNumber(companyNumber).build();
         ApiLogger.infoContext(requestId, "Send auth code email invoked", dataMap.getLogMap());
 
-        String email = getOverseasEntityEmail(companyNumber);
+        String email = getOverseasEntityEmail(requestId, companyNumber);
 
         if (Strings.isNotBlank(email)) {
             ApiLogger.infoContext(requestId, "Retrieved auth code email successfully", dataMap.getLogMap());
@@ -29,8 +29,8 @@ public class AuthCodeNotificationService {
         // 2. send email
     }
 
-    private String getOverseasEntityEmail(String companyNumber) throws ServiceException {
-        return privateDataRetrievalService.getOverseasEntityData(companyNumber).getEmail();
+    private String getOverseasEntityEmail(String requestId, String companyNumber) throws ServiceException {
+        return privateDataRetrievalService.getOverseasEntityData(requestId, companyNumber).getEmail();
     }
 
 }
