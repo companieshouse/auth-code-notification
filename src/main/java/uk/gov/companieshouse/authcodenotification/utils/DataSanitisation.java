@@ -15,9 +15,4 @@ public class DataSanitisation {
         }
         return sanitisedInput;
     }
-
-    public String removeAuthCodeFromLogging(String input) {
-
-    }
-
 }
