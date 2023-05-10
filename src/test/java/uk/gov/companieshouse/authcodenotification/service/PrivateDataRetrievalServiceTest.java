@@ -54,7 +54,7 @@ public class PrivateDataRetrievalServiceTest {
     private HttpResponseException.Builder builder;
 
     @BeforeEach
-    public void init() throws IOException {
+    public void init() {
        when(apiClientService.getInternalApiClient()).thenReturn(internalApiClient);
        when(internalApiClient.privateOverseasEntityDataHandler()).thenReturn(privateOverseasEntityDataHandler);
        when(privateOverseasEntityDataHandler.getOverseasEntityData(anyString())).thenReturn(privateOverseasEntityDataGet);
