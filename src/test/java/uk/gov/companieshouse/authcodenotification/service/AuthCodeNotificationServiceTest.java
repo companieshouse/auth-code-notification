@@ -38,7 +38,7 @@ public class AuthCodeNotificationServiceTest {
     }
 
     @Test
-    void testBlankEmailExceptionThrown() throws ServiceException {
+    void testExceptionThrownWhenEmailIsBlankOrNotFound() throws ServiceException {
         OverseasEntityDataApi overseasEntityDataApi = new OverseasEntityDataApi();
         when(privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER)).thenReturn(overseasEntityDataApi);
         assertThrows(ServiceException.class, () -> {

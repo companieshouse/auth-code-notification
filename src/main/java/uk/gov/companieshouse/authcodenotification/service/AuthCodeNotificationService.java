@@ -21,7 +21,7 @@ public class AuthCodeNotificationService {
 
         String email = getOverseasEntityEmail(requestId, companyNumber, dataMap.getLogMap());
 
-        // 2. send email
+        // TODO send email
     }
 
     private String getOverseasEntityEmail(String requestId, String companyNumber, Map<String, Object> logMap) throws ServiceException {

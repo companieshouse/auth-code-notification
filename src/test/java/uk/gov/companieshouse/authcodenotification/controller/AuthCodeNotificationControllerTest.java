@@ -32,7 +32,7 @@ class AuthCodeNotificationControllerTest {
     }
 
     @Test
-    void testSendEmailException() throws ServiceException{
+    void testSendEmailReturnsInternalServerErrorWhenServiceCallFails() throws ServiceException{
         doThrow(new ServiceException("")).when(authCodeNotificationService).sendAuthCodeEmail(REQUEST_ID , COMPANY_NUMBER);
         ResponseEntity<Object> responseEntity = controller.sendEmail(REQUEST_ID ,COMPANY_NUMBER);
         assertEquals( 500, responseEntity.getStatusCode().value() );
