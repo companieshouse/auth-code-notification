@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.authcodenotification.service;
 
+import com.google.api.client.http.HttpResponseException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +19,7 @@ import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 
 import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -48,6 +50,9 @@ public class PrivateDataRetrievalServiceTest {
     @Mock
     private ApiResponse<OverseasEntityDataApi> overseasEntityDataApiResponse;
 
+    @Mock
+    private HttpResponseException.Builder builder;
+
     @BeforeEach
     public void init() throws IOException {
        when(apiClientService.getInternalApiClient()).thenReturn(internalApiClient);
@@ -62,6 +67,22 @@ public class PrivateDataRetrievalServiceTest {
         when(overseasEntityDataApiResponse.getData()).thenReturn(overseasEntityDataApi);
         privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER);
         verify(apiClientService, times(1)).getInternalApiClient();
+    }
+
+    @Test
+    void testGetOverseasEntityDataWhenURIValidationExceptionExceptionIsThrown() throws ApiErrorResponseException, URIValidationException, ServiceException {
+        when(privateOverseasEntityDataGet.execute()).thenThrow(new URIValidationException(""));
+        assertThrows(ServiceException.class, () -> {
+            privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER);
+        });
+    }
+
+    @Test
+    void testGetOverseasEntityDataWhenApiErrorResponseExceptionIsThrown() throws ApiErrorResponseException, URIValidationException, ServiceException {
+        when(privateOverseasEntityDataGet.execute()).thenThrow(new ApiErrorResponseException(builder));
+        assertThrows(ServiceException.class, () -> {
+            privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER);
+        });
     }
 
 }
