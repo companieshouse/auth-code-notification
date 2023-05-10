@@ -32,11 +32,7 @@ public class AuthCodeNotificationController {
             authCodeNotificationService.sendAuthCodeEmail(requestId, companyNumber);
         } catch (ServiceException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (Exception e) {
-            ApiLogger.errorContext(requestId, "Error sending auth code email", e, dataMap.getLogMap());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -38,8 +38,28 @@ public class AuthCodeNotificationServiceTest {
     }
 
     @Test
-    void testExceptionThrownWhenEmailIsBlankOrNotFound() throws ServiceException {
+    void testExceptionThrownWhenEmailIsNull() throws ServiceException {
         OverseasEntityDataApi overseasEntityDataApi = new OverseasEntityDataApi();
+        when(privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER)).thenReturn(overseasEntityDataApi);
+        assertThrows(ServiceException.class, () -> {
+            authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, COMPANY_NUMBER);
+        });
+    }
+
+    @Test
+    void testExceptionThrownWhenEmailIsEmpty() throws ServiceException {
+        OverseasEntityDataApi overseasEntityDataApi = new OverseasEntityDataApi();
+        overseasEntityDataApi.setEmail("");
+        when(privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER)).thenReturn(overseasEntityDataApi);
+        assertThrows(ServiceException.class, () -> {
+            authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, COMPANY_NUMBER);
+        });
+    }
+
+    @Test
+    void testExceptionThrownWhenEmailIsBlank() throws ServiceException {
+        OverseasEntityDataApi overseasEntityDataApi = new OverseasEntityDataApi();
+        overseasEntityDataApi.setEmail("   ");
         when(privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER)).thenReturn(overseasEntityDataApi);
         assertThrows(ServiceException.class, () -> {
             authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, COMPANY_NUMBER);

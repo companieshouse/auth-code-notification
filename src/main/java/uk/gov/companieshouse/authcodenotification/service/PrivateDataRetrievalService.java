@@ -14,7 +14,7 @@ import java.io.IOException;
 @Service
 public class PrivateDataRetrievalService {
 
-    private static final String OVERSEAS_ENTITY_URI_SECTION = "/overseas-entity/";
+    private static final String OVERSEAS_ENTITY_URI_SECTION = "/overseas-entity/%s/entity-data";
 
     @Autowired
     private ApiClientService apiClientService;
@@ -26,7 +26,7 @@ public class PrivateDataRetrievalService {
             OverseasEntityDataApi overseasEntityDataApi = apiClientService
                     .getInternalApiClient()
                     .privateOverseasEntityDataHandler()
-                    .getOverseasEntityData(OVERSEAS_ENTITY_URI_SECTION + companyNumber + "/entity-data")
+                    .getOverseasEntityData(String.format(OVERSEAS_ENTITY_URI_SECTION, companyNumber))
                     .execute()
                     .getData();
 
