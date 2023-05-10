@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class PrivateDataRetrievalServiceTest {
+class PrivateDataRetrievalServiceTest {
 
     private static final String REQUEST_ID = "abc";
 
@@ -52,7 +52,7 @@ public class PrivateDataRetrievalServiceTest {
     private HttpResponseException.Builder builder;
 
     @BeforeEach
-    public void init() {
+    void init() {
        when(apiClientService.getInternalApiClient()).thenReturn(internalApiClient);
        when(internalApiClient.privateOverseasEntityDataHandler()).thenReturn(privateOverseasEntityDataHandler);
        when(privateOverseasEntityDataHandler.getOverseasEntityData(anyString())).thenReturn(privateOverseasEntityDataGet);

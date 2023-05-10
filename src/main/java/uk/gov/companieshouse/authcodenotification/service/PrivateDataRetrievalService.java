@@ -21,9 +21,9 @@ public class PrivateDataRetrievalService {
 
     public OverseasEntityDataApi getOverseasEntityData(String requestId, String companyNumber)
             throws ServiceException {
-        DataMap dataMap = new DataMap.Builder().companyNumber(companyNumber).build();
+        var dataMap = new DataMap.Builder().companyNumber(companyNumber).build();
         try {
-            OverseasEntityDataApi overseasEntityDataApi = apiClientService
+            var overseasEntityDataApi = apiClientService
                     .getInternalApiClient()
                     .privateOverseasEntityDataHandler()
                     .getOverseasEntityData(String.format(OVERSEAS_ENTITY_URI_SECTION, companyNumber))
