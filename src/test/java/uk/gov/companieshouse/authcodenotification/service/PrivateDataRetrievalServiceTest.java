@@ -17,8 +17,6 @@ import uk.gov.companieshouse.api.model.update.OverseasEntityDataApi;
 import uk.gov.companieshouse.authcodenotification.client.ApiClientService;
 import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 
-import java.io.IOException;
-
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;

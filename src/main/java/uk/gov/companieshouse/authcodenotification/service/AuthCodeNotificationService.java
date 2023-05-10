@@ -29,7 +29,7 @@ public class AuthCodeNotificationService {
 
         if (Strings.isBlank(email)) {
             ServiceException e = new ServiceException("Null or empty email found");
-            ApiLogger.errorContext(requestId, "Failed to retrieve complete email", e, logMap);
+            ApiLogger.errorContext(requestId, "Failed to retrieve a valid email", e, logMap);
             throw e;
         }
 
