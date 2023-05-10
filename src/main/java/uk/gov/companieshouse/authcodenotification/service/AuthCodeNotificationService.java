@@ -7,6 +7,8 @@ import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 import uk.gov.companieshouse.authcodenotification.utils.ApiLogger;
 import uk.gov.companieshouse.logging.util.DataMap;
 
+import java.util.Map;
+
 @Service
 public class AuthCodeNotificationService {
 
@@ -17,20 +19,22 @@ public class AuthCodeNotificationService {
         DataMap dataMap = new DataMap.Builder().companyNumber(companyNumber).build();
         ApiLogger.infoContext(requestId, "Send auth code email invoked", dataMap.getLogMap());
 
-        String email = getOverseasEntityEmail(requestId, companyNumber);
+        String email = getOverseasEntityEmail(requestId, companyNumber, dataMap.getLogMap());
 
-        if (Strings.isNotBlank(email)) {
-            ApiLogger.infoContext(requestId, "Retrieved auth code email successfully", dataMap.getLogMap());
-        } else {
-            ServiceException e = new ServiceException("Null or empty email found");
-            ApiLogger.errorContext(requestId, "Failed to retrieve complete email", e, dataMap.getLogMap());
-            throw e;
-        }
         // 2. send email
     }
 
-    private String getOverseasEntityEmail(String requestId, String companyNumber) throws ServiceException {
-        return privateDataRetrievalService.getOverseasEntityData(requestId, companyNumber).getEmail();
+    private String getOverseasEntityEmail(String requestId, String companyNumber, Map logMap) throws ServiceException {
+        String email = privateDataRetrievalService.getOverseasEntityData(requestId, companyNumber).getEmail();
+
+        if (Strings.isBlank(email)) {
+            ServiceException e = new ServiceException("Null or empty email found");
+            ApiLogger.errorContext(requestId, "Failed to retrieve complete email", e, logMap);
+            throw e;
+        }
+
+        ApiLogger.infoContext(requestId, "Retrieved auth code email successfully", logMap);
+        return email;
     }
 
 }
