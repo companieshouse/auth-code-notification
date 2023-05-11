@@ -4,3 +4,4 @@ group: api
 weight: 90
 routes:
   1: ^/company/(.*)/auth-code/*
+  2: ^/auth-code/healthcheck
