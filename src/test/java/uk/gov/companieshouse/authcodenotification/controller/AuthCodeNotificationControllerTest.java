@@ -9,9 +9,11 @@ import org.springframework.http.ResponseEntity;
 import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 import uk.gov.companieshouse.authcodenotification.model.SendEmailRequestDto;
 import uk.gov.companieshouse.authcodenotification.service.AuthCodeNotificationService;
+import uk.gov.companieshouse.authcodenotification.utils.DataSanitisation;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AuthCodeNotificationControllerTest {
@@ -26,6 +28,9 @@ class AuthCodeNotificationControllerTest {
     @Mock
     private AuthCodeNotificationService authCodeNotificationService;
 
+    @Mock
+    private DataSanitisation dataSanitisation;
+
 
     @Test
     void testSendEmailReturnsSuccess() {
@@ -37,6 +42,7 @@ class AuthCodeNotificationControllerTest {
     @Test
     void testSendEmailReturnsInternalServerErrorWhenServiceCallFails() throws ServiceException{
         SendEmailRequestDto sendEmailRequestDto = new SendEmailRequestDto();
+        when(dataSanitisation.makeStringSafeForLogging(COMPANY_NUMBER)).thenReturn(COMPANY_NUMBER);
         doThrow(new ServiceException("")).when(authCodeNotificationService).sendAuthCodeEmail(REQUEST_ID, COMPANY_NUMBER);
         ResponseEntity<Object> responseEntity = controller.sendEmail(REQUEST_ID, sendEmailRequestDto, COMPANY_NUMBER);
         assertEquals( 500, responseEntity.getStatusCode().value() );

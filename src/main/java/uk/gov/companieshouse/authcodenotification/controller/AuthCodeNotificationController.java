@@ -13,6 +13,7 @@ import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 import uk.gov.companieshouse.authcodenotification.service.AuthCodeNotificationService;
 import uk.gov.companieshouse.authcodenotification.utils.ApiLogger;
 import uk.gov.companieshouse.authcodenotification.model.SendEmailRequestDto;
+import uk.gov.companieshouse.authcodenotification.utils.DataSanitisation;
 import uk.gov.companieshouse.logging.util.DataMap;
 
 import static uk.gov.companieshouse.authcodenotification.utils.Constants.ERIC_REQUEST_ID_KEY;
@@ -21,13 +22,22 @@ import static uk.gov.companieshouse.authcodenotification.utils.Constants.ERIC_RE
 @RequestMapping("/company/{companyNumber}/auth-code")
 public class AuthCodeNotificationController {
 
-    @Autowired
     private AuthCodeNotificationService authCodeNotificationService;
+    private DataSanitisation dataSanitisation;
+
+    @Autowired
+    public AuthCodeNotificationController(AuthCodeNotificationService authCodeNotificationService,
+                                          DataSanitisation dataSanitisation) {
+        this.authCodeNotificationService = authCodeNotificationService;
+        this.dataSanitisation = dataSanitisation;
+    }
 
     @PostMapping("/send-email")
     public ResponseEntity<Object> sendEmail(@RequestHeader(value = ERIC_REQUEST_ID_KEY) String requestId,
                                             @RequestBody SendEmailRequestDto sendEmailRequestDto,
                                             @PathVariable String companyNumber) {
+
+        companyNumber = dataSanitisation.makeStringSafeForLogging(companyNumber);
         DataMap dataMap = new DataMap.Builder().companyNumber(companyNumber).build();
         ApiLogger.infoContext(requestId,"Request received for auth code email", dataMap.getLogMap());
 
