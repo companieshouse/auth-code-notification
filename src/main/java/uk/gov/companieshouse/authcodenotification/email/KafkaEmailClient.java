@@ -5,11 +5,9 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import uk.gov.companieshouse.api.strikeoffobjections.common.AvroSerializer;
-import uk.gov.companieshouse.api.strikeoffobjections.model.email.EmailContent;
+import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 import uk.gov.companieshouse.kafka.message.Message;
 import uk.gov.companieshouse.kafka.producer.CHKafkaProducer;
-import uk.gov.companieshouse.service.ServiceException;
 
 import java.io.IOException;
 import java.time.ZoneId;

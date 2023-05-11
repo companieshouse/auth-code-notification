@@ -12,14 +12,25 @@ import java.util.Map;
 @Service
 public class AuthCodeNotificationService {
 
-    @Autowired
-    private PrivateDataRetrievalService privateDataRetrievalService;
+    private final PrivateDataRetrievalService privateDataRetrievalService;
 
-    public void sendAuthCodeEmail(String requestId, String companyNumber) throws ServiceException {
+    private final EmailService emailService;
+
+    @Autowired
+    public AuthCodeNotificationService(PrivateDataRetrievalService privateDataRetrievalService,
+                                       EmailService emailService) {
+        this.privateDataRetrievalService = privateDataRetrievalService;
+        this.emailService = emailService;
+    }
+
+    public void sendAuthCodeEmail(String requestId, String authCode, String companyNumber) throws ServiceException {
         var dataMap = new DataMap.Builder().companyNumber(companyNumber).build();
         ApiLogger.infoContext(requestId, "Send auth code email invoked", dataMap.getLogMap());
 
-        getOverseasEntityEmail(requestId, companyNumber, dataMap.getLogMap());
+        String email = getOverseasEntityEmail(requestId, companyNumber, dataMap.getLogMap());
+
+        // TODO Lookup company name
+        emailService.sendAuthCodeEmail(requestId, authCode, "", companyNumber, email);
     }
 
     private String getOverseasEntityEmail(String requestId, String companyNumber, Map<String, Object> logMap) throws ServiceException {
