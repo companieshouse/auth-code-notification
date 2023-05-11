@@ -30,22 +30,6 @@ public class AvroSerializer {
         return stream.toByteArray();
     }
 
-    public byte[] serialize(SpecificRecord data) throws IOException {
-        DatumWriter<SpecificRecord> datumWriter = new SpecificDatumWriter<>();
-
-        try(ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            Encoder encoder = EncoderFactory.get().binaryEncoder(out, null);
-            datumWriter.setSchema(data.getSchema());
-            datumWriter.write(data, encoder);
-            encoder.flush();
-
-            byte[] serializedData = out.toByteArray();
-            encoder.flush();
-
-            return serializedData;
-        }
-    }
-
     private GenericRecord buildAvroGenericRecord(EmailContent emailContent, Schema schema)
             throws JsonProcessingException {
         GenericRecord documentData = new GenericData.Record(schema);
