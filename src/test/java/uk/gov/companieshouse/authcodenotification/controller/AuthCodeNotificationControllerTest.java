@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.authcodenotification.controller;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,17 +32,21 @@ class AuthCodeNotificationControllerTest {
     @Mock
     private DataSanitisation dataSanitisation;
 
+    private  SendEmailRequestDto sendEmailRequestDto;
+
+    @BeforeEach
+    void setup() {
+        sendEmailRequestDto = new SendEmailRequestDto();
+    }
 
     @Test
     void testSendEmailReturnsSuccess() {
-        SendEmailRequestDto sendEmailRequestDto = new SendEmailRequestDto();
         ResponseEntity<Object> responseEntity = controller.sendEmail(REQUEST_ID, sendEmailRequestDto, COMPANY_NUMBER);
         assertEquals( 200, responseEntity.getStatusCode().value() );
     }
 
     @Test
-    void testSendEmailReturnsInternalServerErrorWhenServiceCallFails() throws ServiceException{
-        SendEmailRequestDto sendEmailRequestDto = new SendEmailRequestDto();
+    void testSendEmailReturnsInternalServerErrorWhenServiceCallFails() throws ServiceException {
         when(dataSanitisation.makeStringSafeForLogging(COMPANY_NUMBER)).thenReturn(COMPANY_NUMBER);
         doThrow(new ServiceException("")).when(authCodeNotificationService).sendAuthCodeEmail(REQUEST_ID, COMPANY_NUMBER);
         ResponseEntity<Object> responseEntity = controller.sendEmail(REQUEST_ID, sendEmailRequestDto, COMPANY_NUMBER);

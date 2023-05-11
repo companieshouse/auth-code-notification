@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.authcodenotification.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,9 +29,15 @@ class AuthCodeNotificationServiceTest {
     @Mock
     private PrivateDataRetrievalService privateDataRetrievalService;
 
+    private OverseasEntityDataApi overseasEntityDataApi;
+
+    @BeforeEach
+    void setup() {
+        overseasEntityDataApi = new OverseasEntityDataApi();
+    }
+
     @Test
     void testSuccessfulRetrieveAndSend() throws ServiceException {
-        OverseasEntityDataApi overseasEntityDataApi = new OverseasEntityDataApi();
         overseasEntityDataApi.setEmail(TEST_EMAIL);
         when(privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER)).thenReturn(overseasEntityDataApi);
         authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, COMPANY_NUMBER);
@@ -39,7 +46,6 @@ class AuthCodeNotificationServiceTest {
 
     @Test
     void testExceptionThrownWhenEmailIsNull() throws ServiceException {
-        OverseasEntityDataApi overseasEntityDataApi = new OverseasEntityDataApi();
         when(privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER)).thenReturn(overseasEntityDataApi);
         assertThrows(ServiceException.class, () -> {
             authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, COMPANY_NUMBER);
@@ -48,7 +54,6 @@ class AuthCodeNotificationServiceTest {
 
     @Test
     void testExceptionThrownWhenEmailIsEmpty() throws ServiceException {
-        OverseasEntityDataApi overseasEntityDataApi = new OverseasEntityDataApi();
         overseasEntityDataApi.setEmail("");
         when(privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER)).thenReturn(overseasEntityDataApi);
         assertThrows(ServiceException.class, () -> {
@@ -58,7 +63,6 @@ class AuthCodeNotificationServiceTest {
 
     @Test
     void testExceptionThrownWhenEmailIsBlank() throws ServiceException {
-        OverseasEntityDataApi overseasEntityDataApi = new OverseasEntityDataApi();
         overseasEntityDataApi.setEmail("   ");
         when(privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER)).thenReturn(overseasEntityDataApi);
         assertThrows(ServiceException.class, () -> {
