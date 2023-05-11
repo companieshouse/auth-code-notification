@@ -79,7 +79,7 @@ public class EmailService {
 
         data.put("subject", emailSubject);
         data.put("to", emailAddress);
-        data.put("authCode", authCode);
+        data.put("auth_code", authCode);
         data.put("company_name", companyName);
         data.put("company_number", companyNumber);
         return data;
