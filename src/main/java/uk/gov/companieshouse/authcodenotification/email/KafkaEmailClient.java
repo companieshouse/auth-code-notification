@@ -20,9 +20,9 @@ public class KafkaEmailClient {
     @Value("${EMAIL_SEND_QUEUE_TOPIC}")
     private String emailSendQueueTopic;
 
-    private CHKafkaProducer producer;
-    private AvroSerializer avroSerializer;
-    private Schema schema;
+    private final CHKafkaProducer producer;
+    private final AvroSerializer avroSerializer;
+    private final Schema schema;
 
     @Autowired
     public KafkaEmailClient(CHKafkaProducer producer,
