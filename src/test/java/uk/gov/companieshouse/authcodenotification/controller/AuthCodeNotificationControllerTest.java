@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
+import uk.gov.companieshouse.authcodenotification.model.SendEmailRequestDto;
 import uk.gov.companieshouse.authcodenotification.service.AuthCodeNotificationService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,16 +26,19 @@ class AuthCodeNotificationControllerTest {
     @Mock
     private AuthCodeNotificationService authCodeNotificationService;
 
+
     @Test
     void testSendEmailReturnsSuccess() {
-        ResponseEntity<Object> responseEntity = controller.sendEmail(REQUEST_ID ,COMPANY_NUMBER);
+        SendEmailRequestDto sendEmailRequestDto = new SendEmailRequestDto();
+        ResponseEntity<Object> responseEntity = controller.sendEmail(REQUEST_ID, sendEmailRequestDto, COMPANY_NUMBER);
         assertEquals( 200, responseEntity.getStatusCode().value() );
     }
 
     @Test
     void testSendEmailReturnsInternalServerErrorWhenServiceCallFails() throws ServiceException{
-        doThrow(new ServiceException("")).when(authCodeNotificationService).sendAuthCodeEmail(REQUEST_ID , COMPANY_NUMBER);
-        ResponseEntity<Object> responseEntity = controller.sendEmail(REQUEST_ID ,COMPANY_NUMBER);
+        SendEmailRequestDto sendEmailRequestDto = new SendEmailRequestDto();
+        doThrow(new ServiceException("")).when(authCodeNotificationService).sendAuthCodeEmail(REQUEST_ID, COMPANY_NUMBER);
+        ResponseEntity<Object> responseEntity = controller.sendEmail(REQUEST_ID, sendEmailRequestDto, COMPANY_NUMBER);
         assertEquals( 500, responseEntity.getStatusCode().value() );
     }
 }
