@@ -45,8 +45,8 @@ public class EmailService {
         Map<String, Object> data = constructCommonEmailMap(
               authCode, companyName, companyNumber, emailAddress);
 
-        var emailContent = constructEmailContent(authCodeEmailTemplate,
-                emailAddress, data);
+        var emailContent =
+                constructEmailContent(authCodeEmailTemplate, emailAddress, data);
 
         ApiLogger.debugContext(requestId, "Calling Kafka client to send auth code email");
         kafkaEmailClient.sendEmailToKafka(requestId, emailContent);
