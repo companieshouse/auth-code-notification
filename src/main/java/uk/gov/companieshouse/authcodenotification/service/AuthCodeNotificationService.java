@@ -1,6 +1,6 @@
 package uk.gov.companieshouse.authcodenotification.service;
 
-import org.apache.logging.log4j.util.Strings;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
@@ -36,7 +36,7 @@ public class AuthCodeNotificationService {
     private String getOverseasEntityEmail(String requestId, String companyNumber, Map<String, Object> logMap) throws ServiceException {
         String email = privateDataRetrievalService.getOverseasEntityData(requestId, companyNumber).getEmail();
 
-        if (Strings.isBlank(email)) {
+        if (StringUtils.isBlank(email)) {
             var e = new ServiceException("Null or empty email found");
             ApiLogger.errorContext(requestId, "Failed to retrieve a valid email", e, logMap);
             throw e;

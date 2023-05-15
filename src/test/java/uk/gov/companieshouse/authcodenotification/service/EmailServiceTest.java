@@ -61,7 +61,7 @@ class EmailServiceTest {
         );
 
         ArgumentCaptor<EmailContent> emailContentArgumentCaptor = ArgumentCaptor.forClass(EmailContent.class);
-        verify(kafkaEmailClient, times(1)).sendEmailToKafka(emailContentArgumentCaptor.capture());
+        verify(kafkaEmailClient, times(1)).sendEmailToKafka(REQUEST_ID, emailContentArgumentCaptor.capture());
 
         EmailContent emailContent = emailContentArgumentCaptor.getValue();
 

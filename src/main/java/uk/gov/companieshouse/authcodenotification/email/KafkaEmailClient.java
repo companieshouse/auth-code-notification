@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
+import uk.gov.companieshouse.authcodenotification.utils.ApiLogger;
 import uk.gov.companieshouse.kafka.message.Message;
 import uk.gov.companieshouse.kafka.producer.CHKafkaProducer;
 
@@ -33,8 +34,8 @@ public class KafkaEmailClient {
         this.schema = schema;
     }
 
-    public void sendEmailToKafka(EmailContent emailContent)
-            throws ServiceException {
+    public void sendEmailToKafka(String requestId, EmailContent emailContent) throws ServiceException {
+        final String errorMessage = "Error sending email to kafka";
         try {
             var message = new Message();
             byte[] serializedData = avroSerializer.serialize(emailContent, schema);
@@ -44,10 +45,12 @@ public class KafkaEmailClient {
             Future<RecordMetadata> future = producer.sendAndReturnFuture(message);
             future.get();
         } catch (IOException | ExecutionException e) {
-            throw new ServiceException(e.getMessage());
+            ApiLogger.errorContext(requestId, errorMessage, e);
+            throw new ServiceException(e.getMessage(), e);
         } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
-            throw new ServiceException("Thread Interrupted when future was sent and returned");
+            ApiLogger.errorContext(requestId, errorMessage, ie);
+            throw new ServiceException("Thread interrupted when future was sent and returned", ie);
         }
     }
 
