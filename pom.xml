@@ -19,6 +19,11 @@
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
     <structured-logging.version>1.9.19</structured-logging.version>
+    <api-sdk-manager-java-library.version>1.0.4</api-sdk-manager-java-library.version>
+    <json.version>20230227</json.version>
+    <api-sdk-java.version>4.3.22</api-sdk-java.version>
+    <private-api-sdk-java.version>2.0.256</private-api-sdk-java.version>
+    <encoder.version>1.2.3</encoder.version>
   </properties>
   <profiles>
     <profile>
@@ -58,7 +63,7 @@
     <dependency>
       <groupId>org.json</groupId>
       <artifactId>json</artifactId>
-      <version>20230227</version>
+      <version>${json.version}</version>
     </dependency>
     <dependency>
       <groupId>uk.gov.companieshouse</groupId>
@@ -68,17 +73,17 @@
     <dependency>
       <groupId>uk.gov.companieshouse</groupId>
       <artifactId>api-sdk-manager-java-library</artifactId>
-      <version>1.0.4</version>
+      <version>${api-sdk-manager-java-library.version}</version>
     </dependency>
     <dependency>
       <groupId>uk.gov.companieshouse</groupId>
       <artifactId>api-sdk-java</artifactId>
-      <version>4.3.22</version>
+      <version>${api-sdk-java.version}</version>
     </dependency>
     <dependency>
       <groupId>uk.gov.companieshouse</groupId>
       <artifactId>private-api-sdk-java</artifactId>
-      <version>2.0.256</version>
+      <version>${private-api-sdk-java.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.avro</groupId>
@@ -89,6 +94,11 @@
       <groupId>uk.gov.companieshouse</groupId>
       <artifactId>ch-kafka</artifactId>
       <version>${ch-kafka.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.owasp.encoder</groupId>
+      <artifactId>encoder</artifactId>
+      <version>${encoder.version}</version>
     </dependency>
 
     <!-- test dependencies -->
@@ -102,11 +112,6 @@
       <artifactId>sonar-maven-plugin</artifactId>
       <version>${sonar-maven-plugin.version}</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.owasp.encoder</groupId>
-      <artifactId>encoder</artifactId>
-      <version>1.2.3</version>
     </dependency>
   </dependencies>
   <build>
