@@ -34,6 +34,7 @@ class KafkaEmailClientTest {
     private static final String NO_LONGER_REQUIRED_TEMPLATE_MESSAGE_TYPE = "promise_to_file_no_longer_required";
     private static final String EMAIL_NO_LONGER_REQUIRED_TEMPLATE_APP_ID = "filing_processed_notification_sender.promise_to_file_no_longer_required";
     private static final String CUSTOMER_EMAIL = "example@test.co.uk";
+    private static final String REQUEST_ID = "54321asd";
 
     private KafkaEmailClient kafkaEmailClient;
     private Schema testSchema;
@@ -70,7 +71,7 @@ class KafkaEmailClientTest {
         when(producer.sendAndReturnFuture(any())).thenReturn(future);
         kafkaEmailClient = new KafkaEmailClient(producer,
                 avroSerializer, testSchema);
-        kafkaEmailClient.sendEmailToKafka(emailContent);
+        kafkaEmailClient.sendEmailToKafka(REQUEST_ID, emailContent);
         verify(future, times(1)).get();
     }
 
@@ -80,7 +81,7 @@ class KafkaEmailClientTest {
         doThrow(IOException.class).when(faultyAvroSerializer).serialize(emailContent, testSchema);
         kafkaEmailClient = new KafkaEmailClient(producer,
                 faultyAvroSerializer, testSchema);
-        assertThrows(ServiceException.class, () -> kafkaEmailClient.sendEmailToKafka(emailContent));
+        assertThrows(ServiceException.class, () -> kafkaEmailClient.sendEmailToKafka(REQUEST_ID, emailContent));
     }
 
     @Test
@@ -90,7 +91,7 @@ class KafkaEmailClientTest {
         kafkaEmailClient = new KafkaEmailClient(producer,
                 avroSerializer, testSchema);
         doThrow(ExecutionException.class).when(future).get();
-        assertThrows(ServiceException.class, () -> kafkaEmailClient.sendEmailToKafka(emailContent));
+        assertThrows(ServiceException.class, () -> kafkaEmailClient.sendEmailToKafka(REQUEST_ID, emailContent));
     }
 
     @Test
@@ -100,7 +101,7 @@ class KafkaEmailClientTest {
         kafkaEmailClient = new KafkaEmailClient(producer,
                 avroSerializer, testSchema);
         doThrow(InterruptedException.class).when(future).get();
-        assertThrows(ServiceException.class, () -> kafkaEmailClient.sendEmailToKafka(emailContent));
+        assertThrows(ServiceException.class, () -> kafkaEmailClient.sendEmailToKafka(REQUEST_ID, emailContent));
     }
 }
 

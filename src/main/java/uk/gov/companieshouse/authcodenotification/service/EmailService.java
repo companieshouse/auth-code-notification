@@ -53,7 +53,7 @@ public class EmailService {
                 emailAddress, data);
 
         ApiLogger.debugContext(requestId, "Calling Kafka client to send auth code email");
-        kafkaEmailClient.sendEmailToKafka(emailContent);
+        kafkaEmailClient.sendEmailToKafka(requestId, emailContent);
         ApiLogger.debugContext(requestId, "Successfully called Kafka client");
     }
 
