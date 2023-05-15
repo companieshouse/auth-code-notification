@@ -1,6 +1,6 @@
 package uk.gov.companieshouse.authcodenotification.service;
 
-import org.apache.logging.log4j.util.Strings;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
@@ -12,20 +12,31 @@ import java.util.Map;
 @Service
 public class AuthCodeNotificationService {
 
-    @Autowired
-    private PrivateDataRetrievalService privateDataRetrievalService;
+    private final PrivateDataRetrievalService privateDataRetrievalService;
 
-    public void sendAuthCodeEmail(String requestId, String companyNumber) throws ServiceException {
+    private final EmailService emailService;
+
+    @Autowired
+    public AuthCodeNotificationService(PrivateDataRetrievalService privateDataRetrievalService,
+                                       EmailService emailService) {
+        this.privateDataRetrievalService = privateDataRetrievalService;
+        this.emailService = emailService;
+    }
+
+    public void sendAuthCodeEmail(String requestId, String authCode, String companyNumber) throws ServiceException {
         var dataMap = new DataMap.Builder().companyNumber(companyNumber).build();
         ApiLogger.infoContext(requestId, "Send auth code email invoked", dataMap.getLogMap());
 
-        getOverseasEntityEmail(requestId, companyNumber, dataMap.getLogMap());
+        String email = getOverseasEntityEmail(requestId, companyNumber, dataMap.getLogMap());
+
+        // TODO Lookup company name
+        emailService.sendAuthCodeEmail(requestId, authCode, "", companyNumber, email);
     }
 
     private String getOverseasEntityEmail(String requestId, String companyNumber, Map<String, Object> logMap) throws ServiceException {
         String email = privateDataRetrievalService.getOverseasEntityData(requestId, companyNumber).getEmail();
 
-        if (Strings.isBlank(email)) {
+        if (StringUtils.isBlank(email)) {
             var e = new ServiceException("Null or empty email found");
             ApiLogger.errorContext(requestId, "Failed to retrieve a valid email", e, logMap);
             throw e;
