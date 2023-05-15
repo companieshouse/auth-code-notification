@@ -49,7 +49,7 @@ public class EmailService {
         Map<String, Object> data = constructCommonEmailMap(
               authCode, companyName, companyNumber, emailAddress);
 
-        EmailContent emailContent = constructEmailContent(authCodeEmailTemplate,
+        var emailContent = constructEmailContent(authCodeEmailTemplate,
                 emailAddress, data);
 
         ApiLogger.debugContext(requestId, "Calling Kafka client to send auth code email");
