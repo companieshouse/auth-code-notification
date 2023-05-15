@@ -30,21 +30,17 @@ public class EmailService {
 
 
     @Autowired
-    public EmailService(
-            KafkaEmailClient kafkaEmailClient,
-            Supplier<LocalDateTime> dateTimeSupplier
-    ) {
+    public EmailService(KafkaEmailClient kafkaEmailClient,
+                        Supplier<LocalDateTime> dateTimeSupplier) {
         this.kafkaEmailClient = kafkaEmailClient;
         this.dateTimeSupplier = dateTimeSupplier;
     }
 
-    public void sendAuthCodeEmail(
-            String requestId,
-            String authCode,
-            String companyName,
-            String companyNumber,
-            String emailAddress
-    ) throws ServiceException {
+    public void sendAuthCodeEmail(String requestId,
+                                  String authCode,
+                                  String companyName,
+                                  String companyNumber,
+                                  String emailAddress) throws ServiceException {
 
         Map<String, Object> data = constructCommonEmailMap(
               authCode, companyName, companyNumber, emailAddress);
