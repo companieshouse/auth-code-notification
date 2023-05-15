@@ -30,7 +30,6 @@ class EmailServiceTest {
     private static final String COMPANY_NAME = "Company: " + COMPANY_NUMBER;
     private static final String FORMATTED_EMAIL_SUBJECT = COMPANY_NUMBER + ": email sent";
     private static final LocalDateTime LOCAL_DATE_TIME = LocalDateTime.of(2020, 12, 10, 8, 0);
-    private static final String SUBMITTED_DATE = "10 December 2020";
     private static final String EMAIL_ADDRESS = "demo@ch.gov.uk";
 
     private static final String AUTH_CODE = "jgjh34343jh3jh";
@@ -66,7 +65,8 @@ class EmailServiceTest {
 
         EmailContent emailContent = emailContentArgumentCaptor.getValue();
 
-        assertEquals(EMAIL_ADDRESS, emailContent.   getEmailAddress());
+        assertEquals(EMAIL_ADDRESS, emailContent.getEmailAddress());
+        assertEquals(LOCAL_DATE_TIME, emailContent.getCreatedAt());
 
         Map<String, Object> data = emailContent.getData();
 
