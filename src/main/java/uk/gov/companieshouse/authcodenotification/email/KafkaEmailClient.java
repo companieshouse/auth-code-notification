@@ -36,7 +36,7 @@ public class KafkaEmailClient {
     public void sendEmailToKafka(EmailContent emailContent)
             throws ServiceException {
         try {
-            Message message = new Message();
+            var message = new Message();
             byte[] serializedData = avroSerializer.serialize(emailContent, schema);
             message.setValue(serializedData);
             message.setTopic(emailSendQueueTopic);

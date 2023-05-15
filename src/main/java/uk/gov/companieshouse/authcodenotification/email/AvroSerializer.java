@@ -19,8 +19,8 @@ public class AvroSerializer {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public byte[] serialize(EmailContent emailContent, Schema schema) throws IOException {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        BinaryEncoder encoder = EncoderFactory.get().binaryEncoder(stream, null);
+        var stream = new ByteArrayOutputStream();
+        var encoder = EncoderFactory.get().binaryEncoder(stream, null);
         GenericDatumWriter<GenericRecord> datumWriter = new GenericDatumWriter<>(schema);
         datumWriter.write(buildAvroGenericRecord(emailContent, schema), encoder);
         encoder.flush();

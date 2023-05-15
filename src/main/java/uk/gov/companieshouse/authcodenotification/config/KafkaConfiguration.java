@@ -32,13 +32,13 @@ public class KafkaConfiguration {
 
     private Schema getSchema(KafkaRestClient restClient, String schemaUri) throws JSONException {
         byte[] bytes = restClient.getSchema(schemaRegistryUrl, schemaUri);
-        String schemaJson = new JSONObject(new String(bytes)).getString("schema");
+        var schemaJson = new JSONObject(new String(bytes)).getString("schema");
         return new Schema.Parser().parse(schemaJson);
     }
 
     @Bean
     public CHKafkaProducer buildKafkaProducer() {
-        ProducerConfig config = new ProducerConfig();
+        var config = new ProducerConfig();
         ProducerConfigHelper.assignBrokerAddresses(config);
 
         config.setRoundRobinPartitioner(true);
