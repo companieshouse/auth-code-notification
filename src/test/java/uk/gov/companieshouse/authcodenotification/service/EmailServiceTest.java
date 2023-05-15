@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -61,7 +62,7 @@ class EmailServiceTest {
         );
 
         ArgumentCaptor<EmailContent> emailContentArgumentCaptor = ArgumentCaptor.forClass(EmailContent.class);
-        verify(kafkaEmailClient, times(1)).sendEmailToKafka(REQUEST_ID, emailContentArgumentCaptor.capture());
+        verify(kafkaEmailClient, times(1)).sendEmailToKafka(eq(REQUEST_ID), emailContentArgumentCaptor.capture());
 
         EmailContent emailContent = emailContentArgumentCaptor.getValue();
 
