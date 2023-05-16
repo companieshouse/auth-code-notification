@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.update.OverseasEntityDataApi;
 import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 
@@ -21,7 +22,7 @@ class AuthCodeNotificationServiceTest {
 
     private static final String AUTH_CODE = "auth123";
     private static final String COMPANY_NUMBER = "OE123456";
-
+    private static final String COMPANY_NAME = "Test Company";
     private static final String TEST_EMAIL = "test@oe.com";
 
     @InjectMocks
@@ -35,18 +36,24 @@ class AuthCodeNotificationServiceTest {
 
     private OverseasEntityDataApi overseasEntityDataApi;
 
+    private CompanyProfileApi companyProfileApi;
+
     @BeforeEach
     void setup() {
         overseasEntityDataApi = new OverseasEntityDataApi();
+        companyProfileApi = new CompanyProfileApi();
     }
 
     @Test
     void testSuccessfulRetrieveAndSend() throws ServiceException {
         overseasEntityDataApi.setEmail(TEST_EMAIL);
         when(privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER)).thenReturn(overseasEntityDataApi);
+        companyProfileApi.setCompanyName(COMPANY_NAME);
+        when(privateDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER)).thenReturn(companyProfileApi);
+
         authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, AUTH_CODE, COMPANY_NUMBER);
         verify(privateDataRetrievalService, times(1)).getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER);
-        verify(emailService, times(1)).sendAuthCodeEmail(REQUEST_ID, AUTH_CODE, "", COMPANY_NUMBER, TEST_EMAIL);
+        verify(emailService, times(1)).sendAuthCodeEmail(REQUEST_ID, AUTH_CODE, COMPANY_NAME, COMPANY_NUMBER, TEST_EMAIL);
     }
 
     @Test
@@ -70,6 +77,38 @@ class AuthCodeNotificationServiceTest {
     void testExceptionThrownWhenEmailIsBlank() throws ServiceException {
         overseasEntityDataApi.setEmail("   ");
         when(privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER)).thenReturn(overseasEntityDataApi);
+        assertThrows(ServiceException.class, () -> {
+            authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, AUTH_CODE, COMPANY_NUMBER);
+        });
+    }
+
+    @Test
+    void testExceptionThrownWhenCompanyNameIsNull() throws ServiceException {
+        overseasEntityDataApi.setEmail(TEST_EMAIL);
+        when(privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER)).thenReturn(overseasEntityDataApi);
+        when(privateDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER)).thenReturn(companyProfileApi);
+        assertThrows(ServiceException.class, () -> {
+            authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, AUTH_CODE, COMPANY_NUMBER);
+        });
+    }
+
+    @Test
+    void testExceptionThrownWhenCompanyNameIsEmpty() throws ServiceException {
+        overseasEntityDataApi.setEmail(TEST_EMAIL);
+        when(privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER)).thenReturn(overseasEntityDataApi);
+        companyProfileApi.setCompanyName("");
+        when(privateDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER)).thenReturn(companyProfileApi);
+        assertThrows(ServiceException.class, () -> {
+            authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, AUTH_CODE, COMPANY_NUMBER);
+        });
+    }
+
+    @Test
+    void testExceptionThrownWhenCompanyNameIsBlank() throws ServiceException {
+        overseasEntityDataApi.setEmail(TEST_EMAIL);
+        when(privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER)).thenReturn(overseasEntityDataApi);
+        companyProfileApi.setCompanyName("   ");
+        when(privateDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER)).thenReturn(companyProfileApi);
         assertThrows(ServiceException.class, () -> {
             authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, AUTH_CODE, COMPANY_NUMBER);
         });

@@ -28,9 +28,9 @@ public class AuthCodeNotificationService {
         ApiLogger.infoContext(requestId, "Send auth code email invoked", dataMap.getLogMap());
 
         String email = getOverseasEntityEmail(requestId, companyNumber, dataMap.getLogMap());
+        String companyName = getCompanyName(requestId, companyNumber, dataMap.getLogMap());
 
-        // TODO Lookup company name
-        emailService.sendAuthCodeEmail(requestId, authCode, "", companyNumber, email);
+        emailService.sendAuthCodeEmail(requestId, authCode, companyName, companyNumber, email);
     }
 
     private String getOverseasEntityEmail(String requestId, String companyNumber, Map<String, Object> logMap) throws ServiceException {
@@ -46,4 +46,16 @@ public class AuthCodeNotificationService {
         return email;
     }
 
+    private String getCompanyName(String requestId, String companyNumber, Map<String, Object> logMap) throws ServiceException {
+        String companyName = privateDataRetrievalService.getCompanyProfile(requestId, companyNumber).getCompanyName();
+
+        if (StringUtils.isBlank(companyName)) {
+            var e = new ServiceException("Null or empty company name found");
+            ApiLogger.errorContext(requestId, "Failed to retrieve a valid company number", e, logMap);
+            throw e;
+        }
+
+        ApiLogger.infoContext(requestId, "Retrieved company name successfully", logMap);
+        return companyName;
+    }
 }
