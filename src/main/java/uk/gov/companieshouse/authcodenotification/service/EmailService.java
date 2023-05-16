@@ -7,6 +7,7 @@ import uk.gov.companieshouse.authcodenotification.email.EmailContent;
 import uk.gov.companieshouse.authcodenotification.email.KafkaEmailClient;
 import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 import uk.gov.companieshouse.authcodenotification.utils.ApiLogger;
+import uk.gov.companieshouse.logging.util.DataMap;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -42,15 +43,17 @@ public class EmailService {
                                   String companyNumber,
                                   String emailAddress) throws ServiceException {
 
-        Map<String, Object> data = constructCommonEmailMap(
+        Map<String, Object> emailContentData = constructCommonEmailMap(
               authCode, companyName, companyNumber, emailAddress);
 
         var emailContent =
-                constructEmailContent(authCodeEmailTemplate, emailAddress, data);
+                constructEmailContent(authCodeEmailTemplate, emailAddress, emailContentData);
 
-        ApiLogger.debugContext(requestId, "Calling Kafka client to send auth code email");
+        var logDataMap = new DataMap.Builder().companyNumber(companyNumber).build();
+
+        ApiLogger.infoContext(requestId, "Calling Kafka client to send auth code email", logDataMap.getLogMap());
         kafkaEmailClient.sendEmailToKafka(requestId, emailContent);
-        ApiLogger.debugContext(requestId, "Successfully called Kafka client");
+        ApiLogger.infoContext(requestId, "Successfully called Kafka client to send auth code email", logDataMap.getLogMap());
     }
 
 
