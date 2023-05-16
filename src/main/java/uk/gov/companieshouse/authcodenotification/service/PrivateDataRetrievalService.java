@@ -1,9 +1,7 @@
 package uk.gov.companieshouse.authcodenotification.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.update.OverseasEntityDataApi;
@@ -51,7 +49,7 @@ public class PrivateDataRetrievalService {
         var dataMap = new DataMap.Builder().companyNumber(companyNumber).build();
         try {
             var companyProfileApi = apiClientService
-                    .getInternalApiClient()
+                    .getApiClient()
                     .company()
                     .get(String.format(COMPANY_PROFILE_URI, companyNumber))
                     .execute()

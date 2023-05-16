@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.companieshouse.api.ApiClient;
 import uk.gov.companieshouse.api.InternalApiClient;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.company.CompanyResourceHandler;
@@ -19,6 +20,8 @@ import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.update.OverseasEntityDataApi;
 import uk.gov.companieshouse.authcodenotification.client.ApiClientService;
 import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
+
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -44,6 +47,9 @@ class PrivateDataRetrievalServiceTest {
     private InternalApiClient internalApiClient;
 
     @Mock
+    private ApiClient apiClient;
+
+    @Mock
     private PrivateOverseasEntityDataHandler privateOverseasEntityDataHandler;
 
     @Mock
@@ -63,11 +69,6 @@ class PrivateDataRetrievalServiceTest {
 
     @Mock
     private HttpResponseException.Builder builder;
-
-    @BeforeEach
-    void init() {
-       when(apiClientService.getInternalApiClient()).thenReturn(internalApiClient);
-    }
 
     @Test
     void testGetOverseasEntityDataWhenSuccessful() throws ApiErrorResponseException, URIValidationException, ServiceException {
@@ -94,36 +95,38 @@ class PrivateDataRetrievalServiceTest {
     }
 
     @Test
-    void testGetCompanyProfileDataWhenSuccessful() throws ApiErrorResponseException, URIValidationException, ServiceException {
+    void testGetCompanyProfileDataWhenSuccessful() throws IOException, URIValidationException, ServiceException {
         CompanyProfileApi companyProfileApi = new CompanyProfileApi();
         stubCompanyProfileClient();
         when(companyGet.execute()).thenReturn(companyProfileApiResponse);
         when(companyProfileApiResponse.getData()).thenReturn(companyProfileApi);
         privateDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER);
-        verify(apiClientService, times(1)).getInternalApiClient();
+        verify(apiClientService, times(1)).getApiClient();
     }
 
     @Test
-    void testGetCompanyProfileDataWhenURIValidationExceptionExceptionIsThrown() throws ApiErrorResponseException, URIValidationException {
+    void testGetCompanyProfileDataWhenURIValidationExceptionExceptionIsThrown() throws IOException, URIValidationException {
         stubCompanyProfileClient();
         when(companyGet.execute()).thenThrow(new ApiErrorResponseException(builder));
         assertThrows(ServiceException.class, () -> privateDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER));
     }
 
     @Test
-    void testGetCompanyProfileDataWhenApiErrorResponseExceptionIsThrown() throws ApiErrorResponseException, URIValidationException {
+    void testGetCompanyProfileDataWhenApiErrorResponseExceptionIsThrown() throws IOException, URIValidationException {
         stubCompanyProfileClient();
         when(companyGet.execute()).thenThrow(new ApiErrorResponseException(builder));
         assertThrows(ServiceException.class, () -> privateDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER));
     }
 
     private void stubEmailClient() {
+        when(apiClientService.getInternalApiClient()).thenReturn(internalApiClient);
         when(internalApiClient.privateOverseasEntityDataHandler()).thenReturn(privateOverseasEntityDataHandler);
         when(privateOverseasEntityDataHandler.getOverseasEntityData(anyString())).thenReturn(privateOverseasEntityDataGet);
     }
 
-    private void stubCompanyProfileClient() {
-        when(internalApiClient.company()).thenReturn(companyResourceHandler);
+    private void stubCompanyProfileClient() throws IOException {
+        when(apiClientService.getApiClient()).thenReturn(apiClient);
+        when(apiClient.company()).thenReturn(companyResourceHandler);
         when(companyResourceHandler.get(any())).thenReturn(companyGet);
     }
 }
