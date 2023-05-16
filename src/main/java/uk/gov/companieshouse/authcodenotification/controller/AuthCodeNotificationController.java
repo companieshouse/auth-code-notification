@@ -22,8 +22,8 @@ import static uk.gov.companieshouse.authcodenotification.utils.Constants.ERIC_RE
 @RequestMapping("/company/{companyNumber}/auth-code")
 public class AuthCodeNotificationController {
 
-    private AuthCodeNotificationService authCodeNotificationService;
-    private DataSanitisation dataSanitisation;
+    private final AuthCodeNotificationService authCodeNotificationService;
+    private final DataSanitisation dataSanitisation;
 
     @Autowired
     public AuthCodeNotificationController(AuthCodeNotificationService authCodeNotificationService,
@@ -38,7 +38,7 @@ public class AuthCodeNotificationController {
                                             @PathVariable String companyNumber) {
 
         companyNumber = dataSanitisation.makeStringSafeForLogging(companyNumber);
-        DataMap logDataMap = new DataMap.Builder().companyNumber(companyNumber).build();
+        var logDataMap = new DataMap.Builder().companyNumber(companyNumber).build();
         ApiLogger.infoContext(requestId,"Request received for auth code email", logDataMap.getLogMap());
 
         try {
