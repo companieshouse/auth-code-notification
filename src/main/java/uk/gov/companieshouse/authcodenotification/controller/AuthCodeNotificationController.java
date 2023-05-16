@@ -42,7 +42,7 @@ public class AuthCodeNotificationController {
         ApiLogger.infoContext(requestId,"Request received for auth code email", dataMap.getLogMap());
 
         try {
-            authCodeNotificationService.sendAuthCodeEmail(requestId, companyNumber);
+            authCodeNotificationService.sendAuthCodeEmail(requestId, sendEmailRequestDto.getAuthCode(), companyNumber);
         } catch (ServiceException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

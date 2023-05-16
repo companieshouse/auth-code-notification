@@ -19,6 +19,7 @@ class AuthCodeNotificationServiceTest {
 
     private static final String REQUEST_ID = "abc";
 
+    private static final String AUTH_CODE = "auth123";
     private static final String COMPANY_NUMBER = "OE123456";
 
     private static final String TEST_EMAIL = "test@oe.com";
@@ -28,6 +29,9 @@ class AuthCodeNotificationServiceTest {
 
     @Mock
     private PrivateDataRetrievalService privateDataRetrievalService;
+
+    @Mock
+    private EmailService emailService;
 
     private OverseasEntityDataApi overseasEntityDataApi;
 
@@ -40,15 +44,16 @@ class AuthCodeNotificationServiceTest {
     void testSuccessfulRetrieveAndSend() throws ServiceException {
         overseasEntityDataApi.setEmail(TEST_EMAIL);
         when(privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER)).thenReturn(overseasEntityDataApi);
-        authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, COMPANY_NUMBER);
+        authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, AUTH_CODE, COMPANY_NUMBER);
         verify(privateDataRetrievalService, times(1)).getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER);
+        verify(emailService, times(1)).sendAuthCodeEmail(REQUEST_ID, AUTH_CODE, "", COMPANY_NUMBER, TEST_EMAIL);
     }
 
     @Test
     void testExceptionThrownWhenEmailIsNull() throws ServiceException {
         when(privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER)).thenReturn(overseasEntityDataApi);
         assertThrows(ServiceException.class, () -> {
-            authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, COMPANY_NUMBER);
+            authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, AUTH_CODE, COMPANY_NUMBER);
         });
     }
 
@@ -57,7 +62,7 @@ class AuthCodeNotificationServiceTest {
         overseasEntityDataApi.setEmail("");
         when(privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER)).thenReturn(overseasEntityDataApi);
         assertThrows(ServiceException.class, () -> {
-            authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, COMPANY_NUMBER);
+            authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, AUTH_CODE, COMPANY_NUMBER);
         });
     }
 
@@ -66,7 +71,7 @@ class AuthCodeNotificationServiceTest {
         overseasEntityDataApi.setEmail("   ");
         when(privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER)).thenReturn(overseasEntityDataApi);
         assertThrows(ServiceException.class, () -> {
-            authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, COMPANY_NUMBER);
+            authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, AUTH_CODE, COMPANY_NUMBER);
         });
     }
 }

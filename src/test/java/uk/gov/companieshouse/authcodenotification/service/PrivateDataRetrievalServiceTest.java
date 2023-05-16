@@ -68,19 +68,15 @@ class PrivateDataRetrievalServiceTest {
     }
 
     @Test
-    void testGetOverseasEntityDataWhenURIValidationExceptionExceptionIsThrown() throws ApiErrorResponseException, URIValidationException, ServiceException {
+    void testGetOverseasEntityDataWhenURIValidationExceptionExceptionIsThrown() throws ApiErrorResponseException, URIValidationException {
         when(privateOverseasEntityDataGet.execute()).thenThrow(new URIValidationException(""));
-        assertThrows(ServiceException.class, () -> {
-            privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER);
-        });
+        assertThrows(ServiceException.class, () -> privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER));
     }
 
     @Test
-    void testGetOverseasEntityDataWhenApiErrorResponseExceptionIsThrown() throws ApiErrorResponseException, URIValidationException, ServiceException {
+    void testGetOverseasEntityDataWhenApiErrorResponseExceptionIsThrown() throws ApiErrorResponseException, URIValidationException {
         when(privateOverseasEntityDataGet.execute()).thenThrow(new ApiErrorResponseException(builder));
-        assertThrows(ServiceException.class, () -> {
-            privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER);
-        });
+        assertThrows(ServiceException.class, () -> privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER));
     }
 
 }

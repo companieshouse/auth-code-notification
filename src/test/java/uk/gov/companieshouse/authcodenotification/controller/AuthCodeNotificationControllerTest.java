@@ -20,6 +20,7 @@ import static org.mockito.Mockito.when;
 class AuthCodeNotificationControllerTest {
 
     private static final String REQUEST_ID = "abc";
+    private static final String AUTH_CODE = "auth123";
 
     private static final String COMPANY_NUMBER = "OE123456";
 
@@ -37,6 +38,7 @@ class AuthCodeNotificationControllerTest {
     @BeforeEach
     void setup() {
         sendEmailRequestDto = new SendEmailRequestDto();
+        sendEmailRequestDto.setAuthCode(AUTH_CODE);
     }
 
     @Test
@@ -48,7 +50,7 @@ class AuthCodeNotificationControllerTest {
     @Test
     void testSendEmailReturnsInternalServerErrorWhenServiceCallFails() throws ServiceException {
         when(dataSanitisation.makeStringSafeForLogging(COMPANY_NUMBER)).thenReturn(COMPANY_NUMBER);
-        doThrow(new ServiceException("")).when(authCodeNotificationService).sendAuthCodeEmail(REQUEST_ID, COMPANY_NUMBER);
+        doThrow(new ServiceException("")).when(authCodeNotificationService).sendAuthCodeEmail(REQUEST_ID, AUTH_CODE, COMPANY_NUMBER);
         ResponseEntity<Object> responseEntity = controller.sendEmail(REQUEST_ID, sendEmailRequestDto, COMPANY_NUMBER);
         assertEquals( 500, responseEntity.getStatusCode().value() );
     }
