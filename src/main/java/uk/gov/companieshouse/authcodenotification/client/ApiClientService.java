@@ -5,9 +5,6 @@ import uk.gov.companieshouse.api.ApiClient;
 import uk.gov.companieshouse.api.InternalApiClient;
 import uk.gov.companieshouse.sdk.manager.ApiSdkManager;
 
-import java.io.IOException;
-
-
 @Component
 public class ApiClientService {
 
@@ -15,7 +12,7 @@ public class ApiClientService {
         return ApiSdkManager.getPrivateSDK();
     }
 
-    public ApiClient getApiClient() throws IOException {
+    public ApiClient getApiClient() {
         return ApiSdkManager.getSDK();
     }
 }
