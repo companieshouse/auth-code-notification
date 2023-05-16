@@ -38,8 +38,8 @@ public class AuthCodeNotificationController {
                                             @PathVariable String companyNumber) {
 
         companyNumber = dataSanitisation.makeStringSafeForLogging(companyNumber);
-        DataMap dataMap = new DataMap.Builder().companyNumber(companyNumber).build();
-        ApiLogger.infoContext(requestId,"Request received for auth code email", dataMap.getLogMap());
+        DataMap logDataMap = new DataMap.Builder().companyNumber(companyNumber).build();
+        ApiLogger.infoContext(requestId,"Request received for auth code email", logDataMap.getLogMap());
 
         try {
             authCodeNotificationService.sendAuthCodeEmail(requestId, sendEmailRequestDto.getAuthCode(), companyNumber);

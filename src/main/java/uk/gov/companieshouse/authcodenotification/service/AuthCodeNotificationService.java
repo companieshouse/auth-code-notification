@@ -24,13 +24,15 @@ public class AuthCodeNotificationService {
     }
 
     public void sendAuthCodeEmail(String requestId, String authCode, String companyNumber) throws ServiceException {
-        var dataMap = new DataMap.Builder().companyNumber(companyNumber).build();
-        ApiLogger.infoContext(requestId, "Send auth code email invoked", dataMap.getLogMap());
+        var logDataMap = new DataMap.Builder().companyNumber(companyNumber).build();
+        ApiLogger.infoContext(requestId, "Processing send auth code email request", logDataMap.getLogMap());
 
-        String email = getOverseasEntityEmail(requestId, companyNumber, dataMap.getLogMap());
+        String email = getOverseasEntityEmail(requestId, companyNumber, logDataMap.getLogMap());
 
         // TODO Lookup company name
         emailService.sendAuthCodeEmail(requestId, authCode, "", companyNumber, email);
+
+        ApiLogger.infoContext(requestId, "Finished processing send auth code email request", logDataMap.getLogMap());
     }
 
     private String getOverseasEntityEmail(String requestId, String companyNumber, Map<String, Object> logMap) throws ServiceException {
@@ -38,11 +40,11 @@ public class AuthCodeNotificationService {
 
         if (StringUtils.isBlank(email)) {
             var e = new ServiceException("Null or empty email found");
-            ApiLogger.errorContext(requestId, "Failed to retrieve a valid email", e, logMap);
+            ApiLogger.errorContext(requestId, "Failed to retrieve a valid overseas entity email address", e, logMap);
             throw e;
         }
 
-        ApiLogger.infoContext(requestId, "Retrieved auth code email successfully", logMap);
+        ApiLogger.infoContext(requestId, "Successfully retrieved overseas entity email address", logMap);
         return email;
     }
 
