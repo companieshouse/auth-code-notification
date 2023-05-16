@@ -21,6 +21,7 @@ To check out and build the service:
 These instructions are for a local docker environment.
 
 ### Endpoints
-| Method | Path                                    | Description                           |
-|:-------|:----------------------------------------|:--------------------------------------|
-| GET    | /auth-code-notification/actuator/health | Spring actuator health check endpoint |
+| Method | Path                                    | Description                             |
+|:-------|:----------------------------------------|:----------------------------------------|
+| GET    | /auth-code-notification/actuator/health | Spring actuator health check endpoint   |
+| POST   | /company/{companyNumber}/auth-code      | Send email to user containing auth code |
