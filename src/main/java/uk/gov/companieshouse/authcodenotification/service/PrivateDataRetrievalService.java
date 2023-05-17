@@ -17,8 +17,6 @@ public class PrivateDataRetrievalService {
 
     private static final String OVERSEAS_ENTITY_URI_SECTION = "/overseas-entity/%s/entity-data";
 
-    private static final String COMPANY_PROFILE_URI = "/company/%s";
-
     @Autowired
     private ApiClientService apiClientService;
 
@@ -40,27 +38,6 @@ public class PrivateDataRetrievalService {
         } catch (URIValidationException | IOException e) {
             var message = "Error retrieving overseas entity data from database";
             ApiLogger.errorContext(requestId, message, e, logDataMap.getLogMap());
-            throw new ServiceException(e.getMessage(), e);
-        }
-    }
-
-    public CompanyProfileApi getCompanyProfile(String requestId, String companyNumber)
-            throws ServiceException {
-        var dataMap = new DataMap.Builder().companyNumber(companyNumber).build();
-        try {
-            var companyProfileApi = apiClientService
-                    .getApiClient()
-                    .company()
-                    .get(String.format(COMPANY_PROFILE_URI, companyNumber))
-                    .execute()
-                    .getData();
-
-            ApiLogger.infoContext(requestId, "Retrieving company profile data",  dataMap.getLogMap());
-
-            return companyProfileApi;
-        } catch (URIValidationException | IOException e) {
-            var message = "Error retrieving company profile data";
-            ApiLogger.errorContext(requestId, message, e, dataMap.getLogMap());
             throw new ServiceException(e.getMessage(), e);
         }
     }

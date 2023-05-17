@@ -14,12 +14,16 @@ public class AuthCodeNotificationService {
 
     private final PrivateDataRetrievalService privateDataRetrievalService;
 
+    private final PublicDataRetrievalService publicDataRetrievalService;
+
     private final EmailService emailService;
 
     @Autowired
     public AuthCodeNotificationService(PrivateDataRetrievalService privateDataRetrievalService,
+                                       PublicDataRetrievalService publicDataRetrievalService,
                                        EmailService emailService) {
         this.privateDataRetrievalService = privateDataRetrievalService;
+        this.publicDataRetrievalService = publicDataRetrievalService;
         this.emailService = emailService;
     }
 
@@ -38,9 +42,8 @@ public class AuthCodeNotificationService {
         String email = privateDataRetrievalService.getOverseasEntityData(requestId, companyNumber).getEmail();
 
         if (StringUtils.isBlank(email)) {
-            var e = new ServiceException("Null or empty email found");
-            ApiLogger.errorContext(requestId, "Failed to retrieve a valid overseas entity email address", e, logMap);
-            throw e;
+            ApiLogger.errorContext(requestId, "Failed to retrieve a valid overseas entity email address", null, logMap);
+            throw new ServiceException("Null or empty email found");
         }
 
         ApiLogger.infoContext(requestId, "Successfully retrieved overseas entity email address", logMap);
@@ -48,12 +51,11 @@ public class AuthCodeNotificationService {
     }
 
     private String getCompanyName(String requestId, String companyNumber, Map<String, Object> logMap) throws ServiceException {
-        String companyName = privateDataRetrievalService.getCompanyProfile(requestId, companyNumber).getCompanyName();
+        String companyName = publicDataRetrievalService.getCompanyProfile(requestId, companyNumber).getCompanyName();
 
         if (StringUtils.isBlank(companyName)) {
-            var e = new ServiceException("Null or empty company name found");
-            ApiLogger.errorContext(requestId, "Failed to retrieve a valid company number", e, logMap);
-            throw e;
+            ApiLogger.errorContext(requestId, "Failed to retrieve a valid company number", null, logMap);
+            throw new ServiceException("Null or empty company name found");
         }
 
         ApiLogger.infoContext(requestId, "Retrieved company name successfully", logMap);

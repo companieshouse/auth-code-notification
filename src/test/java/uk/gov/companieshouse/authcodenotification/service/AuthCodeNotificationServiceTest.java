@@ -32,6 +32,9 @@ class AuthCodeNotificationServiceTest {
     private PrivateDataRetrievalService privateDataRetrievalService;
 
     @Mock
+    private PublicDataRetrievalService publicDataRetrievalService;
+
+    @Mock
     private EmailService emailService;
 
     private OverseasEntityDataApi overseasEntityDataApi;
@@ -49,7 +52,7 @@ class AuthCodeNotificationServiceTest {
         overseasEntityDataApi.setEmail(TEST_EMAIL);
         when(privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER)).thenReturn(overseasEntityDataApi);
         companyProfileApi.setCompanyName(COMPANY_NAME);
-        when(privateDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER)).thenReturn(companyProfileApi);
+        when(publicDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER)).thenReturn(companyProfileApi);
 
         authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, AUTH_CODE, COMPANY_NUMBER);
         verify(privateDataRetrievalService, times(1)).getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER);
@@ -86,7 +89,7 @@ class AuthCodeNotificationServiceTest {
     void testExceptionThrownWhenCompanyNameIsNull() throws ServiceException {
         overseasEntityDataApi.setEmail(TEST_EMAIL);
         when(privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER)).thenReturn(overseasEntityDataApi);
-        when(privateDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER)).thenReturn(companyProfileApi);
+        when(publicDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER)).thenReturn(companyProfileApi);
         assertThrows(ServiceException.class, () -> {
             authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, AUTH_CODE, COMPANY_NUMBER);
         });
@@ -97,7 +100,7 @@ class AuthCodeNotificationServiceTest {
         overseasEntityDataApi.setEmail(TEST_EMAIL);
         when(privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER)).thenReturn(overseasEntityDataApi);
         companyProfileApi.setCompanyName("");
-        when(privateDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER)).thenReturn(companyProfileApi);
+        when(publicDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER)).thenReturn(companyProfileApi);
         assertThrows(ServiceException.class, () -> {
             authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, AUTH_CODE, COMPANY_NUMBER);
         });
@@ -108,7 +111,7 @@ class AuthCodeNotificationServiceTest {
         overseasEntityDataApi.setEmail(TEST_EMAIL);
         when(privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER)).thenReturn(overseasEntityDataApi);
         companyProfileApi.setCompanyName("   ");
-        when(privateDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER)).thenReturn(companyProfileApi);
+        when(publicDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER)).thenReturn(companyProfileApi);
         assertThrows(ServiceException.class, () -> {
             authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, AUTH_CODE, COMPANY_NUMBER);
         });
