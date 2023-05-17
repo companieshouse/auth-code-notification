@@ -37,12 +37,13 @@ public class AuthCodeNotificationController {
                                             @RequestBody SendEmailRequestDto sendEmailRequestDto,
                                             @PathVariable String companyNumber) {
 
-        companyNumber = dataSanitisation.makeStringSafeForLogging(companyNumber);
+        companyNumber = dataSanitisation.makeStringSafe(companyNumber);
         var logDataMap = new DataMap.Builder().companyNumber(companyNumber).build();
         ApiLogger.infoContext(requestId,"Request received for auth code email", logDataMap.getLogMap());
 
         try {
-            authCodeNotificationService.sendAuthCodeEmail(requestId, sendEmailRequestDto.getAuthCode(), companyNumber);
+            var authCode = dataSanitisation.makeStringSafe(sendEmailRequestDto.getAuthCode());
+            authCodeNotificationService.sendAuthCodeEmail(requestId, authCode, companyNumber);
         } catch (ServiceException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
