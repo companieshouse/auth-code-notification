@@ -3,7 +3,6 @@ package uk.gov.companieshouse.authcodenotification.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
-import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.update.OverseasEntityDataApi;
 import uk.gov.companieshouse.authcodenotification.client.ApiClientService;
 import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
