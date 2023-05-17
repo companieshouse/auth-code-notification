@@ -13,7 +13,7 @@ import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 import uk.gov.companieshouse.authcodenotification.service.AuthCodeNotificationService;
 import uk.gov.companieshouse.authcodenotification.utils.ApiLogger;
 import uk.gov.companieshouse.authcodenotification.model.SendEmailRequestDto;
-import uk.gov.companieshouse.authcodenotification.utils.DataSanitisation;
+import uk.gov.companieshouse.authcodenotification.utils.DataSanitiser;
 import uk.gov.companieshouse.logging.util.DataMap;
 
 import static uk.gov.companieshouse.authcodenotification.utils.Constants.ERIC_REQUEST_ID_KEY;
@@ -23,11 +23,11 @@ import static uk.gov.companieshouse.authcodenotification.utils.Constants.ERIC_RE
 public class AuthCodeNotificationController {
 
     private final AuthCodeNotificationService authCodeNotificationService;
-    private final DataSanitisation dataSanitisation;
+    private final DataSanitiser dataSanitisation;
 
     @Autowired
     public AuthCodeNotificationController(AuthCodeNotificationService authCodeNotificationService,
-                                          DataSanitisation dataSanitisation) {
+                                          DataSanitiser dataSanitisation) {
         this.authCodeNotificationService = authCodeNotificationService;
         this.dataSanitisation = dataSanitisation;
     }

@@ -19,8 +19,8 @@ import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 
 import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -31,6 +31,9 @@ class PublicDataRetrievalServiceTest {
     private static final String REQUEST_ID = "abc";
 
     private static final String COMPANY_NUMBER = "OE123456";
+
+    private static final String COMPANY_PROFILE_URI = String.format("/company/%s", COMPANY_NUMBER);
+
 
     @InjectMocks
     private PublicDataRetrievalService publicDataRetrievalService;
@@ -57,7 +60,7 @@ class PublicDataRetrievalServiceTest {
     void setup() {
         when(apiClientService.getApiClient()).thenReturn(apiClient);
         when(apiClient.company()).thenReturn(companyResourceHandler);
-        when(companyResourceHandler.get(any())).thenReturn(companyGet);
+        when(companyResourceHandler.get(COMPANY_PROFILE_URI)).thenReturn(companyGet);
     }
 
     @Test
@@ -65,7 +68,10 @@ class PublicDataRetrievalServiceTest {
         CompanyProfileApi companyProfileApi = new CompanyProfileApi();
         when(companyGet.execute()).thenReturn(companyProfileApiResponse);
         when(companyProfileApiResponse.getData()).thenReturn(companyProfileApi);
-        publicDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER);
+
+        CompanyProfileApi returnedCompanyProfileApi = publicDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER);
+
+        assertEquals(companyProfileApi, returnedCompanyProfileApi);
         verify(apiClientService, times(1)).getApiClient();
     }
 

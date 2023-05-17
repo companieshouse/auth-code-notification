@@ -5,19 +5,19 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class DataSanitisationTest {
+class DataSanitiserTest {
 
     @Test
     void testMakeStringSafeForLogging() {
-        DataSanitisation dataSanitisation = new DataSanitisation();
-        String sanitisedInput = dataSanitisation.makeStringSafe("abc\t\nabc");
+        DataSanitiser dataSanitiser = new DataSanitiser();
+        String sanitisedInput = dataSanitiser.makeStringSafe("abc\t\nabc");
         assertEquals("abc\\t\\nabc", sanitisedInput);
     }
 
     @Test
     void testMakeStringSafeForLoggingWithTruncation() {
-        DataSanitisation dataSanitisation = new DataSanitisation();
-        String sanitisedInput = dataSanitisation.makeStringSafe("abc\t\nabc" + StringUtils.repeat("A", Constants.TRUNCATED_DATA_LENGTH));
+        DataSanitiser dataSanitiser = new DataSanitiser();
+        String sanitisedInput = dataSanitiser.makeStringSafe("abc\t\nabc" + StringUtils.repeat("A", Constants.TRUNCATED_DATA_LENGTH));
         String sanitised = "abc\\t\\nabc";
         String expected = sanitised + (StringUtils.repeat("A", Constants.TRUNCATED_DATA_LENGTH - sanitised.length()));
         assertEquals(expected, sanitisedInput);
