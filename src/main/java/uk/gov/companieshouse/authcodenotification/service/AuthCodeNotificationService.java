@@ -14,12 +14,16 @@ public class AuthCodeNotificationService {
 
     private final PrivateDataRetrievalService privateDataRetrievalService;
 
+    private final PublicDataRetrievalService publicDataRetrievalService;
+
     private final EmailService emailService;
 
     @Autowired
     public AuthCodeNotificationService(PrivateDataRetrievalService privateDataRetrievalService,
+                                       PublicDataRetrievalService publicDataRetrievalService,
                                        EmailService emailService) {
         this.privateDataRetrievalService = privateDataRetrievalService;
+        this.publicDataRetrievalService = publicDataRetrievalService;
         this.emailService = emailService;
     }
 
@@ -28,9 +32,8 @@ public class AuthCodeNotificationService {
         ApiLogger.infoContext(requestId, "Processing send auth code email request", logDataMap.getLogMap());
 
         String email = getOverseasEntityEmail(requestId, companyNumber, logDataMap.getLogMap());
-
-        // TODO Lookup company name
-        emailService.sendAuthCodeEmail(requestId, authCode, "", companyNumber, email);
+        String companyName = getCompanyName(requestId, companyNumber,logDataMap.getLogMap());
+        emailService.sendAuthCodeEmail(requestId, authCode, companyName, companyNumber, email);
 
         ApiLogger.infoContext(requestId, "Finished processing send auth code email request", logDataMap.getLogMap());
     }
@@ -39,13 +42,23 @@ public class AuthCodeNotificationService {
         String email = privateDataRetrievalService.getOverseasEntityData(requestId, companyNumber).getEmail();
 
         if (StringUtils.isBlank(email)) {
-            var e = new ServiceException("Null or empty email found");
-            ApiLogger.errorContext(requestId, "Failed to retrieve a valid overseas entity email address", e, logMap);
-            throw e;
+            ApiLogger.errorContext(requestId, "Failed to retrieve a valid overseas entity email address", null, logMap);
+            throw new ServiceException("Null or empty email found");
         }
 
         ApiLogger.infoContext(requestId, "Successfully retrieved overseas entity email address", logMap);
         return email;
     }
 
+    private String getCompanyName(String requestId, String companyNumber, Map<String, Object> logMap) throws ServiceException {
+        String companyName = publicDataRetrievalService.getCompanyProfile(requestId, companyNumber).getCompanyName();
+
+        if (StringUtils.isBlank(companyName)) {
+            ApiLogger.errorContext(requestId, "Failed to retrieve a valid company number", null, logMap);
+            throw new ServiceException("Null or empty company name found");
+        }
+
+        ApiLogger.infoContext(requestId, "Retrieved company name successfully", logMap);
+        return companyName;
+    }
 }
