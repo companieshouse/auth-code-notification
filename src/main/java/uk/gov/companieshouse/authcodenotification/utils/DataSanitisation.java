@@ -8,7 +8,7 @@ import static uk.gov.companieshouse.authcodenotification.utils.Constants.TRUNCAT
 @Component
 public class DataSanitisation {
 
-    public String makeStringSafeForLogging(String input) {
+    public String makeStringSafe(String input) {
         String sanitisedInput = Encode.forJava(input);
         if (sanitisedInput.length() > TRUNCATED_DATA_LENGTH) {
             sanitisedInput = sanitisedInput.substring(0, TRUNCATED_DATA_LENGTH);

@@ -49,7 +49,8 @@ class AuthCodeNotificationControllerTest {
 
     @Test
     void testSendEmailReturnsInternalServerErrorWhenServiceCallFails() throws ServiceException {
-        when(dataSanitisation.makeStringSafeForLogging(COMPANY_NUMBER)).thenReturn(COMPANY_NUMBER);
+        when(dataSanitisation.makeStringSafe(COMPANY_NUMBER)).thenReturn(COMPANY_NUMBER);
+        when(dataSanitisation.makeStringSafe(AUTH_CODE)).thenReturn(AUTH_CODE);
         doThrow(new ServiceException("")).when(authCodeNotificationService).sendAuthCodeEmail(REQUEST_ID, AUTH_CODE, COMPANY_NUMBER);
         ResponseEntity<Object> responseEntity = controller.sendEmail(REQUEST_ID, sendEmailRequestDto, COMPANY_NUMBER);
         assertEquals( 500, responseEntity.getStatusCode().value() );
