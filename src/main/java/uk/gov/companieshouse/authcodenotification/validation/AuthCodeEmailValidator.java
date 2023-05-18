@@ -22,18 +22,16 @@ public class AuthCodeEmailValidator {
     }
 
     private void validateCompanyNumber(String companyNumber, Errors errors, String loggingContext) {
-        if (ValidationUtils.isNotBlank(companyNumber, COMPANY_NUMBER_PARAMETER, errors, loggingContext)) {
-            if (ValidationUtils.isSpecficLength(companyNumber, 8, COMPANY_NUMBER_PARAMETER, errors, loggingContext)) {
-                ValidationUtils.isValidCharacters(companyNumber, COMPANY_NUMBER_REGEX, COMPANY_NUMBER_PARAMETER, errors, loggingContext);
-            }
+        if (ValidationUtils.isNotBlank(companyNumber, COMPANY_NUMBER_PARAMETER, errors, loggingContext)
+           && ValidationUtils.isSpecficLength(companyNumber, 8, COMPANY_NUMBER_PARAMETER, errors, loggingContext)) {
+           ValidationUtils.isValidCharacters(companyNumber, COMPANY_NUMBER_REGEX, COMPANY_NUMBER_PARAMETER, errors, loggingContext);
         }
     }
 
     private void validateAuthCode(String authCode, Errors errors, String loggingContext) {
-        if (ValidationUtils.isNotBlank(authCode, AUTH_CODE_FIELD, errors, loggingContext)) {
-            if (ValidationUtils.isSpecficLength(authCode, 6, AUTH_CODE_FIELD, errors, loggingContext)) {
-                ValidationUtils.isValidCharacters(authCode, AUTH_CODE_REGEX, AUTH_CODE_FIELD, errors, loggingContext);
-            }
+        if (ValidationUtils.isNotBlank(authCode, AUTH_CODE_FIELD, errors, loggingContext)
+           && ValidationUtils.isSpecficLength(authCode, 6, AUTH_CODE_FIELD, errors, loggingContext)) {
+           ValidationUtils.isValidCharacters(authCode, AUTH_CODE_REGEX, AUTH_CODE_FIELD, errors, loggingContext);
         }
     }
 }

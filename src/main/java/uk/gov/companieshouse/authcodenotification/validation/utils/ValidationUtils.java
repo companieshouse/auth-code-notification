@@ -13,6 +13,8 @@ public class ValidationUtils {
     public static final String INCORRECT_LENGTH_ERROR_MESSAGE = "%s must be %s characters";
     public static final String INVALID_CHARACTERS_ERROR_MESSAGE = "Invalid characters %s must be in the format %s";
 
+    private ValidationUtils(){}
+
     public static boolean isNotBlank(String toTest, String qualifiedFieldName, Errors errs, String loggingContext) {
         return isNotNull(toTest, qualifiedFieldName, errs, loggingContext)
                 && isNotEmpty(toTest, qualifiedFieldName, errs, loggingContext);

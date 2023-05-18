@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
-public class AuthCodeEmailValidatorTest {
+class AuthCodeEmailValidatorTest {
 
     private static String CONTEXT = "abc";
 
