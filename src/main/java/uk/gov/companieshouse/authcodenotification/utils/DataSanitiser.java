@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import static uk.gov.companieshouse.authcodenotification.utils.Constants.TRUNCATED_DATA_LENGTH;
 
 @Component
-public class DataSanitisation {
+public class DataSanitiser {
 
     public String makeStringSafe(String input) {
         String sanitisedInput = Encode.forJava(input);
