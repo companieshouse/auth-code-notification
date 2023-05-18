@@ -10,9 +10,13 @@ import org.springframework.http.ResponseEntity;
 import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 import uk.gov.companieshouse.authcodenotification.model.SendEmailRequestDto;
 import uk.gov.companieshouse.authcodenotification.service.AuthCodeNotificationService;
-import uk.gov.companieshouse.authcodenotification.utils.DataSanitisation;
+import uk.gov.companieshouse.authcodenotification.utils.DataSanitiser;
+import uk.gov.companieshouse.authcodenotification.validation.AuthCodeEmailValidator;
+import uk.gov.companieshouse.service.rest.err.Errors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
@@ -31,7 +35,10 @@ class AuthCodeNotificationControllerTest {
     private AuthCodeNotificationService authCodeNotificationService;
 
     @Mock
-    private DataSanitisation dataSanitisation;
+    private AuthCodeEmailValidator authCodeEmailValidator;
+
+    @Mock
+    private DataSanitiser dataSanitiser;
 
     private  SendEmailRequestDto sendEmailRequestDto;
 
@@ -39,6 +46,10 @@ class AuthCodeNotificationControllerTest {
     void setup() {
         sendEmailRequestDto = new SendEmailRequestDto();
         sendEmailRequestDto.setAuthCode(AUTH_CODE);
+        when(dataSanitiser.makeStringSafe(COMPANY_NUMBER)).thenReturn(COMPANY_NUMBER);
+        when(dataSanitiser.makeStringSafe(AUTH_CODE)).thenReturn(AUTH_CODE);
+        Errors errors = new Errors();
+        when(authCodeEmailValidator.validate(eq(COMPANY_NUMBER), eq(AUTH_CODE), any(), eq(REQUEST_ID))).thenReturn(errors);
     }
 
     @Test
@@ -49,8 +60,6 @@ class AuthCodeNotificationControllerTest {
 
     @Test
     void testSendEmailReturnsInternalServerErrorWhenServiceCallFails() throws ServiceException {
-        when(dataSanitisation.makeStringSafe(COMPANY_NUMBER)).thenReturn(COMPANY_NUMBER);
-        when(dataSanitisation.makeStringSafe(AUTH_CODE)).thenReturn(AUTH_CODE);
         doThrow(new ServiceException("")).when(authCodeNotificationService).sendAuthCodeEmail(REQUEST_ID, AUTH_CODE, COMPANY_NUMBER);
         ResponseEntity<Object> responseEntity = controller.sendEmail(REQUEST_ID, sendEmailRequestDto, COMPANY_NUMBER);
         assertEquals( 500, responseEntity.getStatusCode().value() );

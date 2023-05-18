@@ -14,7 +14,7 @@ import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 import uk.gov.companieshouse.authcodenotification.service.AuthCodeNotificationService;
 import uk.gov.companieshouse.authcodenotification.utils.ApiLogger;
 import uk.gov.companieshouse.authcodenotification.model.SendEmailRequestDto;
-import uk.gov.companieshouse.authcodenotification.utils.DataSanitisation;
+import uk.gov.companieshouse.authcodenotification.utils.DataSanitiser;
 import uk.gov.companieshouse.authcodenotification.validation.AuthCodeEmailValidator;
 import uk.gov.companieshouse.logging.util.DataMap;
 import uk.gov.companieshouse.service.rest.err.Errors;
@@ -29,17 +29,17 @@ public class AuthCodeNotificationController {
     private static final String VALIDATION_ERRORS_MESSAGE = "Validation errors : %s";
 
     private final AuthCodeNotificationService authCodeNotificationService;
-    private final DataSanitisation dataSanitisation;
 
-    private final AuthCodeEmailValidator authCodeEmailValidator;
+    private AuthCodeEmailValidator authCodeEmailValidator;
+    private final DataSanitiser dataSanitiser;
 
     @Autowired
     public AuthCodeNotificationController(AuthCodeNotificationService authCodeNotificationService,
-                                          DataSanitisation dataSanitisation,
-                                          AuthCodeEmailValidator authCodeEmailValidator) {
+                                          AuthCodeEmailValidator authCodeEmailValidator,
+                                          DataSanitiser dataSanitiser) {
         this.authCodeNotificationService = authCodeNotificationService;
-        this.dataSanitisation = dataSanitisation;
         this.authCodeEmailValidator = authCodeEmailValidator;
+        this.dataSanitiser = dataSanitiser;
     }
 
     @PostMapping("/send-email")
@@ -47,12 +47,13 @@ public class AuthCodeNotificationController {
                                             @RequestBody SendEmailRequestDto sendEmailRequestDto,
                                             @PathVariable String companyNumber) {
 
-        companyNumber = dataSanitisation.makeStringSafe(companyNumber);
+        companyNumber = dataSanitiser.makeStringSafe(companyNumber);
+        var authCode = dataSanitiser.makeStringSafe(sendEmailRequestDto.getAuthCode());
+
         var logDataMap = new DataMap.Builder().companyNumber(companyNumber).build();
         ApiLogger.infoContext(requestId,"Request received for auth code email", logDataMap.getLogMap());
 
-        var authCode = dataSanitisation.makeStringSafe(sendEmailRequestDto.getAuthCode());
-        var validationErrors = authCodeEmailValidator.validate(companyNumber, authCode, new Errors(), requestId);
+        var validationErrors =  authCodeEmailValidator.validate(companyNumber, authCode, new Errors(), requestId);
         if (validationErrors.hasErrors()) {
             ApiLogger.errorContext(requestId, String.format(VALIDATION_ERRORS_MESSAGE,
                     convertErrorsToJsonString(validationErrors)), null, logDataMap.getLogMap());

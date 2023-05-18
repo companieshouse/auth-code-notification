@@ -23,6 +23,8 @@ public class PublicDataRetrievalService {
             throws ServiceException {
         var dataMap = new DataMap.Builder().companyNumber(companyNumber).build();
         try {
+            ApiLogger.infoContext(requestId, "Retrieving company profile data",  dataMap.getLogMap());
+
             var companyProfileApi = apiClientService
                     .getApiClient()
                     .company()
@@ -30,7 +32,7 @@ public class PublicDataRetrievalService {
                     .execute()
                     .getData();
 
-            ApiLogger.infoContext(requestId, "Retrieving company profile data",  dataMap.getLogMap());
+            ApiLogger.infoContext(requestId, "Successfully retrieved company profile data",  dataMap.getLogMap());
 
             return companyProfileApi;
         } catch (URIValidationException | IOException e) {
