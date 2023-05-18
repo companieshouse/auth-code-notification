@@ -23,13 +23,13 @@ import static uk.gov.companieshouse.authcodenotification.utils.Constants.ERIC_RE
 public class AuthCodeNotificationController {
 
     private final AuthCodeNotificationService authCodeNotificationService;
-    private final DataSanitiser dataSanitisation;
+    private final DataSanitiser dataSanitiser;
 
     @Autowired
     public AuthCodeNotificationController(AuthCodeNotificationService authCodeNotificationService,
-                                          DataSanitiser dataSanitisation) {
+                                          DataSanitiser dataSanitiser) {
         this.authCodeNotificationService = authCodeNotificationService;
-        this.dataSanitisation = dataSanitisation;
+        this.dataSanitiser = dataSanitiser;
     }
 
     @PostMapping("/send-email")
@@ -37,12 +37,12 @@ public class AuthCodeNotificationController {
                                             @RequestBody SendEmailRequestDto sendEmailRequestDto,
                                             @PathVariable String companyNumber) {
 
-        companyNumber = dataSanitisation.makeStringSafe(companyNumber);
+        companyNumber = dataSanitiser.makeStringSafe(companyNumber);
         var logDataMap = new DataMap.Builder().companyNumber(companyNumber).build();
         ApiLogger.infoContext(requestId,"Request received for auth code email", logDataMap.getLogMap());
 
         try {
-            var authCode = dataSanitisation.makeStringSafe(sendEmailRequestDto.getAuthCode());
+            var authCode = dataSanitiser.makeStringSafe(sendEmailRequestDto.getAuthCode());
             authCodeNotificationService.sendAuthCodeEmail(requestId, authCode, companyNumber);
         } catch (ServiceException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
