@@ -67,7 +67,7 @@ class AuthCodeEmailValidatorTest {
 
     @Test
     void testErrorsReportedWhenInvalidCompanyNumber() {
-        Errors errors = authCodeEmailValidator.validate("OEE00001", "A1B2C3", new Errors(), CONTEXT);
+        Errors errors = authCodeEmailValidator.validate("OE$00001", "A1B2C3", new Errors(), CONTEXT);
         String validationMessage = String.format(ValidationUtils.INVALID_CHARACTERS_ERROR_MESSAGE, AuthCodeEmailValidator.COMPANY_NUMBER_PARAMETER, AuthCodeEmailValidator.COMPANY_NUMBER_REGEX);
         assertError(AuthCodeEmailValidator.COMPANY_NUMBER_PARAMETER, validationMessage, errors);
     }
