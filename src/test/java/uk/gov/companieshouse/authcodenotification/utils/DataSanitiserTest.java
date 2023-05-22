@@ -2,6 +2,9 @@ package uk.gov.companieshouse.authcodenotification.utils;
 
 import org.apache.commons.lang.StringUtils;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -24,24 +27,13 @@ class DataSanitiserTest {
         assertEquals(expected, sanitisedInput);
     }
 
-    @Test
-    void testSanitiserNullString() {
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = { "", "" } )
+    void testSanitiserBlankString(String input) {
         DataSanitiser dataSanitiser = new DataSanitiser();
-        String sanitisedInput = dataSanitiser.makeStringSafe(null);
-        assertEquals("null", sanitisedInput);
-    }
-
-    @Test
-    void testSanitiserEmptyString() {
-        DataSanitiser dataSanitiser = new DataSanitiser();
-        String sanitisedInput = dataSanitiser.makeStringSafe("");
-        assertEquals("", sanitisedInput);
-    }
-
-    @Test
-    void testSanitiserBlankString() {
-        DataSanitiser dataSanitiser = new DataSanitiser();
-        String sanitisedInput = dataSanitiser.makeStringSafe("  ");
-        assertEquals("  ", sanitisedInput);
+        String sanitisedInput = dataSanitiser.makeStringSafe(input);
+        String expected = (input == null) ? "null" : input;
+        assertEquals(expected, sanitisedInput);
     }
 }
