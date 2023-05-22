@@ -29,7 +29,7 @@ class DataSanitiserTest {
 
     @ParameterizedTest
     @NullSource
-    @ValueSource(strings = { "", "" } )
+    @ValueSource(strings = { "", "  " } )
     void testSanitiserBlankString(String input) {
         DataSanitiser dataSanitiser = new DataSanitiser();
         String sanitisedInput = dataSanitiser.makeStringSafe(input);
