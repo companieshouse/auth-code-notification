@@ -29,7 +29,7 @@ public class ValidationUtils {
         return true;
     }
 
-   private static boolean isNotEmpty(String toTest, String qualifiedFieldName, Errors errs, String loggingContext) {
+    private static boolean isNotEmpty(String toTest, String qualifiedFieldName, Errors errs, String loggingContext) {
         if (toTest.trim().isEmpty()) {
             setErrorMsgToLocation(errs, qualifiedFieldName, String.format(NOT_EMPTY_ERROR_MESSAGE, qualifiedFieldName));
             ApiLogger.infoContext(loggingContext, qualifiedFieldName + " Field is empty");
@@ -38,7 +38,7 @@ public class ValidationUtils {
         return true;
     }
 
-   public static boolean isSpecficLength(String toTest, Integer length, String qualifiedFieldName, Errors errs, String loggingContext) {
+    public static boolean isSpecficLength(String toTest, Integer length, String qualifiedFieldName, Errors errs, String loggingContext) {
         if (toTest.length() != length) {
             setErrorMsgToLocation(errs, qualifiedFieldName,
                     String.format(INCORRECT_LENGTH_ERROR_MESSAGE, qualifiedFieldName, length.toString()));
@@ -46,7 +46,7 @@ public class ValidationUtils {
             return false;
         }
         return true;
-   }
+    }
 
     public static boolean isValidCharacters(String toTest, String regex, String qualifiedFieldName, Errors errs, String loggingContext) {
         var pattern = Pattern.compile(regex);
@@ -62,5 +62,4 @@ public class ValidationUtils {
         final var error = Err.invalidBodyBuilderWithLocation(qualifiedFieldName).withError(msg).build();
         errors.addError(error);
     }
-
 }

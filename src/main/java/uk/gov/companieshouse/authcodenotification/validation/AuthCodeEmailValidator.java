@@ -4,16 +4,16 @@ import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.authcodenotification.validation.utils.ValidationUtils;
 import uk.gov.companieshouse.service.rest.err.Errors;
 
-import static uk.gov.companieshouse.authcodenotification.model.SendEmailRequestDto.AUTH_CODE_FIELD;
-
 @Component
 public class AuthCodeEmailValidator {
 
     public static final String COMPANY_NUMBER_PARAMETER = "company_number";
 
+    public static final String AUTH_CODE_FIELD = "auth_code";
+
     public static final String AUTH_CODE_REGEX = "^[A-Z0-9]{6}$";
 
-    public static final String COMPANY_NUMBER_REGEX = "^[A-Za-z0-9]{8}$";
+    public static final String COMPANY_NUMBER_REGEX = "^[A-Za-z0-9]{2}[0-9]{6}$";
 
     public Errors validate(String companyNumber, String authCode, Errors errors, String loggingContext) {
         validateCompanyNumber(companyNumber, errors, loggingContext);

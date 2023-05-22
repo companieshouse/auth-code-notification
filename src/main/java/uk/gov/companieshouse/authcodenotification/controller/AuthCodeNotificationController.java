@@ -30,7 +30,7 @@ public class AuthCodeNotificationController {
 
     private final AuthCodeNotificationService authCodeNotificationService;
 
-    private AuthCodeEmailValidator authCodeEmailValidator;
+    private final AuthCodeEmailValidator authCodeEmailValidator;
     private final DataSanitiser dataSanitiser;
 
     @Autowired

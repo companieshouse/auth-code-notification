@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class SendEmailRequestDto {
 
-    public static final String AUTH_CODE_FIELD = "auth_code";
-
-    @JsonProperty(AUTH_CODE_FIELD)
+    @JsonProperty("auth_code")
     private String authCode;
 
     public String getAuthCode() {
