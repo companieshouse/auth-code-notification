@@ -27,8 +27,14 @@ class AuthCodeEmailValidatorTest {
     }
 
     @Test
-    void testSuccessfulValidationWhenCompanyNumberStartsWithTwoLetters() {
+    void testSuccessfulValidationWhenCompanyNumberStartsWithTwoUppercaseLetters() {
         Errors errors = authCodeEmailValidator.validate("OE000001", "A1B2C3", new Errors(), CONTEXT);
+        assertFalse(errors.hasErrors());
+    }
+
+    @Test
+    void testSuccessfulValidationWhenCompanyNumberStartsWithTwoLowercaseLetters() {
+        Errors errors = authCodeEmailValidator.validate("oe001100", "A1B2C3", new Errors(), CONTEXT);
         assertFalse(errors.hasErrors());
     }
 
@@ -68,7 +74,7 @@ class AuthCodeEmailValidatorTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "00110011", "ABCDEFGH", "OE$00001", "110000EO", "oe001100" } )
+    @ValueSource(strings = { "00110011", "ABCDEFGH", "OE$00001", "110000EO" } )
     void testErrorsReportedForInvalidNumbers(String companyNumber) {
         Errors errors = authCodeEmailValidator.validate(companyNumber, "A1B2C3", new Errors(), CONTEXT);
         String validationMessage = String.format(ValidationUtils.INVALID_CHARACTERS_ERROR_MESSAGE, AuthCodeEmailValidator.COMPANY_NUMBER_PARAMETER, AuthCodeEmailValidator.COMPANY_NUMBER_REGEX);
