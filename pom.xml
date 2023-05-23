@@ -24,6 +24,7 @@
     <api-sdk-java.version>4.3.22</api-sdk-java.version>
     <private-api-sdk-java.version>2.0.256</private-api-sdk-java.version>
     <encoder.version>1.2.3</encoder.version>
+    <rest-service-common-library-version>0.0.8</rest-service-common-library-version>
   </properties>
   <profiles>
     <profile>
@@ -118,6 +119,11 @@
       <artifactId>mockito-inline</artifactId>
       <version>4.5.1</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>uk.gov.companieshouse</groupId>
+      <artifactId>rest-service-common-library</artifactId>
+      <version>${rest-service-common-library-version}</version>
     </dependency>
   </dependencies>
   <build>

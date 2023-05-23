@@ -25,7 +25,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "pattern": "^[A-Za-z]{2}[0-9]{6}$"
             }
           }
         ],
@@ -64,7 +65,8 @@
         "type": "object",
         "properties": {
           "auth_code": {
-            "type": "string"
+            "type": "string",
+            "pattern": "^[A-Z0-9]{6}$"
           }
         }
       }
