@@ -68,7 +68,7 @@ class AuthCodeEmailValidatorTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "00110011", "ABCDEFGH", "OE$00001", "110000EO" } )
+    @ValueSource(strings = { "00110011", "ABCDEFGH", "OE$00001", "110000EO", "oe001100" } )
     void testErrorsReportedForInvalidNumbers(String companyNumber) {
         Errors errors = authCodeEmailValidator.validate(companyNumber, "A1B2C3", new Errors(), CONTEXT);
         String validationMessage = String.format(ValidationUtils.INVALID_CHARACTERS_ERROR_MESSAGE, AuthCodeEmailValidator.COMPANY_NUMBER_PARAMETER, AuthCodeEmailValidator.COMPANY_NUMBER_REGEX);
