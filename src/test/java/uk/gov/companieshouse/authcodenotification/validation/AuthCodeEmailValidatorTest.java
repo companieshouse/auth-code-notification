@@ -31,12 +31,6 @@ class AuthCodeEmailValidatorTest {
     }
 
     @Test
-    void testSuccessfulValidationWhenCompanyNumberIsAllNumbers() {
-        Errors errors = authCodeEmailValidator.validate("11000001", "A1B2C3", new Errors(), CONTEXT);
-        assertFalse(errors.hasErrors());
-    }
-
-    @Test
     void testErrorsReportedWhenNullCompanyNumber() {
         Errors errors = authCodeEmailValidator.validate(null, "A1B2C3", new Errors(), CONTEXT);
         String validationMessage = String.format(ValidationUtils.NOT_NULL_ERROR_MESSAGE, AuthCodeEmailValidator.COMPANY_NUMBER_PARAMETER);
@@ -68,6 +62,20 @@ class AuthCodeEmailValidatorTest {
     void testErrorsReportedWhenLongCompanyNumber() {
         Errors errors = authCodeEmailValidator.validate("OE0000011", "A1B2C3", new Errors(), CONTEXT);
         String validationMessage = String.format(ValidationUtils.INCORRECT_LENGTH_ERROR_MESSAGE, AuthCodeEmailValidator.COMPANY_NUMBER_PARAMETER, 8);
+        assertError(AuthCodeEmailValidator.COMPANY_NUMBER_PARAMETER, validationMessage, errors);
+    }
+
+    @Test
+    void testErrorsReportedWhenCompanyNumberIsAllNumbers() {
+        Errors errors = authCodeEmailValidator.validate("11000001", "A1B2C3", new Errors(), CONTEXT);
+        String validationMessage = String.format(ValidationUtils.INVALID_CHARACTERS_ERROR_MESSAGE, AuthCodeEmailValidator.COMPANY_NUMBER_PARAMETER, AuthCodeEmailValidator.COMPANY_NUMBER_REGEX);
+        assertError(AuthCodeEmailValidator.COMPANY_NUMBER_PARAMETER, validationMessage, errors);
+    }
+
+    @Test
+    void testErrorsReportedWhenCompanyNumberIsAllLetters() {
+        Errors errors = authCodeEmailValidator.validate("ABCDEFGH", "A1B2C3", new Errors(), CONTEXT);
+        String validationMessage = String.format(ValidationUtils.INVALID_CHARACTERS_ERROR_MESSAGE, AuthCodeEmailValidator.COMPANY_NUMBER_PARAMETER, AuthCodeEmailValidator.COMPANY_NUMBER_REGEX);
         assertError(AuthCodeEmailValidator.COMPANY_NUMBER_PARAMETER, validationMessage, errors);
     }
 

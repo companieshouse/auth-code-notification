@@ -13,7 +13,7 @@ public class AuthCodeEmailValidator {
 
     public static final String AUTH_CODE_REGEX = "^[A-Z0-9]{6}$";
 
-    public static final String COMPANY_NUMBER_REGEX = "^[A-Za-z0-9]{2}[0-9]{6}$";
+    public static final String COMPANY_NUMBER_REGEX = "^[A-Z]{2}[0-9]{6}$";
 
     public Errors validate(String companyNumber, String authCode, Errors errors, String loggingContext) {
         validateCompanyNumber(companyNumber, errors, loggingContext);
