@@ -3,6 +3,8 @@ package uk.gov.companieshouse.authcodenotification.validation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.authcodenotification.model.SendEmailRequestDto;
 import uk.gov.companieshouse.authcodenotification.validation.utils.ValidationUtils;
@@ -65,30 +67,10 @@ class AuthCodeEmailValidatorTest {
         assertError(AuthCodeEmailValidator.COMPANY_NUMBER_PARAMETER, validationMessage, errors);
     }
 
-    @Test
-    void testErrorsReportedWhenCompanyNumberIsAllNumbers() {
-        Errors errors = authCodeEmailValidator.validate("11000001", "A1B2C3", new Errors(), CONTEXT);
-        String validationMessage = String.format(ValidationUtils.INVALID_CHARACTERS_ERROR_MESSAGE, AuthCodeEmailValidator.COMPANY_NUMBER_PARAMETER, AuthCodeEmailValidator.COMPANY_NUMBER_REGEX);
-        assertError(AuthCodeEmailValidator.COMPANY_NUMBER_PARAMETER, validationMessage, errors);
-    }
-
-    @Test
-    void testErrorsReportedWhenCompanyNumberIsAllLetters() {
-        Errors errors = authCodeEmailValidator.validate("ABCDEFGH", "A1B2C3", new Errors(), CONTEXT);
-        String validationMessage = String.format(ValidationUtils.INVALID_CHARACTERS_ERROR_MESSAGE, AuthCodeEmailValidator.COMPANY_NUMBER_PARAMETER, AuthCodeEmailValidator.COMPANY_NUMBER_REGEX);
-        assertError(AuthCodeEmailValidator.COMPANY_NUMBER_PARAMETER, validationMessage, errors);
-    }
-
-    @Test
-    void testErrorsReportedWhenInvalidCharcatersInCompanyNumber() {
-        Errors errors = authCodeEmailValidator.validate("OE$00001", "A1B2C3", new Errors(), CONTEXT);
-        String validationMessage = String.format(ValidationUtils.INVALID_CHARACTERS_ERROR_MESSAGE, AuthCodeEmailValidator.COMPANY_NUMBER_PARAMETER, AuthCodeEmailValidator.COMPANY_NUMBER_REGEX);
-        assertError(AuthCodeEmailValidator.COMPANY_NUMBER_PARAMETER, validationMessage, errors);
-    }
-
-    @Test
-    void testErrorsReportedWhenInvalidLettersInCompanyNumber() {
-        Errors errors = authCodeEmailValidator.validate("110000EO", "A1B2C3", new Errors(), CONTEXT);
+    @ParameterizedTest
+    @ValueSource(strings = { "00110011", "ABCDEFGH", "OE$00001", "110000EO" } )
+    void testErrorsReportedForInvalidNumbers(String companyNumber) {
+        Errors errors = authCodeEmailValidator.validate(companyNumber, "A1B2C3", new Errors(), CONTEXT);
         String validationMessage = String.format(ValidationUtils.INVALID_CHARACTERS_ERROR_MESSAGE, AuthCodeEmailValidator.COMPANY_NUMBER_PARAMETER, AuthCodeEmailValidator.COMPANY_NUMBER_REGEX);
         assertError(AuthCodeEmailValidator.COMPANY_NUMBER_PARAMETER, validationMessage, errors);
     }
