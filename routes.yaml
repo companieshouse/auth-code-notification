@@ -1,5 +1,5 @@
 app_name: auth-code-notification
-group: internal
+group: internalapi
 
 weight: 90
 routes:
