@@ -1,7 +1,7 @@
 app_name: auth-code-notification
-group: api
+group: internal
 
 weight: 90
 routes:
-  1: ^/company/(.*)/auth-code/*
+  1: ^/internal/company/(.*)/auth-code/*
   2: ^/auth-code-notification/healthcheck
