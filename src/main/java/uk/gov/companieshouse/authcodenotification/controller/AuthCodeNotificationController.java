@@ -23,7 +23,7 @@ import uk.gov.companieshouse.service.rest.response.ChResponseBody;
 import static uk.gov.companieshouse.authcodenotification.utils.Constants.ERIC_REQUEST_ID_KEY;
 
 @RestController
-@RequestMapping("/company/{companyNumber}/auth-code")
+@RequestMapping("/internal/company/{companyNumber}/auth-code")
 public class AuthCodeNotificationController {
 
     private static final String VALIDATION_ERRORS_MESSAGE = "Validation errors : %s";
