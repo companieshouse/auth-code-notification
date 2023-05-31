@@ -17,6 +17,9 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class InterceptorConfigTest {
 
+    private static final String ALL_PATHS = "/**";
+    private static final String HEALTH_CHECK_PATH = "/**/healthcheck";
+
     @Mock
     private InterceptorRegistry interceptorRegistry;
 
@@ -45,7 +48,7 @@ class InterceptorConfigTest {
 
         // Internal User authentication interceptor check
         inOrder.verify(interceptorRegistry).addInterceptor(internalUserInterceptor);
-        inOrder.verify(interceptorRegistration).addPathPatterns(InterceptorConfig.ALL_PATHS);
-        inOrder.verify(interceptorRegistration).excludePathPatterns(InterceptorConfig.HEALTH_CHECK_PATH);
+        inOrder.verify(interceptorRegistration).addPathPatterns(ALL_PATHS);
+        inOrder.verify(interceptorRegistration).excludePathPatterns(HEALTH_CHECK_PATH);
     }
 }

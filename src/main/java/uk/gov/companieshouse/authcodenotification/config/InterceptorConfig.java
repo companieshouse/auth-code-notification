@@ -12,8 +12,8 @@ import uk.gov.companieshouse.api.interceptor.InternalUserInterceptor;
 @ComponentScan("uk.gov.companieshouse.api.interceptor")
 public class InterceptorConfig implements WebMvcConfigurer {
 
-    static final String ALL_PATHS = "/**";
-    static final String HEALTH_CHECK_PATH = "/auth-code-notification/healthcheck";
+    private static final String ALL_PATHS = "/**";
+    private static final String HEALTH_CHECK_PATH = "/**/healthcheck";
 
     @Autowired
     private InternalUserInterceptor internalUserInterceptor;
