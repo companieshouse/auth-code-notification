@@ -26,8 +26,8 @@ public class EmailService {
     @Value("${EMAIL_SENDER_APP_ID}")
     private String originatingAppId;
 
-    @Value("${EMAIL_AUTH_CODE_TEMPLATE}")
-    private String authCodeEmailTemplate;
+    @Value("${EMAIL_AUTH_CODE_TEMPLATE_OVERSEAS_ENTITIES}")
+    private String authCodeEmailTemplateOverseasEntities;
 
 
     @Autowired
@@ -47,7 +47,7 @@ public class EmailService {
               authCode, companyName, companyNumber, emailAddress);
 
         var emailContent =
-                constructEmailContent(authCodeEmailTemplate, emailAddress, emailContentData);
+                constructEmailContent(authCodeEmailTemplateOverseasEntities, emailAddress, emailContentData);
 
         var logDataMap = new DataMap.Builder().companyNumber(companyNumber).build();
 
