@@ -16,7 +16,7 @@
     }
   ],
   "paths": {
-    "/company/{company_number}/auth-code/send-email": {
+    "/internal/company/{company_number}/auth-code/send-email": {
       "post": {
         "summary": "Obtain email and send auth code for company specified",
         "parameters": [
