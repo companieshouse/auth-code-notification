@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://api.companieshouse.gov.uk/"
+      "url": "https://internalapi.companieshouse.gov.uk/"
     }
   ],
   "tags": [
