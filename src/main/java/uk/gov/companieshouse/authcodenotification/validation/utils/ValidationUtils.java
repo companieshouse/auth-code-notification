@@ -38,7 +38,7 @@ public class ValidationUtils {
         return true;
     }
 
-    public static boolean isSpecficLength(String toTest, Integer length, String qualifiedFieldName, Errors errs, String loggingContext) {
+    public static boolean isSpecificLength(String toTest, Integer length, String qualifiedFieldName, Errors errs, String loggingContext) {
         if (toTest.length() != length) {
             setErrorMsgToLocation(errs, qualifiedFieldName,
                     String.format(INCORRECT_LENGTH_ERROR_MESSAGE, qualifiedFieldName, length.toString()));
