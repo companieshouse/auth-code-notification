@@ -58,7 +58,7 @@ public class AuthCodeNotificationController {
 
         var logDataMap = new DataMap.Builder().companyNumber(companyNumber).build();
         var logMap = logDataMap.getLogMap();
-        ApiLogger.infoContext(requestId,"Request received for auth code email", logMap);
+        ApiLogger.infoContext(requestId, "Request received for auth code email", logMap);
 
         // validate request data
         var validationErrors =  authCodeEmailValidator.validate(companyNumber, authCode, new Errors(), requestId);
