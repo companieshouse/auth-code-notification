@@ -13,13 +13,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class EncrypterTest {
 
     private static final String PLAIN_TEXT_INPUT = "hello";
-    private static final String ENCRYPT_KEY = "jhtefgOBoV+YIjhgrfEvae9Up476543j";
+    private static final String DUMMY_ENCRYPTION_KEY = "jhtefgOBoV+YIjhgrfEvae9Up476543j";
 
     private final Encrypter encrypter = new Encrypter();
 
     @BeforeEach
     void init() {
-        ReflectionTestUtils.setField(encrypter, "aesKeyString", ENCRYPT_KEY);
+        ReflectionTestUtils.setField(encrypter, "aesKeyString", DUMMY_ENCRYPTION_KEY);
     }
 
     @Test

@@ -70,14 +70,14 @@ public class AuthCodeNotificationController {
         }
 
         // encrypt auth code
-        String authCodeEncrypted;
+        String encryptedAuthCode;
         try {
-            authCodeEncrypted = encrypter.encrypt(authCode);
-            if (StringUtils.isBlank(authCodeEncrypted)) {
+            encryptedAuthCode = encrypter.encrypt(authCode);
+            if (StringUtils.isBlank(encryptedAuthCode)) {
                 ApiLogger.errorContext(requestId, "Encrypted auth code is blank", null, logMap);
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
-            ApiLogger.infoContext(requestId, "Successfully encrypted auth code to: " + authCodeEncrypted , logMap);
+            ApiLogger.infoContext(requestId, "Successfully encrypted auth code to: " + encryptedAuthCode, logMap);
         } catch (Exception e) {
             ApiLogger.errorContext(requestId, "Failed to encrypt auth code", e, logMap);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -85,7 +85,7 @@ public class AuthCodeNotificationController {
 
         // send email
         try {
-            authCodeNotificationService.sendAuthCodeEmail(requestId, authCodeEncrypted, companyNumber);
+            authCodeNotificationService.sendAuthCodeEmail(requestId, encryptedAuthCode, companyNumber);
         } catch (ServiceException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

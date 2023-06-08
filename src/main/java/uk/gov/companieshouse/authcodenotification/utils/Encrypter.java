@@ -26,7 +26,7 @@ public class Encrypter {
     private static final String AES_CBC_PKCS_5_PADDING = "AES/CBC/PKCS5Padding";
     private static final String AES = "AES";
 
-    @Value("${AUTH_CODE_ENCRYPT_KEY}")
+    @Value("${AUTH_CODE_ENCRYPTION_KEY}")
     private String aesKeyString;
 
     public String encrypt(String plainText) throws
@@ -38,7 +38,7 @@ public class Encrypter {
             BadPaddingException,
             IOException {
         byte[] key = aesKeyString.getBytes(StandardCharsets.UTF_8);
-        byte[] plaintextBytes = plainText.getBytes(StandardCharsets.UTF_8);
+        byte[] plainTextBytes = plainText.getBytes(StandardCharsets.UTF_8);
 
         var cipher = Cipher.getInstance(AES_CBC_PKCS_5_PADDING);
 
@@ -47,16 +47,16 @@ public class Encrypter {
         random.nextBytes(initialisationVector);
 
         cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key, AES), new IvParameterSpec(initialisationVector));
-        byte[] encodedBytes = cipher.doFinal(plaintextBytes);
+        byte[] encodedBytes = cipher.doFinal(plainTextBytes);
 
         byte[] encodedSaltedBytes = concatByte(initialisationVector, encodedBytes);
         return Base64.getEncoder().encodeToString(encodedSaltedBytes);
     }
 
-    private byte[] concatByte(byte[] a, byte[] b) throws IOException {
+    private byte[] concatByte(byte[] byteArray1, byte[] byteArray2) throws IOException {
         var outputStream = new ByteArrayOutputStream();
-        outputStream.write(a);
-        outputStream.write(b);
+        outputStream.write(byteArray1);
+        outputStream.write(byteArray2);
         return outputStream.toByteArray();
     }
 }
