@@ -2,6 +2,7 @@ package uk.gov.companieshouse.authcodenotification.service;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 import uk.gov.companieshouse.authcodenotification.utils.ApiLogger;
@@ -14,6 +15,10 @@ import java.util.Map;
 public class AuthCodeNotificationService {
 
     private static final String BLANK_ENCRYPTED_AUTH_CODE_MESSAGE = "Encrypted auth code is blank";
+    public static final String ENCRYPTION_ERROR_MESSAGE = "Error when encrypting text";
+
+    @Value("${AUTH_CODE_ENCRYPTION_KEY}")
+    private String aesKeyString;
 
     private final PrivateDataRetrievalService privateDataRetrievalService;
 
@@ -48,14 +53,19 @@ public class AuthCodeNotificationService {
     }
 
     private String encryptAuthCode(String requestId, String authCode, Map<String, Object> logMap) throws ServiceException {
-        String encryptedAuthCode = encrypter.encrypt(requestId, authCode, logMap);
-        if (StringUtils.isBlank(encryptedAuthCode)) {
-            ApiLogger.errorContext(requestId, BLANK_ENCRYPTED_AUTH_CODE_MESSAGE, null, logMap);
-            throw new ServiceException(BLANK_ENCRYPTED_AUTH_CODE_MESSAGE);
-        }
-        ApiLogger.infoContext(requestId, "Successfully encrypted auth code", logMap);
+        try {
+            String encryptedAuthCode = encrypter.encrypt(authCode, aesKeyString);
+            if (StringUtils.isBlank(encryptedAuthCode)) {
+                ApiLogger.errorContext(requestId, BLANK_ENCRYPTED_AUTH_CODE_MESSAGE, null, logMap);
+                throw new ServiceException(BLANK_ENCRYPTED_AUTH_CODE_MESSAGE);
+            }
+            ApiLogger.infoContext(requestId, "Successfully encrypted auth code", logMap);
 
-        return encryptedAuthCode;
+            return encryptedAuthCode;
+        } catch (Exception e) {
+            ApiLogger.errorContext(requestId, ENCRYPTION_ERROR_MESSAGE, e, logMap);
+            throw new ServiceException(ENCRYPTION_ERROR_MESSAGE, e);
+        }
     }
 
     private String getOverseasEntityEmailAddress(String requestId, String companyNumber, Map<String, Object> logMap) throws ServiceException {
