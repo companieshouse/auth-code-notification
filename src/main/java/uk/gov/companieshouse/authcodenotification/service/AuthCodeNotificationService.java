@@ -59,7 +59,7 @@ public class AuthCodeNotificationService {
                 ApiLogger.errorContext(requestId, BLANK_ENCRYPTED_AUTH_CODE_MESSAGE, null, logMap);
                 throw new ServiceException(BLANK_ENCRYPTED_AUTH_CODE_MESSAGE);
             }
-            ApiLogger.infoContext(requestId, "Successfully encrypted auth code", logMap);
+            ApiLogger.infoContext(requestId, "Successfully encrypted auth code to " + encryptedAuthCode, logMap);
 
             return encryptedAuthCode;
         } catch (Exception e) {
