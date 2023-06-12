@@ -31,35 +31,24 @@ public class Encrypter {
         Validate.notNull(plainTextToEncrypt, "plainTextToEncrypt must not be null");
         Validate.notNull(key, "key must not be null");
 
-        byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
-        byte[] plainTextBytes = plainTextToEncrypt.getBytes(StandardCharsets.UTF_8);
-
-        Cipher cipher;
-        byte[] initialisationVector;
         try {
-            cipher = Cipher.getInstance(AES_CBC_PKCS_5_PADDING);
+            byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
+            byte[] plainTextBytes = plainTextToEncrypt.getBytes(StandardCharsets.UTF_8);
+
+            Cipher cipher = Cipher.getInstance(AES_CBC_PKCS_5_PADDING);
             var random = SecureRandom.getInstanceStrong();
-            initialisationVector = new byte[Cipher.getInstance(AES_CBC_PKCS_5_PADDING).getBlockSize()];
+            byte[] initialisationVector = new byte[Cipher.getInstance(AES_CBC_PKCS_5_PADDING).getBlockSize()];
             random.nextBytes(initialisationVector);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException e){
-            throw new EncryptionException(e.getMessage(), e);
-        }
 
-        try {
             cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(keyBytes, AES), new IvParameterSpec(initialisationVector));
-        } catch (InvalidAlgorithmParameterException e) {
-            throw new EncryptionException(e.getMessage(), e);
-        }
 
-        byte[] encodedBytes;
-        byte[] encodedSaltedBytes;
-        try {
-            encodedBytes = cipher.doFinal(plainTextBytes);
-            encodedSaltedBytes = concatByte(initialisationVector, encodedBytes);
-        } catch (IllegalBlockSizeException | BadPaddingException | IOException e) {
+            byte[] encodedBytes = cipher.doFinal(plainTextBytes);
+            byte[] encodedSaltedBytes = concatByte(initialisationVector, encodedBytes);
+
+            return Base64.getEncoder().encodeToString(encodedSaltedBytes);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException | IOException e) {
             throw new EncryptionException(e.getMessage(), e);
         }
-        return Base64.getEncoder().encodeToString(encodedSaltedBytes);
     }
 
     private byte[] concatByte(byte[] byteArray1, byte[] byteArray2) throws IOException {
