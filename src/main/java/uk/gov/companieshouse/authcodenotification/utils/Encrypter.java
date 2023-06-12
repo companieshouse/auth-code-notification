@@ -36,13 +36,19 @@ public class Encrypter {
             byte[] plainTextBytes = plainTextToEncrypt.getBytes(StandardCharsets.UTF_8);
 
             var cipher = Cipher.getInstance(AES_CBC_PKCS_5_PADDING);
+
+            // AES in CBC mode requires any initialisation vector (IV) which should be random for each encryption.
+            // use a cryptographically strong random generator to generate the data for this IV
             var random = SecureRandom.getInstanceStrong();
             var initialisationVector = new byte[Cipher.getInstance(AES_CBC_PKCS_5_PADDING).getBlockSize()];
             random.nextBytes(initialisationVector);
 
+            // Encrypt the plaintext using the given key and generated initialisation vector
             cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(keyBytes, AES), new IvParameterSpec(initialisationVector));
-
             byte[] encodedBytes = cipher.doFinal(plainTextBytes);
+
+            // As the initialisation vector is needed for decryption, concatenate it to the encrypted auth code. It is not an issue that the
+            // initialisation vector is in plaintext as it is random every time
             byte[] encodedSaltedBytes = concatByte(initialisationVector, encodedBytes);
 
             return Base64.getEncoder().encodeToString(encodedSaltedBytes);
