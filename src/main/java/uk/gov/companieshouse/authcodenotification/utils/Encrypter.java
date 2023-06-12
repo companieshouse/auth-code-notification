@@ -35,9 +35,9 @@ public class Encrypter {
             byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
             byte[] plainTextBytes = plainTextToEncrypt.getBytes(StandardCharsets.UTF_8);
 
-            Cipher cipher = Cipher.getInstance(AES_CBC_PKCS_5_PADDING);
+            var cipher = Cipher.getInstance(AES_CBC_PKCS_5_PADDING);
             var random = SecureRandom.getInstanceStrong();
-            byte[] initialisationVector = new byte[Cipher.getInstance(AES_CBC_PKCS_5_PADDING).getBlockSize()];
+            var initialisationVector = new byte[Cipher.getInstance(AES_CBC_PKCS_5_PADDING).getBlockSize()];
             random.nextBytes(initialisationVector);
 
             cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(keyBytes, AES), new IvParameterSpec(initialisationVector));
