@@ -45,13 +45,13 @@ public class Encrypter {
 
             // Encrypt the plaintext using the given key and generated initialisation vector
             cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(keyBytes, AES), new IvParameterSpec(initialisationVector));
-            byte[] encodedBytes = cipher.doFinal(plainTextBytes);
+            byte[] cipherText = cipher.doFinal(plainTextBytes);
 
             // As the initialisation vector is needed for decryption, concatenate it to the encrypted auth code. It is not an issue that the
             // initialisation vector is in plaintext as it is random every time
-            byte[] encodedSaltedBytes = concatByte(initialisationVector, encodedBytes);
+            byte[] iVAndCipherText = concatByte(initialisationVector, cipherText);
 
-            return Base64.getEncoder().encodeToString(encodedSaltedBytes);
+            return Base64.getEncoder().encodeToString(iVAndCipherText);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException | IOException e) {
             throw new EncryptionException(e.getMessage(), e);
         }
