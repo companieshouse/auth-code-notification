@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.update.OverseasEntityDataApi;
 import uk.gov.companieshouse.authcodenotification.client.ApiClientService;
+import uk.gov.companieshouse.authcodenotification.exception.EntityNotFoundException;
 import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 import uk.gov.companieshouse.authcodenotification.utils.ApiLogger;
 import uk.gov.companieshouse.logging.util.DataMap;
@@ -20,7 +21,7 @@ public class PrivateDataRetrievalService {
     private ApiClientService apiClientService;
 
     public OverseasEntityDataApi getOverseasEntityData(String requestId, String companyNumber)
-            throws ServiceException {
+            throws EntityNotFoundException {
         var logDataMap = new DataMap.Builder().companyNumber(companyNumber).build();
         try {
             ApiLogger.infoContext(requestId, "Retrieving overseas entity data from database",  logDataMap.getLogMap());
@@ -37,7 +38,7 @@ public class PrivateDataRetrievalService {
         } catch (URIValidationException | IOException e) {
             var message = "Error retrieving overseas entity data from database";
             ApiLogger.errorContext(requestId, message, e, logDataMap.getLogMap());
-            throw new ServiceException(e.getMessage(), e);
+            throw new EntityNotFoundException(e.getMessage(), e);
         }
     }
 }

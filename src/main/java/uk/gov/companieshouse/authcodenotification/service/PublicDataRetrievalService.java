@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.authcodenotification.client.ApiClientService;
+import uk.gov.companieshouse.authcodenotification.exception.EntityNotFoundException;
 import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 import uk.gov.companieshouse.authcodenotification.utils.ApiLogger;
 import uk.gov.companieshouse.logging.util.DataMap;
@@ -20,7 +21,7 @@ public class PublicDataRetrievalService {
     private ApiClientService apiClientService;
 
     public CompanyProfileApi getCompanyProfile(String requestId, String companyNumber)
-            throws ServiceException {
+            throws EntityNotFoundException {
         var dataMap = new DataMap.Builder().companyNumber(companyNumber).build();
         try {
             ApiLogger.infoContext(requestId, "Retrieving company profile data",  dataMap.getLogMap());
@@ -38,7 +39,7 @@ public class PublicDataRetrievalService {
         } catch (URIValidationException | IOException e) {
             var message = "Error retrieving company profile data";
             ApiLogger.errorContext(requestId, message, e, dataMap.getLogMap());
-            throw new ServiceException(e.getMessage(), e);
+            throw new EntityNotFoundException(e.getMessage(), e);
         }
     }
 }

@@ -15,7 +15,7 @@ import uk.gov.companieshouse.api.handler.update.request.PrivateOverseasEntityDat
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.update.OverseasEntityDataApi;
 import uk.gov.companieshouse.authcodenotification.client.ApiClientService;
-import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
+import uk.gov.companieshouse.authcodenotification.exception.EntityNotFoundException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -63,7 +63,7 @@ class PrivateDataRetrievalServiceTest {
     }
 
     @Test
-    void testGetOverseasEntityDataWhenSuccessful() throws ApiErrorResponseException, URIValidationException, ServiceException {
+    void testGetOverseasEntityDataWhenSuccessful() throws ApiErrorResponseException, URIValidationException, EntityNotFoundException {
         OverseasEntityDataApi overseasEntityDataApi = new OverseasEntityDataApi();
         when(privateOverseasEntityDataGet.execute()).thenReturn(overseasEntityDataApiResponse);
         when(overseasEntityDataApiResponse.getData()).thenReturn(overseasEntityDataApi);
@@ -77,13 +77,13 @@ class PrivateDataRetrievalServiceTest {
     @Test
     void testGetOverseasEntityDataWhenURIValidationExceptionExceptionIsThrown() throws ApiErrorResponseException, URIValidationException {
         when(privateOverseasEntityDataGet.execute()).thenThrow(new URIValidationException(""));
-        assertThrows(ServiceException.class, () -> privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER));
+        assertThrows(EntityNotFoundException.class, () -> privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER));
     }
 
     @Test
     void testGetOverseasEntityDataWhenApiErrorResponseExceptionIsThrown() throws ApiErrorResponseException, URIValidationException {
         when(privateOverseasEntityDataGet.execute()).thenThrow(new ApiErrorResponseException(builder));
-        assertThrows(ServiceException.class, () -> privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER));
+        assertThrows(EntityNotFoundException.class, () -> privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER));
     }
 
 }
