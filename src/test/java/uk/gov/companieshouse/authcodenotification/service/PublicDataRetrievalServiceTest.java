@@ -15,7 +15,7 @@ import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.authcodenotification.client.ApiClientService;
-import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
+import uk.gov.companieshouse.authcodenotification.exception.EntityNotFoundException;
 
 import java.io.IOException;
 
@@ -64,7 +64,7 @@ class PublicDataRetrievalServiceTest {
     }
 
     @Test
-    void testGetCompanyProfileDataWhenSuccessful() throws IOException, URIValidationException, ServiceException {
+    void testGetCompanyProfileDataWhenSuccessful() throws IOException, URIValidationException, EntityNotFoundException {
         CompanyProfileApi companyProfileApi = new CompanyProfileApi();
         when(companyGet.execute()).thenReturn(companyProfileApiResponse);
         when(companyProfileApiResponse.getData()).thenReturn(companyProfileApi);
@@ -78,13 +78,13 @@ class PublicDataRetrievalServiceTest {
     @Test
     void testGetCompanyProfileDataWhenURIValidationExceptionExceptionIsThrown() throws IOException, URIValidationException {
         when(companyGet.execute()).thenThrow(new ApiErrorResponseException(builder));
-        assertThrows(ServiceException.class, () -> publicDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER));
+        assertThrows(EntityNotFoundException.class, () -> publicDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER));
     }
 
     @Test
     void testGetCompanyProfileDataWhenApiErrorResponseExceptionIsThrown() throws IOException, URIValidationException {
         when(companyGet.execute()).thenThrow(new ApiErrorResponseException(builder));
-        assertThrows(ServiceException.class, () -> publicDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER));
+        assertThrows(EntityNotFoundException.class, () -> publicDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER));
     }
 
 }
