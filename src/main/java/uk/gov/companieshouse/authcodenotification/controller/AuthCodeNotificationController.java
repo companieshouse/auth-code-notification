@@ -33,6 +33,7 @@ public class AuthCodeNotificationController {
     private final AuthCodeEmailValidator authCodeEmailValidator;
     private final DataSanitiser dataSanitiser;
 
+
     @Autowired
     public AuthCodeNotificationController(AuthCodeNotificationService authCodeNotificationService,
                                           AuthCodeEmailValidator authCodeEmailValidator,
@@ -51,16 +52,19 @@ public class AuthCodeNotificationController {
         var authCode = dataSanitiser.makeStringSafe(sendEmailRequestDto.getAuthCode());
 
         var logDataMap = new DataMap.Builder().companyNumber(companyNumber).build();
-        ApiLogger.infoContext(requestId,"Request received for auth code email", logDataMap.getLogMap());
+        var logMap = logDataMap.getLogMap();
+        ApiLogger.infoContext(requestId, "Request received for auth code email", logMap);
 
+        // validate request data
         var validationErrors =  authCodeEmailValidator.validate(companyNumber, authCode, new Errors(), requestId);
         if (validationErrors.hasErrors()) {
             ApiLogger.errorContext(requestId, String.format(VALIDATION_ERRORS_MESSAGE,
-                    convertErrorsToJsonString(validationErrors)), null, logDataMap.getLogMap());
+                    convertErrorsToJsonString(validationErrors)), null, logMap);
             var responseBody = ChResponseBody.createErrorsBody(validationErrors);
             return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
         }
 
+        // send email
         try {
             authCodeNotificationService.sendAuthCodeEmail(requestId, authCode, companyNumber);
         } catch (ServiceException e) {

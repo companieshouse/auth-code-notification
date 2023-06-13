@@ -16,6 +16,8 @@ import uk.gov.companieshouse.service.rest.err.Err;
 import uk.gov.companieshouse.service.rest.err.Errors;
 import uk.gov.companieshouse.service.rest.response.ChResponseBody;
 
+import java.util.Objects;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -79,7 +81,7 @@ class AuthCodeNotificationControllerTest {
         when(authCodeEmailValidator.validate(eq(COMPANY_NUMBER), eq(AUTH_CODE), any(), eq(REQUEST_ID))).thenReturn(errors);
         ResponseEntity<Object> responseEntity = controller.sendEmail(REQUEST_ID, sendEmailRequestDto, COMPANY_NUMBER);
         assertEquals( 400, responseEntity.getStatusCode().value() );
-        assertTrue( ((ChResponseBody)responseEntity.getBody()).isErrorBody() );
-        assertEquals( errors, ((ChResponseBody)responseEntity.getBody()).getErrorBody() );
+        assertTrue( ((ChResponseBody<?>) Objects.requireNonNull(responseEntity.getBody())).isErrorBody() );
+        assertEquals( errors, ((ChResponseBody<?>)responseEntity.getBody()).getErrorBody() );
     }
 }
