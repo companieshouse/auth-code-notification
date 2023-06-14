@@ -1,6 +1,6 @@
 package uk.gov.companieshouse.authcodenotification.service;
 
-import com.google.api.client.http.HttpResponseException;
+import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
@@ -10,7 +10,6 @@ import uk.gov.companieshouse.authcodenotification.exception.EntityNotFoundExcept
 import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 import uk.gov.companieshouse.authcodenotification.utils.ApiLogger;
 import uk.gov.companieshouse.logging.util.DataMap;
-import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 
 @Service
 public class PrivateDataRetrievalService {

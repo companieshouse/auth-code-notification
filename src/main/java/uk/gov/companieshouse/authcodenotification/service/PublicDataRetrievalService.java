@@ -11,8 +11,6 @@ import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 import uk.gov.companieshouse.authcodenotification.utils.ApiLogger;
 import uk.gov.companieshouse.logging.util.DataMap;
 
-import java.io.IOException;
-
 @Service
 public class PublicDataRetrievalService {
 
