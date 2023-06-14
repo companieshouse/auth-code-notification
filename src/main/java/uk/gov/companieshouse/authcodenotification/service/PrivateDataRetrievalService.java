@@ -11,6 +11,8 @@ import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 import uk.gov.companieshouse.authcodenotification.utils.ApiLogger;
 import uk.gov.companieshouse.logging.util.DataMap;
 
+import java.util.Map;
+
 @Service
 public class PrivateDataRetrievalService {
 
@@ -34,16 +36,21 @@ public class PrivateDataRetrievalService {
 
             ApiLogger.infoContext(requestId, "Successfully retrieved overseas entity data from database", logDataMap.getLogMap());
             return overseasEntityDataApi;
-        } catch (URIValidationException | ApiErrorResponseException e) {
-            if (e instanceof ApiErrorResponseException && ((ApiErrorResponseException)e).getStatusCode() == 404) {
-                var message = "Http exception status: " + ((ApiErrorResponseException)e).getStatusCode();
+        } catch (ApiErrorResponseException e) {
+            if (e.getStatusCode() == 404) {
+                var message = "Http exception status: " + e.getStatusCode();
                 ApiLogger.errorContext(requestId, message, e, logDataMap.getLogMap());
                 throw new EntityNotFoundException(e.getMessage(), e);
             } else {
-                var message = "Error retrieving overseas entity data from database";
-                ApiLogger.errorContext(requestId, message, e, logDataMap.getLogMap());
-                throw new ServiceException(e.getMessage(), e);
+                throw buildServiceException(requestId, e, logDataMap.getLogMap());
             }
+        } catch (URIValidationException e) {
+            throw buildServiceException(requestId, e, logDataMap.getLogMap());
         }
+    }
+
+    private ServiceException buildServiceException(String requestId, Exception e, Map<String, Object> logMap) {
+        ApiLogger.errorContext(requestId, "Error retrieving overseas entity data from database", e, logMap);
+        return new ServiceException(e.getMessage(), e);
     }
 }

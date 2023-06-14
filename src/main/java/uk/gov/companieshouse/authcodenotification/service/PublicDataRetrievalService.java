@@ -11,6 +11,8 @@ import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 import uk.gov.companieshouse.authcodenotification.utils.ApiLogger;
 import uk.gov.companieshouse.logging.util.DataMap;
 
+import java.util.Map;
+
 @Service
 public class PublicDataRetrievalService {
 
@@ -35,16 +37,21 @@ public class PublicDataRetrievalService {
             ApiLogger.infoContext(requestId, "Successfully retrieved company profile data",  dataMap.getLogMap());
 
             return companyProfileApi;
-        } catch (URIValidationException | ApiErrorResponseException e) {
-            if (e instanceof ApiErrorResponseException && ((ApiErrorResponseException)e).getStatusCode() == 404) {
-                var message = "Http exception status: " + ((ApiErrorResponseException)e).getStatusCode();
+        } catch (ApiErrorResponseException e) {
+            if (e.getStatusCode() == 404) {
+                var message = "Http exception status: " + e.getStatusCode();
                 ApiLogger.errorContext(requestId, message, e, dataMap.getLogMap());
                 throw new EntityNotFoundException(e.getMessage(), e);
             } else {
-                var message = "Error retrieving company profile data";
-                ApiLogger.errorContext(requestId, message, e, dataMap.getLogMap());
-                throw new ServiceException(e.getMessage(), e);
+                throw buildServiceException(requestId, e, dataMap.getLogMap());
             }
+        } catch (URIValidationException e) {
+            throw buildServiceException(requestId, e, dataMap.getLogMap());
         }
+    }
+
+    private ServiceException buildServiceException(String requestId, Exception e, Map<String, Object> logMap) {
+        ApiLogger.errorContext(requestId, "Error retrieving company profile data", e, logMap);
+        return new ServiceException(e.getMessage(), e);
     }
 }
