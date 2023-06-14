@@ -37,18 +37,16 @@ public class PublicDataRetrievalService {
             ApiLogger.infoContext(requestId, "Successfully retrieved company profile data",  dataMap.getLogMap());
 
             return companyProfileApi;
-        } catch (HttpResponseException httpe) {
-            var message = "Http exception status: " + httpe.getStatusCode();
-            ApiLogger.errorContext(requestId, message, httpe, dataMap.getLogMap());
-            if (httpe.getStatusCode() == 404) {
-                throw new EntityNotFoundException(httpe.getMessage(), httpe);
-            } else {
-                throw new ServiceException(httpe.getMessage(), httpe);
-            }
         } catch (URIValidationException | IOException e) {
-            var message = "Error retrieving company profile data";
-            ApiLogger.errorContext(requestId, message, e, dataMap.getLogMap());
-            throw new ServiceException(e.getMessage(), e);
+            if (e instanceof HttpResponseException && ((HttpResponseException)e).getStatusCode() == 404) {
+                var message = "Http exception status: " + ((HttpResponseException)e).getStatusCode();
+                ApiLogger.errorContext(requestId, message, e, dataMap.getLogMap());
+                throw new EntityNotFoundException(e.getMessage(), e);
+            } else {
+                var message = "Error retrieving company profile data";
+                ApiLogger.errorContext(requestId, message, e, dataMap.getLogMap());
+                throw new ServiceException(e.getMessage(), e);
+            }
         }
     }
 }
