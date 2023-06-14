@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.authcodenotification.service;
 
+import com.google.api.client.http.HttpResponseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
@@ -21,7 +22,7 @@ public class PublicDataRetrievalService {
     private ApiClientService apiClientService;
 
     public CompanyProfileApi getCompanyProfile(String requestId, String companyNumber)
-            throws EntityNotFoundException {
+            throws ServiceException {
         var dataMap = new DataMap.Builder().companyNumber(companyNumber).build();
         try {
             ApiLogger.infoContext(requestId, "Retrieving company profile data",  dataMap.getLogMap());
@@ -36,10 +37,18 @@ public class PublicDataRetrievalService {
             ApiLogger.infoContext(requestId, "Successfully retrieved company profile data",  dataMap.getLogMap());
 
             return companyProfileApi;
+        } catch (HttpResponseException httpe) {
+            var message = "Http exception status: " + httpe.getStatusCode();
+            ApiLogger.errorContext(requestId, message, httpe, dataMap.getLogMap());
+            if (httpe.getStatusCode() == 404) {
+                throw new EntityNotFoundException(httpe.getMessage(), httpe);
+            } else {
+                throw new ServiceException(httpe.getMessage(), httpe);
+            }
         } catch (URIValidationException | IOException e) {
             var message = "Error retrieving company profile data";
             ApiLogger.errorContext(requestId, message, e, dataMap.getLogMap());
-            throw new EntityNotFoundException(e.getMessage(), e);
+            throw new ServiceException(e.getMessage(), e);
         }
     }
 }

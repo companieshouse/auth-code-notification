@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.authcodenotification.service;
 
+import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpResponseException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,9 @@ import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.update.OverseasEntityDataApi;
 import uk.gov.companieshouse.authcodenotification.client.ApiClientService;
 import uk.gov.companieshouse.authcodenotification.exception.EntityNotFoundException;
+import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
+
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -63,7 +67,7 @@ class PrivateDataRetrievalServiceTest {
     }
 
     @Test
-    void testGetOverseasEntityDataWhenSuccessful() throws ApiErrorResponseException, URIValidationException, EntityNotFoundException {
+    void testGetOverseasEntityDataWhenSuccessful() throws ApiErrorResponseException, URIValidationException, ServiceException {
         OverseasEntityDataApi overseasEntityDataApi = new OverseasEntityDataApi();
         when(privateOverseasEntityDataGet.execute()).thenReturn(overseasEntityDataApiResponse);
         when(overseasEntityDataApiResponse.getData()).thenReturn(overseasEntityDataApi);
@@ -77,13 +81,27 @@ class PrivateDataRetrievalServiceTest {
     @Test
     void testGetOverseasEntityDataWhenURIValidationExceptionExceptionIsThrown() throws ApiErrorResponseException, URIValidationException {
         when(privateOverseasEntityDataGet.execute()).thenThrow(new URIValidationException(""));
-        assertThrows(EntityNotFoundException.class, () -> privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER));
+        assertThrows(ServiceException.class, () -> privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER));
     }
 
     @Test
     void testGetOverseasEntityDataWhenApiErrorResponseExceptionIsThrown() throws ApiErrorResponseException, URIValidationException {
         when(privateOverseasEntityDataGet.execute()).thenThrow(new ApiErrorResponseException(builder));
+        assertThrows(ServiceException.class, () -> privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER));
+    }
+
+    @Test
+    void testGetCompanyProfileDataWhenHttpResponseExceptionWithNotFoundStatusIsThrown() throws IOException, URIValidationException {
+        HttpResponseException.Builder responseBuilder = new HttpResponseException.Builder(404, "", new HttpHeaders());
+        when(privateOverseasEntityDataGet.execute()).thenThrow(new ApiErrorResponseException(responseBuilder));
         assertThrows(EntityNotFoundException.class, () -> privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER));
+    }
+
+    @Test
+    void testGetCompanyProfileDataWhenHttpResponseExceptionWithoutNotFoundStatusIsThrown() throws IOException, URIValidationException {
+        HttpResponseException.Builder responseBuilder = new HttpResponseException.Builder(503, "", new HttpHeaders());
+        when(privateOverseasEntityDataGet.execute()).thenThrow(new ApiErrorResponseException(responseBuilder));
+        assertThrows(ServiceException.class, () -> privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER));
     }
 
 }

@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.authcodenotification.service;
 
+import com.google.api.client.http.HttpResponseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
@@ -21,10 +22,10 @@ public class PrivateDataRetrievalService {
     private ApiClientService apiClientService;
 
     public OverseasEntityDataApi getOverseasEntityData(String requestId, String companyNumber)
-            throws EntityNotFoundException {
+            throws ServiceException {
         var logDataMap = new DataMap.Builder().companyNumber(companyNumber).build();
         try {
-            ApiLogger.infoContext(requestId, "Retrieving overseas entity data from database",  logDataMap.getLogMap());
+            ApiLogger.infoContext(requestId, "Retrieving overseas entity data from database", logDataMap.getLogMap());
 
             var overseasEntityDataApi = apiClientService
                     .getInternalApiClient()
@@ -33,12 +34,20 @@ public class PrivateDataRetrievalService {
                     .execute()
                     .getData();
 
-            ApiLogger.infoContext(requestId, "Successfully retrieved overseas entity data from database",  logDataMap.getLogMap());
+            ApiLogger.infoContext(requestId, "Successfully retrieved overseas entity data from database", logDataMap.getLogMap());
             return overseasEntityDataApi;
+        } catch (HttpResponseException httpe) {
+            var message = "Http exception status: " + httpe.getStatusCode();
+            ApiLogger.errorContext(requestId, message, httpe, logDataMap.getLogMap());
+            if (httpe.getStatusCode() == 404) {
+                throw new EntityNotFoundException(httpe.getMessage(), httpe);
+            } else {
+                throw new ServiceException(httpe.getMessage(), httpe);
+            }
         } catch (URIValidationException | IOException e) {
             var message = "Error retrieving overseas entity data from database";
             ApiLogger.errorContext(requestId, message, e, logDataMap.getLogMap());
-            throw new EntityNotFoundException(e.getMessage(), e);
+            throw new ServiceException(e.getMessage(), e);
         }
     }
 }

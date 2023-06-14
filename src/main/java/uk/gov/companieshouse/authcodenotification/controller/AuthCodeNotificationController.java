@@ -65,8 +65,10 @@ public class AuthCodeNotificationController {
         try {
             authCodeNotificationService.sendAuthCodeEmail(requestId, authCode, companyNumber);
         } catch (EntityNotFoundException nfe) {
+            ApiLogger.errorContext(requestId, nfe.getMessage(), null, logDataMap.getLogMap());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (ServiceException e) {
+            ApiLogger.errorContext(requestId, e.getMessage(), null, logDataMap.getLogMap());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(HttpStatus.OK);
