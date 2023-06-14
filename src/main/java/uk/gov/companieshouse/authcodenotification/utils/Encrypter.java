@@ -39,7 +39,7 @@ public class Encrypter {
 
             // AES in CBC mode requires any initialisation vector (IV) which should be random for each encryption.
             // use a cryptographically strong random generator to generate the data for this IV
-            var random = SecureRandom.getInstanceStrong();
+            var random = new SecureRandom();
             var initialisationVector = new byte[Cipher.getInstance(AES_CBC_PKCS_5_PADDING).getBlockSize()];
             random.nextBytes(initialisationVector);
 
