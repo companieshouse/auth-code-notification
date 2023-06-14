@@ -1,6 +1,6 @@
 package uk.gov.companieshouse.authcodenotification.service;
 
-import com.google.api.client.http.HttpResponseException;
+import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
@@ -37,9 +37,9 @@ public class PublicDataRetrievalService {
             ApiLogger.infoContext(requestId, "Successfully retrieved company profile data",  dataMap.getLogMap());
 
             return companyProfileApi;
-        } catch (URIValidationException | IOException e) {
-            if (e instanceof HttpResponseException && ((HttpResponseException)e).getStatusCode() == 404) {
-                var message = "Http exception status: " + ((HttpResponseException)e).getStatusCode();
+        } catch (URIValidationException | ApiErrorResponseException e) {
+            if (e instanceof ApiErrorResponseException && ((ApiErrorResponseException)e).getStatusCode() == 404) {
+                var message = "Http exception status: " + ((ApiErrorResponseException)e).getStatusCode();
                 ApiLogger.errorContext(requestId, message, e, dataMap.getLogMap());
                 throw new EntityNotFoundException(e.getMessage(), e);
             } else {

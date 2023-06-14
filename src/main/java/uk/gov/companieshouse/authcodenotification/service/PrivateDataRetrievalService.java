@@ -10,8 +10,7 @@ import uk.gov.companieshouse.authcodenotification.exception.EntityNotFoundExcept
 import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 import uk.gov.companieshouse.authcodenotification.utils.ApiLogger;
 import uk.gov.companieshouse.logging.util.DataMap;
-
-import java.io.IOException;
+import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 
 @Service
 public class PrivateDataRetrievalService {
@@ -36,9 +35,9 @@ public class PrivateDataRetrievalService {
 
             ApiLogger.infoContext(requestId, "Successfully retrieved overseas entity data from database", logDataMap.getLogMap());
             return overseasEntityDataApi;
-        } catch (URIValidationException | IOException e) {
-            if (e instanceof HttpResponseException && ((HttpResponseException)e).getStatusCode() == 404) {
-                var message = "Http exception status: " + ((HttpResponseException)e).getStatusCode();
+        } catch (URIValidationException | ApiErrorResponseException e) {
+            if (e instanceof ApiErrorResponseException && ((ApiErrorResponseException)e).getStatusCode() == 404) {
+                var message = "Http exception status: " + ((ApiErrorResponseException)e).getStatusCode();
                 ApiLogger.errorContext(requestId, message, e, logDataMap.getLogMap());
                 throw new EntityNotFoundException(e.getMessage(), e);
             } else {
