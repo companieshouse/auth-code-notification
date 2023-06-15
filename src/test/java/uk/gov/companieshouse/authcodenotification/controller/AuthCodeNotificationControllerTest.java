@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
+import uk.gov.companieshouse.authcodenotification.exception.EntityNotFoundException;
 import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 import uk.gov.companieshouse.authcodenotification.model.SendEmailRequestDto;
 import uk.gov.companieshouse.authcodenotification.service.AuthCodeNotificationService;
@@ -60,6 +61,15 @@ class AuthCodeNotificationControllerTest {
         when(authCodeEmailValidator.validate(eq(COMPANY_NUMBER), eq(AUTH_CODE), any(), eq(REQUEST_ID))).thenReturn(errors);
         ResponseEntity<Object> responseEntity = controller.sendEmail(REQUEST_ID, sendEmailRequestDto, COMPANY_NUMBER);
         assertEquals( 200, responseEntity.getStatusCode().value() );
+    }
+
+    @Test
+    void testSendEmailReturnsNotFoundErrorWhenEntityNotFoundIsThrown() throws ServiceException {
+        Errors errors = new Errors();
+        when(authCodeEmailValidator.validate(eq(COMPANY_NUMBER), eq(AUTH_CODE), any(), eq(REQUEST_ID))).thenReturn(errors);
+        doThrow(new EntityNotFoundException("")).when(authCodeNotificationService).sendAuthCodeEmail(REQUEST_ID, AUTH_CODE, COMPANY_NUMBER);
+        ResponseEntity<Object> responseEntity = controller.sendEmail(REQUEST_ID, sendEmailRequestDto, COMPANY_NUMBER);
+        assertEquals( 404, responseEntity.getStatusCode().value() );
     }
 
     @Test

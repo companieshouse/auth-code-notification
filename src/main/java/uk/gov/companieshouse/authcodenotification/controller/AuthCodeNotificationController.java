@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.companieshouse.authcodenotification.exception.EntityNotFoundException;
 import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 import uk.gov.companieshouse.authcodenotification.service.AuthCodeNotificationService;
 import uk.gov.companieshouse.authcodenotification.utils.ApiLogger;
@@ -67,7 +68,11 @@ public class AuthCodeNotificationController {
         // send email
         try {
             authCodeNotificationService.sendAuthCodeEmail(requestId, authCode, companyNumber);
+        } catch (EntityNotFoundException nfe) {
+            ApiLogger.infoContext(requestId, nfe.getMessage(), logDataMap.getLogMap());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (ServiceException e) {
+            ApiLogger.errorContext(requestId, e.getMessage(), e, logDataMap.getLogMap());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(HttpStatus.OK);

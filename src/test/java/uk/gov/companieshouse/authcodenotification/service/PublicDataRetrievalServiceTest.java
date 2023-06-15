@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.authcodenotification.service;
 
+import com.google.api.client.http.HttpHeaders;
+import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +17,7 @@ import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.authcodenotification.client.ApiClientService;
+import uk.gov.companieshouse.authcodenotification.exception.EntityNotFoundException;
 import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 
 import java.io.IOException;
@@ -77,7 +80,7 @@ class PublicDataRetrievalServiceTest {
 
     @Test
     void testGetCompanyProfileDataWhenURIValidationExceptionExceptionIsThrown() throws IOException, URIValidationException {
-        when(companyGet.execute()).thenThrow(new ApiErrorResponseException(builder));
+        when(companyGet.execute()).thenThrow(new URIValidationException(""));
         assertThrows(ServiceException.class, () -> publicDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER));
     }
 
@@ -86,5 +89,20 @@ class PublicDataRetrievalServiceTest {
         when(companyGet.execute()).thenThrow(new ApiErrorResponseException(builder));
         assertThrows(ServiceException.class, () -> publicDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER));
     }
+
+    @Test
+    void testGetCompanyProfileDataWhenHttpResponseExceptionWithNotFoundStatusIsThrown() throws IOException, URIValidationException {
+        HttpResponseException.Builder responseBuilder = new HttpResponseException.Builder(404, "", new HttpHeaders());
+        when(companyGet.execute()).thenThrow(new ApiErrorResponseException(responseBuilder));
+        assertThrows(EntityNotFoundException.class, () -> publicDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER));
+    }
+
+    @Test
+    void testGetCompanyProfileDataWhenHttpResponseExceptionWithoutNotFoundStatusIsThrown() throws IOException, URIValidationException {
+        HttpResponseException.Builder responseBuilder = new HttpResponseException.Builder(503, "", new HttpHeaders());
+        when(companyGet.execute()).thenThrow(new ApiErrorResponseException(responseBuilder));
+        assertThrows(ServiceException.class, () -> publicDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER));
+    }
+
 
 }
