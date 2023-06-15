@@ -38,7 +38,7 @@ public class PrivateDataRetrievalService {
             return overseasEntityDataApi;
         } catch (ApiErrorResponseException e) {
             if (e.getStatusCode() == 404) {
-                var message = "Http exception status: " + e.getStatusCode();
+                var message = "HTTP exception status: " + e.getStatusCode();
                 ApiLogger.errorContext(requestId, message, e, logDataMap.getLogMap());
                 throw new EntityNotFoundException(e.getMessage(), e);
             } else {
