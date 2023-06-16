@@ -21,7 +21,7 @@ public class PrivateDataRetrievalService {
     @Autowired
     private ApiClientService apiClientService;
 
-    public RegisteredEmailAddressJson getOverseasEntityData(String requestId, String companyNumber)
+    public RegisteredEmailAddressJson getRegisteredEmailAddressData(String requestId, String companyNumber)
             throws ServiceException {
         var logDataMap = new DataMap.Builder().companyNumber(companyNumber).build();
         try {

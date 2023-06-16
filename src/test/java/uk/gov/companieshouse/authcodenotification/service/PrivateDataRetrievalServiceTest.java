@@ -10,10 +10,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.InternalApiClient;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
+import uk.gov.companieshouse.api.handler.company.PrivateCompanyResourceHandler;
+import uk.gov.companieshouse.api.handler.company.request.PrivateCompanyEmailGet;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
-import uk.gov.companieshouse.api.handler.update.PrivateOverseasEntityDataHandler;
-import uk.gov.companieshouse.api.handler.update.request.PrivateOverseasEntityDataGet;
 import uk.gov.companieshouse.api.model.ApiResponse;
+import uk.gov.companieshouse.api.model.company.RegisteredEmailAddressJson;
 import uk.gov.companieshouse.api.model.update.OverseasEntityDataApi;
 import uk.gov.companieshouse.authcodenotification.client.ApiClientService;
 import uk.gov.companieshouse.authcodenotification.exception.EntityNotFoundException;
@@ -35,7 +36,7 @@ class PrivateDataRetrievalServiceTest {
     private static final String COMPANY_NUMBER = "OE123456";
 
     private static final String GET_OVERSEAS_ENTITY_DATA_URL =
-            String.format("/overseas-entity/%s/entity-data", COMPANY_NUMBER);
+            String.format("/company/%s/registered-email-address", COMPANY_NUMBER);
 
     @InjectMocks
     private PrivateDataRetrievalService privateDataRetrievalService;
@@ -47,13 +48,13 @@ class PrivateDataRetrievalServiceTest {
     private InternalApiClient internalApiClient;
 
     @Mock
-    private PrivateOverseasEntityDataHandler privateOverseasEntityDataHandler;
+    private PrivateCompanyResourceHandler privateCompanyResourceHandler;
 
     @Mock
-    private PrivateOverseasEntityDataGet privateOverseasEntityDataGet;
+    private PrivateCompanyEmailGet privateCompanyEmailGet;
 
     @Mock
-    private ApiResponse<OverseasEntityDataApi> overseasEntityDataApiResponse;
+    private ApiResponse<RegisteredEmailAddressJson> registeredEmailAddressJsonResponse;
 
     @Mock
     private HttpResponseException.Builder builder;
@@ -61,47 +62,47 @@ class PrivateDataRetrievalServiceTest {
     @BeforeEach
     void setup() {
         when(apiClientService.getInternalApiClient()).thenReturn(internalApiClient);
-        when(internalApiClient.privateOverseasEntityDataHandler()).thenReturn(privateOverseasEntityDataHandler);
-        when(privateOverseasEntityDataHandler.getOverseasEntityData(GET_OVERSEAS_ENTITY_DATA_URL))
-                .thenReturn(privateOverseasEntityDataGet);
+        when(internalApiClient.privateCompanyResourceHandler()).thenReturn(privateCompanyResourceHandler);
+        when(privateCompanyResourceHandler.getCompanyRegisteredEmailAddress(GET_OVERSEAS_ENTITY_DATA_URL))
+                .thenReturn(privateCompanyEmailGet);
     }
-/*
+
     @Test
     void testGetOverseasEntityDataWhenSuccessful() throws ApiErrorResponseException, URIValidationException, ServiceException {
-        OverseasEntityDataApi overseasEntityDataApi = new OverseasEntityDataApi();
-        when(privateOverseasEntityDataGet.execute()).thenReturn(overseasEntityDataApiResponse);
-        when(overseasEntityDataApiResponse.getData()).thenReturn(overseasEntityDataApi);
+        RegisteredEmailAddressJson registeredEmailAddressJson = new RegisteredEmailAddressJson();
+        when(privateCompanyEmailGet.execute()).thenReturn(registeredEmailAddressJsonResponse);
+        when(registeredEmailAddressJsonResponse.getData()).thenReturn(registeredEmailAddressJson);
 
-        OverseasEntityDataApi returnedOverseasEntityDataApi = privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER);
+        RegisteredEmailAddressJson returnedRegisteredEmailAddressJson = privateDataRetrievalService.getRegisteredEmailAddressData(REQUEST_ID, COMPANY_NUMBER);
 
-        assertEquals(overseasEntityDataApi, returnedOverseasEntityDataApi);
+        assertEquals(registeredEmailAddressJson, returnedRegisteredEmailAddressJson);
         verify(apiClientService, times(1)).getInternalApiClient();
     }
 
     @Test
     void testGetOverseasEntityDataWhenURIValidationExceptionExceptionIsThrown() throws ApiErrorResponseException, URIValidationException {
-        when(privateOverseasEntityDataGet.execute()).thenThrow(new URIValidationException(""));
-        assertThrows(ServiceException.class, () -> privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER));
+        when(privateCompanyEmailGet.execute()).thenThrow(new URIValidationException(""));
+        assertThrows(ServiceException.class, () -> privateDataRetrievalService.getRegisteredEmailAddressData(REQUEST_ID, COMPANY_NUMBER));
     }
 
     @Test
     void testGetOverseasEntityDataWhenApiErrorResponseExceptionIsThrown() throws ApiErrorResponseException, URIValidationException {
-        when(privateOverseasEntityDataGet.execute()).thenThrow(new ApiErrorResponseException(builder));
-        assertThrows(ServiceException.class, () -> privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER));
+        when(privateCompanyEmailGet.execute()).thenThrow(new ApiErrorResponseException(builder));
+        assertThrows(ServiceException.class, () -> privateDataRetrievalService.getRegisteredEmailAddressData(REQUEST_ID, COMPANY_NUMBER));
     }
 
     @Test
     void testGetCompanyProfileDataWhenHttpResponseExceptionWithNotFoundStatusIsThrown() throws IOException, URIValidationException {
         HttpResponseException.Builder responseBuilder = new HttpResponseException.Builder(404, "", new HttpHeaders());
-        when(privateOverseasEntityDataGet.execute()).thenThrow(new ApiErrorResponseException(responseBuilder));
-        assertThrows(EntityNotFoundException.class, () -> privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER));
+        when(privateCompanyEmailGet.execute()).thenThrow(new ApiErrorResponseException(responseBuilder));
+        assertThrows(EntityNotFoundException.class, () -> privateDataRetrievalService.getRegisteredEmailAddressData(REQUEST_ID, COMPANY_NUMBER));
     }
 
     @Test
     void testGetCompanyProfileDataWhenHttpResponseExceptionWithoutNotFoundStatusIsThrown() throws IOException, URIValidationException {
         HttpResponseException.Builder responseBuilder = new HttpResponseException.Builder(503, "", new HttpHeaders());
-        when(privateOverseasEntityDataGet.execute()).thenThrow(new ApiErrorResponseException(responseBuilder));
-        assertThrows(ServiceException.class, () -> privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER));
-    }*/
+        when(privateCompanyEmailGet.execute()).thenThrow(new ApiErrorResponseException(responseBuilder));
+        assertThrows(ServiceException.class, () -> privateDataRetrievalService.getRegisteredEmailAddressData(REQUEST_ID, COMPANY_NUMBER));
+    }
 
 }
