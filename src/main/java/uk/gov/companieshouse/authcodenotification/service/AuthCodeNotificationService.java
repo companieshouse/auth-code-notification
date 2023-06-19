@@ -69,7 +69,7 @@ public class AuthCodeNotificationService {
     }
 
     private String getOverseasEntityEmailAddress(String requestId, String companyNumber, Map<String, Object> logMap) throws ServiceException {
-        String emailAddress = privateDataRetrievalService.getRegisteredEmailAddressData(requestId, companyNumber).getRegisteredEmailAddress();
+        String emailAddress = privateDataRetrievalService.getCompanyRegisteredEmailAddress(requestId, companyNumber).getRegisteredEmailAddress();
 
         if (StringUtils.isBlank(emailAddress)) {
             ApiLogger.errorContext(requestId, "Failed to retrieve a valid overseas entity email address", null, logMap);

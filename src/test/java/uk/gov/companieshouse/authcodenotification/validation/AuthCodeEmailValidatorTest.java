@@ -26,8 +26,8 @@ class AuthCodeEmailValidatorTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "00110011", "ABCDEFGH","OE000001", "oe001100"})
-    void testSuccessfulValidationWhenCompanyNumberStartsWithTwoLowercaseLetters(String companyNumber) {
+    @ValueSource(strings = { "00110011", "ABCDEFGH", "OE000001", "oe001100" })
+    void testNoErrorsReportedWhenCompanyNumberIsValid(String companyNumber) {
         Errors errors = authCodeEmailValidator.validate(companyNumber, "A1B2C3", new Errors(), CONTEXT);
         assertFalse(errors.hasErrors());
     }
