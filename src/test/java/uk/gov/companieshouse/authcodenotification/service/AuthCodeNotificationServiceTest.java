@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
-import uk.gov.companieshouse.api.model.update.OverseasEntityDataApi;
+import uk.gov.companieshouse.api.model.company.RegisteredEmailAddressJson;
 import uk.gov.companieshouse.authcodenotification.exception.EncryptionException;
 import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 import uk.gov.companieshouse.authcodenotification.utils.Encrypter;
@@ -49,14 +49,14 @@ class AuthCodeNotificationServiceTest {
     @Mock
     private Encrypter encrypter;
 
-    private OverseasEntityDataApi overseasEntityDataApi;
+    private RegisteredEmailAddressJson registeredEmailAddress;
 
     private CompanyProfileApi companyProfileApi;
 
     @BeforeEach
     void setup() throws EncryptionException, InvalidKeyException {
         ReflectionTestUtils.setField(authCodeNotificationService, "aesKeyString", DUMMY_ENCRYPTION_KEY);
-        overseasEntityDataApi = new OverseasEntityDataApi();
+        registeredEmailAddress = new RegisteredEmailAddressJson();
         companyProfileApi = new CompanyProfileApi();
 
         when(encrypter.encrypt(AUTH_CODE, DUMMY_ENCRYPTION_KEY)).thenReturn(DUMMY_ENCRYPTED_AUTH_CODE);
@@ -64,51 +64,51 @@ class AuthCodeNotificationServiceTest {
 
     @Test
     void testSendAuthCodeEmailSuccessfulRetrieveAndSend() throws ServiceException, EncryptionException, InvalidKeyException {
-        overseasEntityDataApi.setEmail(TEST_EMAIL);
-        when(privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER)).thenReturn(overseasEntityDataApi);
+        registeredEmailAddress.setRegisteredEmailAddress(TEST_EMAIL);
+        when(privateDataRetrievalService.getCompanyRegisteredEmailAddress(REQUEST_ID, COMPANY_NUMBER)).thenReturn(registeredEmailAddress);
         companyProfileApi.setCompanyName(COMPANY_NAME);
         when(publicDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER)).thenReturn(companyProfileApi);
 
         authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, AUTH_CODE, COMPANY_NUMBER);
 
         verify(encrypter, times(1)).encrypt(AUTH_CODE, DUMMY_ENCRYPTION_KEY);
-        verify(privateDataRetrievalService, times(1)).getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER);
+        verify(privateDataRetrievalService, times(1)).getCompanyRegisteredEmailAddress(REQUEST_ID, COMPANY_NUMBER);
         verify(publicDataRetrievalService, times(1)).getCompanyProfile(REQUEST_ID, COMPANY_NUMBER);
         verify(emailService, times(1)).sendAuthCodeEmail(REQUEST_ID, DUMMY_ENCRYPTED_AUTH_CODE, COMPANY_NAME, COMPANY_NUMBER, TEST_EMAIL);
     }
 
     @Test
     void testSendAuthCodeEmailThrowsServiceExceptionWhenEmailIsNull() throws ServiceException {
-        when(privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER)).thenReturn(overseasEntityDataApi);
+        when(privateDataRetrievalService.getCompanyRegisteredEmailAddress(REQUEST_ID, COMPANY_NUMBER)).thenReturn(registeredEmailAddress);
         assertThrows(ServiceException.class, () -> authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, AUTH_CODE, COMPANY_NUMBER));
     }
 
     @Test
     void testSendAuthCodeEmailThrowsServiceExceptionWhenEmailIsEmpty() throws ServiceException {
-        overseasEntityDataApi.setEmail("");
-        when(privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER)).thenReturn(overseasEntityDataApi);
+        registeredEmailAddress.setRegisteredEmailAddress("");
+        when(privateDataRetrievalService.getCompanyRegisteredEmailAddress(REQUEST_ID, COMPANY_NUMBER)).thenReturn(registeredEmailAddress);
         assertThrows(ServiceException.class, () -> authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, AUTH_CODE, COMPANY_NUMBER));
     }
 
     @Test
     void testSendAuthCodeEmailThrowsServiceExceptionWhenEmailIsBlank() throws ServiceException {
-        overseasEntityDataApi.setEmail("   ");
-        when(privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER)).thenReturn(overseasEntityDataApi);
+        registeredEmailAddress.setRegisteredEmailAddress("   ");
+        when(privateDataRetrievalService.getCompanyRegisteredEmailAddress(REQUEST_ID, COMPANY_NUMBER)).thenReturn(registeredEmailAddress);
         assertThrows(ServiceException.class, () -> authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, AUTH_CODE, COMPANY_NUMBER));
     }
 
     @Test
     void testSendAuthCodeEmailThrowsServiceExceptionWhenCompanyNameIsNull() throws ServiceException {
-        overseasEntityDataApi.setEmail(TEST_EMAIL);
-        when(privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER)).thenReturn(overseasEntityDataApi);
+        registeredEmailAddress.setRegisteredEmailAddress(TEST_EMAIL);
+        when(privateDataRetrievalService.getCompanyRegisteredEmailAddress(REQUEST_ID, COMPANY_NUMBER)).thenReturn(registeredEmailAddress);
         when(publicDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER)).thenReturn(companyProfileApi);
         assertThrows(ServiceException.class, () -> authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, AUTH_CODE, COMPANY_NUMBER));
     }
 
     @Test
     void testSendAuthCodeEmailThrowsServiceExceptionWhenCompanyNameIsEmpty() throws ServiceException {
-        overseasEntityDataApi.setEmail(TEST_EMAIL);
-        when(privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER)).thenReturn(overseasEntityDataApi);
+        registeredEmailAddress.setRegisteredEmailAddress(TEST_EMAIL);
+        when(privateDataRetrievalService.getCompanyRegisteredEmailAddress(REQUEST_ID, COMPANY_NUMBER)).thenReturn(registeredEmailAddress);
         companyProfileApi.setCompanyName("");
         when(publicDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER)).thenReturn(companyProfileApi);
         assertThrows(ServiceException.class, () -> authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, AUTH_CODE, COMPANY_NUMBER));
@@ -116,8 +116,8 @@ class AuthCodeNotificationServiceTest {
 
     @Test
     void testSendAuthCodeEmailThrowsServiceExceptionWhenCompanyNameIsBlank() throws ServiceException {
-        overseasEntityDataApi.setEmail(TEST_EMAIL);
-        when(privateDataRetrievalService.getOverseasEntityData(REQUEST_ID, COMPANY_NUMBER)).thenReturn(overseasEntityDataApi);
+        registeredEmailAddress.setRegisteredEmailAddress(TEST_EMAIL);
+        when(privateDataRetrievalService.getCompanyRegisteredEmailAddress(REQUEST_ID, COMPANY_NUMBER)).thenReturn(registeredEmailAddress);
         companyProfileApi.setCompanyName("   ");
         when(publicDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER)).thenReturn(companyProfileApi);
         assertThrows(ServiceException.class, () -> authCodeNotificationService.sendAuthCodeEmail(REQUEST_ID, AUTH_CODE, COMPANY_NUMBER));

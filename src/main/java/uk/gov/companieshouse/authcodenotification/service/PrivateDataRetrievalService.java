@@ -4,7 +4,7 @@ import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
-import uk.gov.companieshouse.api.model.update.OverseasEntityDataApi;
+import uk.gov.companieshouse.api.model.company.RegisteredEmailAddressJson;
 import uk.gov.companieshouse.authcodenotification.client.ApiClientService;
 import uk.gov.companieshouse.authcodenotification.exception.EntityNotFoundException;
 import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
@@ -16,29 +16,29 @@ import java.util.Map;
 @Service
 public class PrivateDataRetrievalService {
 
-    private static final String OVERSEAS_ENTITY_URI_SECTION = "/overseas-entity/%s/entity-data";
+    private static final String REGISTERED_EMAIL_ADDRESS_URI_SUFFIX = "/company/%s/registered-email-address";
 
     @Autowired
     private ApiClientService apiClientService;
 
-    public OverseasEntityDataApi getOverseasEntityData(String requestId, String companyNumber)
+    public RegisteredEmailAddressJson getCompanyRegisteredEmailAddress(String requestId, String companyNumber)
             throws ServiceException {
         var logDataMap = new DataMap.Builder().companyNumber(companyNumber).build();
         try {
-            ApiLogger.infoContext(requestId, "Retrieving overseas entity data from database", logDataMap.getLogMap());
+            ApiLogger.infoContext(requestId, "Retrieving company registered email address from database", logDataMap.getLogMap());
 
-            var overseasEntityDataApi = apiClientService
+            var registeredEmailAddress = apiClientService
                     .getInternalApiClient()
-                    .privateOverseasEntityDataHandler()
-                    .getOverseasEntityData(String.format(OVERSEAS_ENTITY_URI_SECTION, companyNumber))
+                    .privateCompanyResourceHandler()
+                    .getCompanyRegisteredEmailAddress(String.format(REGISTERED_EMAIL_ADDRESS_URI_SUFFIX, companyNumber))
                     .execute()
                     .getData();
 
-            ApiLogger.infoContext(requestId, "Successfully retrieved overseas entity data from database", logDataMap.getLogMap());
-            return overseasEntityDataApi;
+            ApiLogger.infoContext(requestId, "Successfully retrieved company registered email address from database", logDataMap.getLogMap());
+            return registeredEmailAddress;
         } catch (ApiErrorResponseException e) {
             if (e.getStatusCode() == 404) {
-                var message = "Unable to find overseas entity data from database, HTTP exception status: " + e.getStatusCode();
+                var message = "Unable to find company registered email address from database, HTTP exception status: " + e.getStatusCode();
                 ApiLogger.errorContext(requestId, message, e, logDataMap.getLogMap());
                 throw new EntityNotFoundException(e.getMessage(), e);
             } else {
@@ -50,7 +50,7 @@ public class PrivateDataRetrievalService {
     }
 
     private ServiceException buildServiceException(String requestId, Exception e, Map<String, Object> logMap) {
-        ApiLogger.errorContext(requestId, "Error retrieving overseas entity data from database", e, logMap);
+        ApiLogger.errorContext(requestId, "Error retrieving company registered email address from database", e, logMap);
         return new ServiceException(e.getMessage(), e);
     }
 }
