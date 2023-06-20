@@ -26,6 +26,7 @@
     <encoder.version>1.2.3</encoder.version>
     <rest-service-common-library-version>0.0.8</rest-service-common-library-version>
     <api-security-java.version>0.4.1</api-security-java.version>
+    <dependency-check-plugin.version>8.3.1</dependency-check-plugin.version>
   </properties>
   <profiles>
     <profile>
@@ -177,6 +178,23 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.owasp</groupId>
+        <artifactId>dependency-check-maven</artifactId>
+        <version>${dependency-check-plugin.version}</version>
+        <configuration>
+          <suppressionFiles>
+            <suppressionFile>suppress.xml</suppressionFile>
+          </suppressionFiles>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
