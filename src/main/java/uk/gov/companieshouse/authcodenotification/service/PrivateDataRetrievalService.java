@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.authcodenotification.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,14 +22,18 @@ public class PrivateDataRetrievalService {
     @Autowired
     private ApiClientService apiClientService;
 
+    @Value("${ORACLE_QUERY_API_URL}")
+    private String oracleQueryApiUrl;
+
     public RegisteredEmailAddressJson getCompanyRegisteredEmailAddress(String requestId, String companyNumber)
             throws ServiceException {
         var logDataMap = new DataMap.Builder().companyNumber(companyNumber).build();
         try {
             ApiLogger.infoContext(requestId, "Retrieving company registered email address from database", logDataMap.getLogMap());
 
-            var registeredEmailAddress = apiClientService
-                    .getInternalApiClient()
+            var internalApiClient = apiClientService.getInternalApiClient();
+            internalApiClient.setBasePath(oracleQueryApiUrl);
+            var registeredEmailAddress = internalApiClient
                     .privateCompanyResourceHandler()
                     .getCompanyRegisteredEmailAddress(String.format(REGISTERED_EMAIL_ADDRESS_URI_SUFFIX, companyNumber))
                     .execute()
