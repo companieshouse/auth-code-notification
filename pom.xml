@@ -11,17 +11,17 @@
   <name>auth-code-notification</name>
   <properties>
     <java.version>11</java.version>
-    <spring-boot-dependencies.version>2.6.1</spring-boot-dependencies.version>
-    <spring-boot-maven-plugin.version>2.6.1</spring-boot-maven-plugin.version>
+    <spring-boot-dependencies.version>2.6.15</spring-boot-dependencies.version>
+    <spring-boot-maven-plugin.version>2.6.15</spring-boot-maven-plugin.version>
     <log4j.version>2.17.2</log4j.version>
     <avro.version>1.11.1</avro.version>
     <ch-kafka.version>1.4.8</ch-kafka.version>
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
     <structured-logging.version>1.9.19</structured-logging.version>
-    <api-sdk-manager-java-library.version>1.0.4</api-sdk-manager-java-library.version>
-    <json.version>20230227</json.version>
-    <api-sdk-java.version>4.3.31</api-sdk-java.version>
+    <api-sdk-manager-java-library.version>1.0.7</api-sdk-manager-java-library.version>
+    <json.version>20230618</json.version>
+    <api-sdk-java.version>4.3.9</api-sdk-java.version>
     <private-api-sdk-java.version>2.0.270</private-api-sdk-java.version>
     <encoder.version>1.2.3</encoder.version>
     <rest-service-common-library-version>0.0.8</rest-service-common-library-version>
