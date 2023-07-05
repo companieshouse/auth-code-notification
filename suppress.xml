@@ -26,4 +26,17 @@
         <packageUrl regex="false">pkg:maven/org.json/json@20230618</packageUrl>
         <cve>CVE-2022-45688</cve>
     </suppress>
+     <suppress until="2023-08-31">
+        <notes>
+            <![CDATA[
+            File name: guava-31.1-android.jar
+            Suppressed for 2 months
+            Requires changes to uk.gov.companieshouse.api-sdk-java,  and the version of google oauth being pulled in, but this is already at the latest stable version which imports this version of guava with
+            CVE-2023-2976 and CVE-2020-8908. This should be checked regulary for a fix.
+            ]]>
+        </notes>
+        <packageUrl regex="false">pkg:maven/com.google.guava/guava@31.1-android</packageUrl>
+        <cve>CVE-2023-2976</cve>
+        <cve>CVE-2020-8908</cve>
+    </suppress>
 </suppressions>
