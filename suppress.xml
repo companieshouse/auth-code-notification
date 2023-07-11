@@ -39,4 +39,44 @@
         <cve>CVE-2023-2976</cve>
         <cve>CVE-2020-8908</cve>
     </suppress>
+    <suppress until="2023-09-30">
+        <notes>
+            <![CDATA[
+            File name: kafka-clients-3.0.0.jar
+            Suppressed for 3 months
+            Requires changes to uk.gov.companieshouse.ch-kafka and Needs >= 3.3.2 to fix CVE-2022-34917 and CVE-2023-25194. But we
+            cannot go past 3.0.0 due to changes that are not compatible with ch-kafka, in particular idempotency 
+            which is turned on in version 3.0.1. ch-kafka should be regularly reviewed for changes to enable this change.
+            ]]>
+        </notes>
+        <packageUrl regex="false">pkg:maven/org.apache.kafka/kafka-clients@3.0.0</packageUrl>
+        <cve>CVE-2022-34917</cve>
+        <cve>CVE-2023-25194</cve>
+    </suppress>
+    <suppress until="2023-09-30">
+        <notes>
+            <![CDATA[
+            File name: snappy-java-1.1.8.1.jar
+            Suppressed for 3 months
+            CVE-2023-34453, CVE-2023-34454 and CVE-2023-34455 tequires changes to uk.gov.companieshouse.ch-kafka to fix. 
+            But the version is bound by the same issue as kafka-clients. Hence this needs to be supressed until ch-kafka is updated.
+            ]]>
+        </notes>
+        <packageUrl regex="false">pkg:maven/org.xerial.snappy/snappy-java@1.1.8.1</packageUrl>
+        <cve>CVE-2023-34454</cve>
+        <cve>CVE-2023-34455</cve>
+        <cve>CVE-2023-34453</cve>
+    </suppress>
+     <suppress until="2023-09-30">
+        <notes>
+            <![CDATA[
+            File name: spring-boot-actuator-autoconfigure-2.6.15.jar
+            Suppressed for 3 months
+            Needs > 2.7.11 to fix CVE-2023-20873, but this is not going to work with the current version of kafka in use with ch-kafka. 
+            Hence this needs to be supressed until ch-kafka is updated.
+            ]]>
+        </notes>
+        <packageUrl regex="false">pkg:maven/org.springframework.boot/spring-boot-actuator-autoconfigure@2.6.15</packageUrl>
+        <cve>CVE-2023-20873</cve>
+    </suppress>
 </suppressions>
