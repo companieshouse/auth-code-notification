@@ -21,7 +21,7 @@
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
     <structured-logging.version>1.9.19</structured-logging.version>
-    <api-sdk-manager-java-library.version>1.0.7</api-sdk-manager-java-library.version>
+    <api-sdk-manager-java-library.version>1.0.8</api-sdk-manager-java-library.version>
     <json.version>20230618</json.version>
     <api-sdk-java.version>4.3.31</api-sdk-java.version>
     <private-api-sdk-java.version>2.0.270</private-api-sdk-java.version>
