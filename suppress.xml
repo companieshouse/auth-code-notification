@@ -79,4 +79,15 @@
         <packageUrl regex="false">pkg:maven/org.springframework.boot/spring-boot-actuator-autoconfigure@2.6.15</packageUrl>
         <cve>CVE-2023-20873</cve>
     </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[
+            File name: jackson-databind-2.13.5.jar
+            Disputed CVE that marks all versions as vulnerable.
+            See https://nvd.nist.gov/vuln/detail/CVE-2023-35116
+            ]]>
+        </notes>
+        <packageUrl regex="false">pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.13.5</packageUrl>
+        <cve>CVE-2023-35116</cve>
+    </suppress>
 </suppressions>
