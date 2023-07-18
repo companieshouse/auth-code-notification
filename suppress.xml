@@ -83,8 +83,9 @@
         <notes>
             <![CDATA[
             File name: jackson-databind-2.13.5.jar
-            Disputed CVE that marks all versions as vulnerable.
+            Disputed CVE that marks all versions as vulnerable (Latest version in artefactory 2.15.2 is also marked as vulnerable)
             See https://nvd.nist.gov/vuln/detail/CVE-2023-35116
+            Check status of CVE-2023-35116 and version 2.16 when it becomes available to see if it has addressed the issue.
             ]]>
         </notes>
         <packageUrl regex="false">pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.13.5</packageUrl>
