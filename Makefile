@@ -55,8 +55,4 @@ sonar-pr-analysis:
 
 .PHONY: security-check
 security-check:
-    # This target currently doesn't fail a build if there are reported vulnerabilities. This will need to be changed when
-    # we fix the vulnerabilities by changing the flags on the dependency check
-    # e.g.
-    # -DfailBuildOnCVSS=0 or -DfailBuildOnAnyVulnerability=true
-	mvn org.owasp:dependency-check-maven:check -DassemblyAnalyzerEnabled=false
+	mvn org.owasp:dependency-check-maven:check -DassemblyAnalyzerEnabled=false -DfailBuildOnAnyVulnerability=true
