@@ -17,7 +17,7 @@ build:
 	mvn versions:set -DnewVersion=$(version) -DgenerateBackupPoms=false
 	mvn package -DskipTests=true
 	cp ./target/$(artifact_name)-$(version).jar ./$(artifact_name).jar
-	mvn org.owasp:dependency-check-maven:check -DassemblyAnalyzerEnabled=false
+
 
 .PHONY: test
 test: test-unit
@@ -61,3 +61,4 @@ security-check:
     # e.g.
     # -DfailBuildOnCVSS=0 or -DfailBuildOnAnyVulnerability=true
 	mvn org.owasp:dependency-check-maven:check -DassemblyAnalyzerEnabled=false
+	mvn org.owasp:dependency-check-maven:DfailBuildOnAnyVulnerability=true
