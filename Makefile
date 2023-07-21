@@ -55,4 +55,5 @@ sonar-pr-analysis:
 
 .PHONY: security-check
 security-check:
-    	mvn org.owasp:dependency-check-maven:check -DfailBuildOnAnyVulnerability=true
+
+	mvn org.owasp:dependency-check-maven:check -DassemblyAnalyzerEnabled=false -DfailBuildOnAnyVulnerability=true
