@@ -19,7 +19,7 @@
     <!-- Force version of kafka for compatability with ch-kafka -->
     <kafka-clients.version>3.0.0</kafka-clients.version>
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-    <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+    <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
     <structured-logging.version>1.9.19</structured-logging.version>
     <api-sdk-manager-java-library.version>1.0.8</api-sdk-manager-java-library.version>
     <json.version>20230618</json.version>
