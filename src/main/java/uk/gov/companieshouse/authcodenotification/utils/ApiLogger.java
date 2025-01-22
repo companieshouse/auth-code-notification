@@ -68,10 +68,6 @@ public class ApiLogger {
      * @return A cloned copy of the map data
      */
     private static Map<String, Object> cloneMapData(Map<String, Object> dataMap) {
-        if(dataMap == null) {
-            dataMap = new HashMap<>();
-        }
-
-        return new HashMap<>(dataMap);
+        return dataMap == null ? new HashMap<>(new HashMap<>()) : new HashMap<>(dataMap);
     }
 }
