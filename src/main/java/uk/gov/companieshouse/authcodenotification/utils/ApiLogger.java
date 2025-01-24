@@ -12,7 +12,7 @@ public class ApiLogger {
 
     private ApiLogger() {}
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AuthCodeNotificationApplication.APP_NAMESPACE);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthCodeNotificationApplication.APPLICATION_NAME_SPACE);
 
     public static void debug(String message, Map<String, Object> dataMap) {
         LOGGER.debug(message, cloneMapData(dataMap));
@@ -68,12 +68,6 @@ public class ApiLogger {
      * @return A cloned copy of the map data
      */
     private static Map<String, Object> cloneMapData(Map<String, Object> dataMap) {
-        if(dataMap == null) {
-            dataMap = new HashMap<>();
-        }
-        Map<String, Object> clonedMapData = new HashMap<>();
-        clonedMapData.putAll(dataMap);
-
-        return clonedMapData;
+        return dataMap == null ? new HashMap<>(new HashMap<>()) : new HashMap<>(dataMap);
     }
 }

@@ -44,6 +44,7 @@ public class KafkaConfiguration {
         config.setRoundRobinPartitioner(true);
         config.setAcks(Acks.WAIT_FOR_ALL);
         config.setRetries(Integer.parseInt(maximumRetryAttempts));
+        config.setEnableIdempotence(false);
         return new CHKafkaProducer(config);
     }
 }
