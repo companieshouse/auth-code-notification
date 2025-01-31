@@ -1,7 +1,0 @@
-app_name: auth-code-notification
-group: internalapi
-
-weight: 90
-routes:
-  1: ^/internal/company/(.*)/auth-code/*
-  2: ^/auth-code-notification/healthcheck

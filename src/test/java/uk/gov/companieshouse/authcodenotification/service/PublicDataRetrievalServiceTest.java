@@ -1,7 +1,6 @@
 package uk.gov.companieshouse.authcodenotification.service;
 
 import com.google.api.client.http.HttpHeaders;
-import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -103,6 +102,5 @@ class PublicDataRetrievalServiceTest {
         when(companyGet.execute()).thenThrow(new ApiErrorResponseException(responseBuilder));
         assertThrows(ServiceException.class, () -> publicDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER));
     }
-
 
 }

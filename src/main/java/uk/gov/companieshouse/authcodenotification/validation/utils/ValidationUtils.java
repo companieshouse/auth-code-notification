@@ -41,7 +41,7 @@ public class ValidationUtils {
     public static boolean isSpecificLength(String toTest, Integer length, String qualifiedFieldName, Errors errs, String loggingContext) {
         if (toTest.length() != length) {
             setErrorMsgToLocation(errs, qualifiedFieldName,
-                    String.format(INCORRECT_LENGTH_ERROR_MESSAGE, qualifiedFieldName, length.toString()));
+                    String.format(INCORRECT_LENGTH_ERROR_MESSAGE, qualifiedFieldName, length));
             ApiLogger.infoContext(loggingContext, "Invalid length for " + qualifiedFieldName);
             return false;
         }
