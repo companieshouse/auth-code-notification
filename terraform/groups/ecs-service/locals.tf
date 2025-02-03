@@ -8,7 +8,7 @@ locals {
   eric_port                  = "10000"
   docker_repo                = "auth-code-notification"
   kms_alias                  = "alias/${var.aws_profile}/environment-services-kms"
-  lb_listener_rule_priority  = 42
+  lb_listener_rule_priority  = 43
   lb_listener_paths          = ["/internal/company/*/auth-code/*"]
   healthcheck_path           = "/auth-code-notification/healthcheck" # healthcheck path for auth-code-notification
   healthcheck_matcher        = "200"
