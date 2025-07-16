@@ -36,8 +36,9 @@
     <ch-kafka.version>3.0.3</ch-kafka.version>
     <private-api-sdk-java.version>4.0.313</private-api-sdk-java.version>
     <rest-service-common-library-version>2.0.2</rest-service-common-library-version>
-    <structured-logging.version>3.0.32</structured-logging.version>
+    <structured-logging.version>3.0.35</structured-logging.version>
     <opentelemetry-instrumentation.version>2.14.0</opentelemetry-instrumentation.version>
+    <commons-lang3.version>3.18.0</commons-lang3.version>
 
     <!--  Sonar -->
     <sonar.projectName>auth-code-notification</sonar.projectName>
@@ -72,7 +73,6 @@
             <version>${kafka-clients.version}</version>
             <scope>compile</scope>
       </dependency>
-
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
@@ -119,12 +119,6 @@
       <artifactId>structured-logging</artifactId>
       <version>${structured-logging.version}</version>
       <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.slf4j</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -155,6 +149,12 @@
       <groupId>uk.gov.companieshouse</groupId>
       <artifactId>ch-kafka</artifactId>
       <version>${ch-kafka.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-lang</groupId>
+          <artifactId>commons-lang</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -194,6 +194,11 @@
       <groupId>uk.gov.companieshouse</groupId>
       <artifactId>rest-service-common-library</artifactId>
       <version>${rest-service-common-library-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${commons-lang3.version}</version>
     </dependency>
   </dependencies>
 
