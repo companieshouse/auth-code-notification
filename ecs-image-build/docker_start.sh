@@ -3,4 +3,4 @@
 # Start script for auth-code-notification
 
 PORT=8080
-exec java -jar -Dserver.port="${PORT}" "auth-code-notification.jar"
+exec java -jar -Dserver.port="${PORT}" -XX:MaxRAMPercentage=80 "auth-code-notification.jar"

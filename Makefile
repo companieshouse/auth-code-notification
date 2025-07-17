@@ -34,7 +34,6 @@ endif
 	mvn versions:set -DnewVersion=$(version) -DgenerateBackupPoms=false
 	mvn package -DskipTests=true
 	$(eval tmpdir:=$(shell mktemp -d build-XXXXXXXXXX))
-	cp ./start.sh $(tmpdir)
 	cp ./target/$(artifact_name)-$(version).jar $(tmpdir)/$(artifact_name).jar
 	cd $(tmpdir); zip -r ../$(artifact_name)-$(version).zip *
 	rm -rf $(tmpdir)
@@ -49,3 +48,13 @@ sonar:
 .PHONY: sonar-pr-analysis
 sonar-pr-analysis:
 	mvn sonar:sonar -P sonar-pr-analysis
+
+.PHONY: dependency-check
+dependency-check: build package
+	mvn install -DskipTests
+	dependency-check-runner --repo-name=auth-code-notification
+
+.PHONY: dependency-check-local
+dependency-check-local: build package
+	mvn install -DskipTests
+	docker run --rm -e DEPENDENCY_CHECK_SUPPRESSIONS_HOME=/opt -v "$$(pwd)":/app -w /app 416670754337.dkr.ecr.eu-west-2.amazonaws.com/dependency-check-runner --repo-name=auth-code-notification
