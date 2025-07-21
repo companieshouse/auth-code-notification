@@ -15,28 +15,30 @@
 
   <properties>
     <java.version>21</java.version>
-    <spring-boot-dependencies.version>3.4.1</spring-boot-dependencies.version>
-    <spring-boot-maven-plugin.version>3.4.1</spring-boot-maven-plugin.version>
+    <spring-boot-dependencies.version>3.5.3</spring-boot-dependencies.version>
+    <spring-boot-maven-plugin.version>3.5.3</spring-boot-maven-plugin.version>
 
     <avro.version>1.12.0</avro.version>
     <encoder.version>1.3.1</encoder.version>
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
-    <jib-maven-plugin.version>3.4.4</jib-maven-plugin.version>
-    <json.version>20250107</json.version>
+    <jib-maven-plugin.version>3.4.6</jib-maven-plugin.version>
+    <json.version>20250517</json.version>
     <!-- Force version of kafka for compatibility with ch-kafka -->
-    <kafka-clients.version>3.9.0</kafka-clients.version>
+    <kafka-clients.version>3.9.1</kafka-clients.version>
     <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
     <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
-    <mockito-core.version>5.15.2</mockito-core.version>
+    <mockito-core.version>5.18.0</mockito-core.version>
 
     <!-- internal dependencies -->
-    <api-sdk-java.version>6.0.23</api-sdk-java.version>
+    <api-sdk-java.version>6.2.11</api-sdk-java.version>
     <api-sdk-manager-java-library.version>3.0.6</api-sdk-manager-java-library.version>
     <api-security-java.version>2.0.8</api-security-java.version>
     <ch-kafka.version>3.0.3</ch-kafka.version>
-    <private-api-sdk-java.version>4.0.255</private-api-sdk-java.version>
+    <private-api-sdk-java.version>4.0.313</private-api-sdk-java.version>
     <rest-service-common-library-version>2.0.2</rest-service-common-library-version>
-    <structured-logging.version>3.0.20</structured-logging.version>
+    <structured-logging.version>3.0.36</structured-logging.version>
+    <opentelemetry-instrumentation.version>2.14.0</opentelemetry-instrumentation.version>
+    <commons-lang3.version>3.18.0</commons-lang3.version>
 
     <!--  Sonar -->
     <sonar.projectName>auth-code-notification</sonar.projectName>
@@ -59,12 +61,18 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
+        <groupId>io.opentelemetry.instrumentation</groupId>
+        <artifactId>opentelemetry-instrumentation-bom</artifactId>
+        <version>${opentelemetry-instrumentation.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-clients</artifactId>
             <version>${kafka-clients.version}</version>
             <scope>compile</scope>
       </dependency>
-
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
@@ -76,6 +84,10 @@
   </dependencyManagement>
 
   <dependencies>
+    <dependency>
+      <groupId>io.opentelemetry.instrumentation</groupId>
+      <artifactId>opentelemetry-spring-boot-starter</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
@@ -107,12 +119,6 @@
       <artifactId>structured-logging</artifactId>
       <version>${structured-logging.version}</version>
       <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.slf4j</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -143,6 +149,12 @@
       <groupId>uk.gov.companieshouse</groupId>
       <artifactId>ch-kafka</artifactId>
       <version>${ch-kafka.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-lang</groupId>
+          <artifactId>commons-lang</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -182,6 +194,11 @@
       <groupId>uk.gov.companieshouse</groupId>
       <artifactId>rest-service-common-library</artifactId>
       <version>${rest-service-common-library-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${commons-lang3.version}</version>
     </dependency>
   </dependencies>
 
