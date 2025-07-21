@@ -24,7 +24,7 @@
     <jib-maven-plugin.version>3.4.6</jib-maven-plugin.version>
     <json.version>20250517</json.version>
     <!-- Force version of kafka for compatibility with ch-kafka -->
-    <kafka-clients.version>4.0.0</kafka-clients.version>
+    <kafka-clients.version>3.9.1</kafka-clients.version>
     <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
     <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
     <mockito-core.version>5.18.0</mockito-core.version>
