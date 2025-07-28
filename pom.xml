@@ -30,13 +30,13 @@
     <mockito-core.version>5.18.0</mockito-core.version>
 
     <!-- internal dependencies -->
-    <api-sdk-java.version>6.2.11</api-sdk-java.version>
-    <api-sdk-manager-java-library.version>3.0.6</api-sdk-manager-java-library.version>
-    <api-security-java.version>2.0.8</api-security-java.version>
+    <api-sdk-java.version>6.4.1</api-sdk-java.version>
+    <api-sdk-manager-java-library.version>3.0.9</api-sdk-manager-java-library.version>
+    <api-security-java.version>2.0.9</api-security-java.version>
     <ch-kafka.version>3.0.3</ch-kafka.version>
-    <private-api-sdk-java.version>4.0.313</private-api-sdk-java.version>
-    <rest-service-common-library-version>2.0.2</rest-service-common-library-version>
-    <structured-logging.version>3.0.36</structured-logging.version>
+    <private-api-sdk-java.version>4.0.329</private-api-sdk-java.version>
+    <rest-service-common-library-version>2.0.4</rest-service-common-library-version>
+    <structured-logging.version>3.0.37</structured-logging.version>
     <opentelemetry-instrumentation.version>2.14.0</opentelemetry-instrumentation.version>
     <commons-lang3.version>3.18.0</commons-lang3.version>
 
