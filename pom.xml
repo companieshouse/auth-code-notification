@@ -84,6 +84,14 @@
   </dependencyManagement>
 
   <dependencies>
+
+    <!-- CVE-2014-11407 -->
+    <dependency>
+      <groupId>io.grpc</groupId>
+      <artifactId>grpc-context</artifactId>
+      <version>1.73.0</version>
+    </dependency>
+
     <dependency>
       <groupId>io.opentelemetry.instrumentation</groupId>
       <artifactId>opentelemetry-spring-boot-starter</artifactId>
