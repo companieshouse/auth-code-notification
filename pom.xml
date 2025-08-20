@@ -47,6 +47,9 @@
     <sonar.login></sonar.login>
     <sonar.password></sonar.password>
 
+    <sonar.dependencyCheck.htmlReportPath>
+      ${project.basedir}/target/dependency-check-report.html
+    </sonar.dependencyCheck.htmlReportPath>
   </properties>
 
   <profiles>
