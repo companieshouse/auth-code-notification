@@ -15,30 +15,32 @@
 
   <properties>
     <java.version>21</java.version>
-    <spring-boot-dependencies.version>3.5.3</spring-boot-dependencies.version>
-    <spring-boot-maven-plugin.version>3.5.3</spring-boot-maven-plugin.version>
+    <spring-boot-dependencies.version>3.5.7</spring-boot-dependencies.version>
+    <spring-boot-maven-plugin.version>3.5.7</spring-boot-maven-plugin.version>
 
-    <avro.version>1.12.0</avro.version>
-    <encoder.version>1.3.1</encoder.version>
+    <avro.version>1.12.1</avro.version>
+    <encoder.version>1.4.0</encoder.version>
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
     <jib-maven-plugin.version>3.4.6</jib-maven-plugin.version>
-    <json.version>20250517</json.version>
+    <json.version>20251224</json.version>
+    <grpc.version>1.78.0</grpc.version>
+
     <!-- Force version of kafka for compatibility with ch-kafka -->
     <kafka-clients.version>3.9.1</kafka-clients.version>
     <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
     <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
-    <mockito-core.version>5.18.0</mockito-core.version>
+    <mockito-core.version>5.21.0</mockito-core.version>
 
     <!-- internal dependencies -->
-    <api-sdk-java.version>6.4.1</api-sdk-java.version>
-    <api-sdk-manager-java-library.version>3.0.9</api-sdk-manager-java-library.version>
-    <api-security-java.version>2.0.10</api-security-java.version>
-    <ch-kafka.version>3.0.3</ch-kafka.version>
-    <private-api-sdk-java.version>4.0.329</private-api-sdk-java.version>
-    <rest-service-common-library-version>2.0.4</rest-service-common-library-version>
-    <structured-logging.version>3.0.37</structured-logging.version>
-    <opentelemetry-instrumentation.version>2.14.0</opentelemetry-instrumentation.version>
-    <commons-lang3.version>3.18.0</commons-lang3.version>
+    <api-sdk-java.version>6.6.1</api-sdk-java.version>
+    <api-sdk-manager-java-library.version>3.0.14</api-sdk-manager-java-library.version>
+    <api-security-java.version>2.0.19</api-security-java.version>
+    <ch-kafka.version>3.0.6</ch-kafka.version>
+    <private-api-sdk-java.version>4.0.433</private-api-sdk-java.version>
+    <rest-service-common-library-version>2.0.9</rest-service-common-library-version>
+    <structured-logging.version>3.0.46</structured-logging.version>
+    <opentelemetry-instrumentation.version>2.23.0</opentelemetry-instrumentation.version>
+    <commons-lang3.version>3.20.0</commons-lang3.version>
 
     <!--  Sonar -->
     <sonar.projectName>auth-code-notification</sonar.projectName>
@@ -89,7 +91,7 @@
     <dependency>
       <groupId>io.grpc</groupId>
       <artifactId>grpc-context</artifactId>
-      <version>1.73.0</version>
+      <version>${grpc.version}</version>
     </dependency>
 
     <dependency>
