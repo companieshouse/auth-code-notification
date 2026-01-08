@@ -14,7 +14,17 @@
   <name>auth-code-notification</name>
 
   <properties>
+    <!-- Encoding -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <!-- JDK Version -->
     <java.version>21</java.version>
+
+    <!-- Maven Compiler -->
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+
     <spring-boot-dependencies.version>3.5.7</spring-boot-dependencies.version>
     <spring-boot-maven-plugin.version>3.5.7</spring-boot-maven-plugin.version>
 
@@ -42,7 +52,11 @@
     <opentelemetry-instrumentation.version>2.23.0</opentelemetry-instrumentation.version>
     <commons-lang3.version>3.20.0</commons-lang3.version>
 
-    <!--  Sonar -->
+    <!-- Sonar -->
+    <sonar.coverage.jacoco.xmlReportPaths>
+      ${project.build.directory}/site/jacoco/jacoco.xml
+    </sonar.coverage.jacoco.xmlReportPaths>
+    <sonar.jacoco.reports>${project.build.directory}/site</sonar.jacoco.reports>
     <sonar.projectName>auth-code-notification</sonar.projectName>
     <sonar.projectKey>uk.gov.companieshouse:auth-code-notification</sonar.projectKey>
     <sonar.token>${CODE_ANALYSIS_TOKEN}</sonar.token>
@@ -62,6 +76,7 @@
 
   <dependencyManagement>
     <dependencies>
+
       <dependency>
         <groupId>io.opentelemetry.instrumentation</groupId>
         <artifactId>opentelemetry-instrumentation-bom</artifactId>
@@ -69,12 +84,14 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+
       <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-clients</artifactId>
             <version>${kafka-clients.version}</version>
             <scope>compile</scope>
       </dependency>
+
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
@@ -82,6 +99,13 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+
+      <dependency>
+        <groupId>org.apache.tomcat.embed</groupId>
+        <artifactId>tomcat-embed-core</artifactId>
+        <version>11.0.15</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
@@ -147,6 +171,13 @@
       <groupId>uk.gov.companieshouse</groupId>
       <artifactId>private-api-sdk-java</artifactId>
       <version>${private-api-sdk-java.version}</version>
+      <exclusions>
+        <!-- CVE-2025-52520(7.5), CVE-2025-61795(5.3), CVE-2025-53506(7.5), CVE-2025-55754(9.6), CVE-2025-48989(7.5), CVE-2025-55752(7.5) -->
+        <exclusion>
+          <groupId>org.apache.tomcat.embed</groupId>
+          <artifactId>tomcat-embed-core</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
