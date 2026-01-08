@@ -19,11 +19,19 @@ build:
 	cp ./target/$(artifact_name)-$(version).jar ./$(artifact_name).jar
 
 .PHONY: test
-test: test-unit
+test: test-unit test-integration
 
 .PHONY: test-unit
-test-unit: clean
-	mvn test
+test-unit:
+	mvn clean verify
+
+.PHONY: test-integration
+test-integration:
+	mvn clean verify -Dskip.unit.tests=true -Dskip.integration.tests=true
+
+.PHONY: docker-image
+docker-image: clean
+	mvn package -Dskip.unit.tests=true -Dskip.integration.tests=true jib:dockerBuild
 
 .PHONY: package
 package:
