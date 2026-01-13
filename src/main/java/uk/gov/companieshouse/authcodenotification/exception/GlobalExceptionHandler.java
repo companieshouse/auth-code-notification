@@ -1,13 +1,13 @@
 package uk.gov.companieshouse.authcodenotification.exception;
 
+import static uk.gov.companieshouse.authcodenotification.utils.Constants.ERIC_REQUEST_ID_KEY;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import uk.gov.companieshouse.authcodenotification.utils.ApiLogger;
-
-import static uk.gov.companieshouse.authcodenotification.utils.Constants.ERIC_REQUEST_ID_KEY;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {

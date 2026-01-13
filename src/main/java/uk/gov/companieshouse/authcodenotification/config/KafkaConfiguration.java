@@ -16,35 +16,31 @@ import uk.gov.companieshouse.kafka.producer.ProducerConfigHelper;
 @Configuration
 public class KafkaConfiguration {
 
-    @Value("${SCHEMA_REGISTRY_URL}")
+    @Value("${spring.kafka.schema.registry-url}")
     private String schemaRegistryUrl;
 
-    @Value("${EMAIL_SCHEMA_URI}")
+    @Value("${spring.kafka.email.schema-uri}")
     private String emailSchemaUri;
 
-    @Value("${KAFKA_PRODUCER_MAXIMUM_RETRY_ATTEMPTS}")
+    @Value("${spring.kafka.producer.maximum-retry-attempts}")
     private String maximumRetryAttempts;
 
     @Bean
     public Schema fetchSchema(KafkaRestClient restClient) throws JSONException {
-       return getSchema(restClient, emailSchemaUri);
-    }
-
-    private Schema getSchema(KafkaRestClient restClient, String schemaUri) throws JSONException {
-        byte[] bytes = restClient.getSchema(schemaRegistryUrl, schemaUri);
+        byte[] bytes = restClient.getSchema(schemaRegistryUrl, emailSchemaUri);
         var schemaJson = new JSONObject(new String(bytes)).getString("schema");
         return new Schema.Parser().parse(schemaJson);
     }
 
     @Bean
-    public CHKafkaProducer buildKafkaProducer() {
+    public CHKafkaProducer buildKafkaProducer(@Value("${spring.kafka.bootstrap-servers}") String bootstrapServers) {
         var config = new ProducerConfig();
-        ProducerConfigHelper.assignBrokerAddresses(config);
-
         config.setRoundRobinPartitioner(true);
         config.setAcks(Acks.WAIT_FOR_ALL);
         config.setRetries(Integer.parseInt(maximumRetryAttempts));
         config.setEnableIdempotence(false);
+        config.setBrokerAddresses(bootstrapServers.split(","));
+
         return new CHKafkaProducer(config);
     }
 }

@@ -18,7 +18,7 @@ import java.util.concurrent.Future;
 @Component
 public class KafkaEmailClient {
 
-    @Value("${EMAIL_SEND_QUEUE_TOPIC}")
+    @Value("${spring.kafka.messaging.email-send.topic}")
     private String emailSendQueueTopic;
 
     private final CHKafkaProducer producer;
@@ -26,9 +26,7 @@ public class KafkaEmailClient {
     private final Schema schema;
 
     @Autowired
-    public KafkaEmailClient(CHKafkaProducer producer,
-                            AvroSerializer avroSerializer,
-                            Schema schema) {
+    public KafkaEmailClient(CHKafkaProducer producer, AvroSerializer avroSerializer, Schema schema) {
         this.producer = producer;
         this.avroSerializer = avroSerializer;
         this.schema = schema;
@@ -37,16 +35,20 @@ public class KafkaEmailClient {
     public void sendEmailToKafka(String requestId, EmailContent emailContent) throws ServiceException {
         final var errorMessage = "Error sending email to kafka";
         try {
-            var message = new Message();
             byte[] serializedData = avroSerializer.serialize(emailContent, schema);
+
+            var message = new Message();
             message.setValue(serializedData);
             message.setTopic(emailSendQueueTopic);
             message.setTimestamp(emailContent.getCreatedAt().atZone(ZoneId.systemDefault()).toEpochSecond());
+
             Future<RecordMetadata> future = producer.sendAndReturnFuture(message);
             future.get();
+
         } catch (IOException | ExecutionException e) {
             ApiLogger.errorContext(requestId, errorMessage, e);
             throw new ServiceException(e.getMessage(), e);
+
         } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
             ApiLogger.errorContext(requestId, errorMessage, ie);

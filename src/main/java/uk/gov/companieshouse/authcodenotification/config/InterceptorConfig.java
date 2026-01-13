@@ -15,11 +15,11 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
     private static final String ALL_PATHS = "/**";
 
-    // see application.properties
+    // see __application.properties
     @Value("${management.endpoints.web.base-path}")
     private String managementBasePath;
 
-    // see application.properties
+    // see __application.properties
     @Value("${management.endpoints.web.path-mapping.health}")
     private String healthCheckPathSuffix;
 
