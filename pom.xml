@@ -36,6 +36,7 @@
     <grpc.version>1.78.0</grpc.version>
     <tomcat.version>11.0.15</tomcat.version>
     <log4j2.version>2.25.3</log4j2.version>
+    <junit-pioneer.version>2.3.0</junit-pioneer.version>
 
     <!-- Force version of kafka for compatibility with ch-kafka -->
     <kafka-clients.version>3.9.1</kafka-clients.version>
@@ -246,6 +247,13 @@
     </dependency>
 
     <dependency>
+      <groupId>org.junit-pioneer</groupId>
+      <artifactId>junit-pioneer</artifactId>
+      <version>${junit-pioneer.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
       <version>${mockito-core.version}</version>
@@ -257,11 +265,13 @@
       <artifactId>rest-service-common-library</artifactId>
       <version>${rest-service-common-library-version}</version>
     </dependency>
+
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <version>${commons-lang3.version}</version>
     </dependency>
+
   </dependencies>
 
   <build>
@@ -317,6 +327,12 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${maven-surefire-plugin.version}</version>
+        <configuration>
+          <argLine>
+            --add-opens java.base/java.lang=ALL-UNNAMED
+            --add-opens java.base/java.util=ALL-UNNAMED
+          </argLine>
+        </configuration>
       </plugin>
 
       <plugin>

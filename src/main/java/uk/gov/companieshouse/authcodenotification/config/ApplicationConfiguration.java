@@ -26,7 +26,7 @@ public class ApplicationConfiguration {
     }
 
     @Bean
-    public KafkaRestClient restClient(RestTemplate restTemplate) {
+    public KafkaRestClient kafkaRestClient(RestTemplate restTemplate) {
         return new KafkaRestClient(restTemplate);
     }
 
