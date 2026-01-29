@@ -14,7 +14,7 @@ import uk.gov.companieshouse.api.ApiClient;
 import uk.gov.companieshouse.api.InternalApiClient;
 
 @ExtendWith(MockitoExtension.class)
-public class ApiClientConfigTest {
+class ApiClientConfigTest {
 
     ApiClientConfig underTest;
 

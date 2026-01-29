@@ -16,31 +16,31 @@ import uk.gov.companieshouse.authcodenotification.email.KafkaRestClient;
 import uk.gov.companieshouse.logging.Logger;
 
 @ExtendWith(MockitoExtension.class)
-public class ApplicationConfigurationTest {
+class ApplicationConfigurationTest {
 
     ApplicationConfiguration underTest;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         underTest = new ApplicationConfiguration();
     }
 
     @Test
-    public void testLogger() {
+    void testLogger() {
         Logger logger = underTest.logger();
 
         assertThat(logger, is(notNullValue()));
     }
 
     @Test
-    public void testDateTimeNow() {
+    void testDateTimeNow() {
         Supplier<LocalDateTime> localDateTimeSupplier = underTest.dateTimeNow();
 
         assertThat(localDateTimeSupplier, is(notNullValue()));
     }
 
     @Test
-    public void testKafkaRestClient() {
+    void testKafkaRestClient() {
         RestTemplate restTemplate = new RestTemplateBuilder().build();
         KafkaRestClient kafkaRestClient = underTest.kafkaRestClient(restTemplate);
 
@@ -48,7 +48,7 @@ public class ApplicationConfigurationTest {
     }
 
     @Test
-    public void testRestTemplate() {
+    void testRestTemplate() {
         RestTemplate restTemplate = underTest.restTemplate(new RestTemplateBuilder());
 
         assertThat(restTemplate, is(notNullValue()));

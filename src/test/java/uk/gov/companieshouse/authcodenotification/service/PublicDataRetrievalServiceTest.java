@@ -1,7 +1,14 @@
 package uk.gov.companieshouse.authcodenotification.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpResponseException;
+import java.io.IOException;
 import java.util.function.Supplier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,14 +26,6 @@ import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.authcodenotification.config.ApiClientConfig;
 import uk.gov.companieshouse.authcodenotification.exception.EntityNotFoundException;
 import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
-
-import java.io.IOException;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PublicDataRetrievalServiceTest {
@@ -64,7 +63,6 @@ class PublicDataRetrievalServiceTest {
 
     @BeforeEach
     void setup() {
-        //when(apiClientService.getApiClient()).thenReturn(apiClientSupplier);
         when(apiClientSupplier.get()).thenReturn(apiClient);
         when(apiClient.company()).thenReturn(companyResourceHandler);
         when(companyResourceHandler.get(COMPANY_PROFILE_URI)).thenReturn(companyGet);

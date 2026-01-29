@@ -2,14 +2,11 @@ package uk.gov.companieshouse.authcodenotification.service;
 
 import java.util.Map;
 import java.util.function.Supplier;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.api.InternalApiClient;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.company.RegisteredEmailAddressJson;
-import uk.gov.companieshouse.authcodenotification.config.ApiClientConfig;
 import uk.gov.companieshouse.authcodenotification.exception.EntityNotFoundException;
 import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 import uk.gov.companieshouse.authcodenotification.utils.ApiLogger;

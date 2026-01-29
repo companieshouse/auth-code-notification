@@ -1,7 +1,14 @@
 package uk.gov.companieshouse.authcodenotification.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpResponseException;
+import java.io.IOException;
 import java.util.function.Supplier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,21 +27,11 @@ import uk.gov.companieshouse.authcodenotification.config.ApiClientConfig;
 import uk.gov.companieshouse.authcodenotification.exception.EntityNotFoundException;
 import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 
-import java.io.IOException;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 @ExtendWith(MockitoExtension.class)
 class PrivateDataRetrievalServiceTest {
 
     private static final String REQUEST_ID = "abc";
     private static final String COMPANY_NUMBER = "OE123456";
-    private static final String ORACLE_QUERY_API_URL = "http://oracle-query-api-test:8080";
 
     private static final String GET_OVERSEAS_ENTITY_DATA_URL =
             String.format("/company/%s/registered-email-address", COMPANY_NUMBER);
@@ -65,7 +62,6 @@ class PrivateDataRetrievalServiceTest {
 
     @BeforeEach
     void setup() {
-//        when(apiClientConfig.getInternalApiClient(anyString())).thenReturn(internalApiClientSupplier);
         when(internalApiClientSupplier.get()).thenReturn(internalApiClient);
     }
 

@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import uk.gov.companieshouse.api.ApiClient;
 import uk.gov.companieshouse.api.InternalApiClient;
 import uk.gov.companieshouse.authcodenotification.utils.ApiLogger;
-import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.sdk.manager.ApiSdkManager;
 
 @Configuration
