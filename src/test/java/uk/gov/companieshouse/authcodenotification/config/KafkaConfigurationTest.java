@@ -3,7 +3,6 @@ package uk.gov.companieshouse.authcodenotification.config;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -20,7 +19,7 @@ import uk.gov.companieshouse.kafka.producer.CHKafkaProducer;
 import uk.gov.companieshouse.kafka.producer.ProducerConfig;
 
 @ExtendWith(MockitoExtension.class)
-public class KafkaConfigurationTest {
+class KafkaConfigurationTest {
 
     private static final String SCHEMA_REGISTRY_URL = "http://chs-kafka-schemas";
     private static final String EMAIL_SCHEMA_URI = "/subjects/email-send/versions/latest";
