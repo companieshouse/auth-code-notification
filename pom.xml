@@ -21,22 +21,30 @@
     <!-- JDK Version -->
     <java.version>21</java.version>
 
+    <!-- Skips Tests -->
+    <skip.unit.tests>false</skip.unit.tests>
+    <skip.integration.tests>false</skip.integration.tests>
+
     <!-- Maven Compiler -->
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
 
-    <spring-boot-dependencies.version>3.5.7</spring-boot-dependencies.version>
+    <maven-surefire.version>3.5.2</maven-surefire.version>
+    <maven-surefire-plugin.version>${maven-surefire.version}</maven-surefire-plugin.version>
+    <maven-failsafe-plugin.version>${maven-surefire.version}</maven-failsafe-plugin.version>
     <spring-boot-maven-plugin.version>3.5.7</spring-boot-maven-plugin.version>
+    <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
+    <jib-maven-plugin.version>3.5.1</jib-maven-plugin.version>
+
+    <!-- Spring Boot -->
+    <spring-boot-dependencies.version>3.5.7</spring-boot-dependencies.version>
 
     <avro.version>1.12.1</avro.version>
-    <encoder.version>1.4.0</encoder.version>
-    <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
-    <jib-maven-plugin.version>3.4.6</jib-maven-plugin.version>
     <json.version>20251224</json.version>
     <grpc.version>1.78.0</grpc.version>
     <tomcat.version>11.0.15</tomcat.version>
     <log4j2.version>2.25.3</log4j2.version>
-    <junit-pioneer.version>2.3.0</junit-pioneer.version>
+    <encoder.version>1.4.0</encoder.version>
 
     <!-- Force version of kafka for compatibility with ch-kafka -->
     <kafka-clients.version>3.9.1</kafka-clients.version>
@@ -140,17 +148,11 @@
 
   <dependencies>
 
-    <!-- CVE-2014-11407 -->
-    <dependency>
-      <groupId>io.grpc</groupId>
-      <artifactId>grpc-context</artifactId>
-      <version>${grpc.version}</version>
-    </dependency>
-
     <dependency>
       <groupId>io.opentelemetry.instrumentation</groupId>
       <artifactId>opentelemetry-spring-boot-starter</artifactId>
     </dependency>
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
@@ -169,6 +171,13 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
+
+    <!-- CVE-2014-11407 -->
+    <dependency>
+      <groupId>io.grpc</groupId>
+      <artifactId>grpc-context</artifactId>
+      <version>${grpc.version}</version>
     </dependency>
 
     <dependency>
@@ -232,7 +241,6 @@
       <version>${api-security-java.version}</version>
     </dependency>
 
-    <!-- test dependencies -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
@@ -246,13 +254,7 @@
       <scope>test</scope>
     </dependency>
 
-    <dependency>
-      <groupId>org.junit-pioneer</groupId>
-      <artifactId>junit-pioneer</artifactId>
-      <version>${junit-pioneer.version}</version>
-      <scope>test</scope>
-    </dependency>
-
+    <!-- test dependencies -->
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
@@ -276,6 +278,7 @@
 
   <build>
     <plugins>
+
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
@@ -324,22 +327,90 @@
       </plugin>
 
       <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${jacoco-maven-plugin.version}</version>
+        <configuration>
+          <append>true</append>
+          <destFile>${sonar.jacoco.reports}/jacoco.exec</destFile>
+          <dataFile>${sonar.jacoco.reports}/jacoco.exec</dataFile>
+          <outputDirectory>${sonar.jacoco.reports}/jacoco</outputDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <id>pre-unit-test</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+            <configuration>
+              <propertyName>surefireArgLine</propertyName>
+            </configuration>
+          </execution>
+          <execution>
+            <id>post-unit-test</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>pre-integration-test</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+            <configuration>
+              <propertyName>failsafeArgLine</propertyName>
+            </configuration>
+          </execution>
+          <execution>
+            <id>post-integration-test</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${maven-surefire-plugin.version}</version>
         <configuration>
-          <argLine>
-            --add-opens java.base/java.lang=ALL-UNNAMED
-            --add-opens java.base/java.util=ALL-UNNAMED
-          </argLine>
+          <argLine>-Dfile.encoding=UTF-8</argLine>
+          <argLine>${surefireArgLine}</argLine>
+          <skipTests>${skip.unit.tests}</skipTests>
         </configuration>
       </plugin>
 
       <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <version>${jacoco-maven-plugin.version}</version>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>${maven-failsafe-plugin.version}</version>
+        <executions>
+          <execution>
+            <phase>integration-test</phase>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <properties>
+            <property>
+              <name>listener</name>
+              <value>org.sonar.java.jacoco.JUnitListener</value>
+            </property>
+          </properties>
+          <argLine>-Dfile.encoding=UTF-8</argLine>
+          <argLine>${failsafeArgLine}</argLine>
+          <classesDirectory>${project.build.outputDirectory}</classesDirectory>
+          <skipITs>${skip.integration.tests}</skipITs>
+        </configuration>
       </plugin>
+
     </plugins>
   </build>
 </project>
