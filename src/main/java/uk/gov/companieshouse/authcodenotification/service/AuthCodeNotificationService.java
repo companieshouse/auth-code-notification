@@ -17,7 +17,7 @@ public class AuthCodeNotificationService {
     private static final String BLANK_ENCRYPTED_AUTH_CODE_MESSAGE = "Encrypted auth code is blank";
     public static final String ENCRYPTION_ERROR_MESSAGE = "Error when encrypting text";
 
-    @Value("${DATA_FIELD_ENCRYPTION_KEY}")
+    @Value("${application.data-field.encryption-key}")
     private String aesKeyString;
 
     private final PrivateDataRetrievalService privateDataRetrievalService;

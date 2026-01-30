@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.authcodenotification.controller;
 
+import static uk.gov.companieshouse.authcodenotification.utils.Constants.ERIC_REQUEST_ID_KEY;
+
 import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,16 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.companieshouse.authcodenotification.exception.EntityNotFoundException;
 import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
+import uk.gov.companieshouse.authcodenotification.model.SendEmailRequestDto;
 import uk.gov.companieshouse.authcodenotification.service.AuthCodeNotificationService;
 import uk.gov.companieshouse.authcodenotification.utils.ApiLogger;
-import uk.gov.companieshouse.authcodenotification.model.SendEmailRequestDto;
 import uk.gov.companieshouse.authcodenotification.utils.DataSanitiser;
 import uk.gov.companieshouse.authcodenotification.validation.AuthCodeEmailValidator;
 import uk.gov.companieshouse.logging.util.DataMap;
 import uk.gov.companieshouse.service.rest.err.Errors;
 import uk.gov.companieshouse.service.rest.response.ChResponseBody;
-
-import static uk.gov.companieshouse.authcodenotification.utils.Constants.ERIC_REQUEST_ID_KEY;
 
 @RestController
 @RequestMapping("/internal/company/{companyNumber}/auth-code")
@@ -68,13 +68,16 @@ public class AuthCodeNotificationController {
         // send email
         try {
             authCodeNotificationService.sendAuthCodeEmail(requestId, authCode, companyNumber);
+
         } catch (EntityNotFoundException nfe) {
             ApiLogger.infoContext(requestId, nfe.getMessage(), logDataMap.getLogMap());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
         } catch (ServiceException e) {
             ApiLogger.errorContext(requestId, e.getMessage(), e, logDataMap.getLogMap());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

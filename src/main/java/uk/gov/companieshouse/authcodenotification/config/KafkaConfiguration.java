@@ -10,41 +10,43 @@ import uk.gov.companieshouse.authcodenotification.email.KafkaRestClient;
 import uk.gov.companieshouse.kafka.producer.Acks;
 import uk.gov.companieshouse.kafka.producer.CHKafkaProducer;
 import uk.gov.companieshouse.kafka.producer.ProducerConfig;
-import uk.gov.companieshouse.kafka.producer.ProducerConfigHelper;
-
 
 @Configuration
 public class KafkaConfiguration {
 
-    @Value("${SCHEMA_REGISTRY_URL}")
-    private String schemaRegistryUrl;
+    private final String schemaRegistryUrl;
+    private final String emailSchemaUri;
+    private final String maximumRetryAttempts;
 
-    @Value("${EMAIL_SCHEMA_URI}")
-    private String emailSchemaUri;
-
-    @Value("${KAFKA_PRODUCER_MAXIMUM_RETRY_ATTEMPTS}")
-    private String maximumRetryAttempts;
+    public KafkaConfiguration(@Value("${spring.kafka.schema.registry-url}") String schemaRegistryUrl,
+                              @Value("${spring.kafka.email.schema-uri}") String emailSchemaUri,
+                              @Value("${spring.kafka.producer.maximum-retry-attempts}") String maximumRetryAttempts) {
+        this.schemaRegistryUrl = schemaRegistryUrl;
+        this.emailSchemaUri = emailSchemaUri;
+        this.maximumRetryAttempts = maximumRetryAttempts;
+    }
 
     @Bean
     public Schema fetchSchema(KafkaRestClient restClient) throws JSONException {
-       return getSchema(restClient, emailSchemaUri);
-    }
-
-    private Schema getSchema(KafkaRestClient restClient, String schemaUri) throws JSONException {
-        byte[] bytes = restClient.getSchema(schemaRegistryUrl, schemaUri);
+        byte[] bytes = restClient.getSchema(schemaRegistryUrl, emailSchemaUri);
         var schemaJson = new JSONObject(new String(bytes)).getString("schema");
         return new Schema.Parser().parse(schemaJson);
     }
 
     @Bean
-    public CHKafkaProducer buildKafkaProducer() {
+    public ProducerConfig buildKafkaConfig(@Value("${spring.kafka.bootstrap-servers}") String bootstrapServers) {
         var config = new ProducerConfig();
-        ProducerConfigHelper.assignBrokerAddresses(config);
-
         config.setRoundRobinPartitioner(true);
         config.setAcks(Acks.WAIT_FOR_ALL);
         config.setRetries(Integer.parseInt(maximumRetryAttempts));
         config.setEnableIdempotence(false);
-        return new CHKafkaProducer(config);
+        config.setBrokerAddresses(bootstrapServers.split(","));
+
+        return config;
+    }
+
+    @Bean
+    public CHKafkaProducer buildKafkaProducer(ProducerConfig producerConfig) {
+        return new CHKafkaProducer(producerConfig);
     }
 }

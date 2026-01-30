@@ -1,6 +1,5 @@
 package uk.gov.companieshouse.authcodenotification.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -15,16 +14,17 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
     private static final String ALL_PATHS = "/**";
 
-    // see application.properties
     @Value("${management.endpoints.web.base-path}")
     private String managementBasePath;
 
-    // see application.properties
     @Value("${management.endpoints.web.path-mapping.health}")
     private String healthCheckPathSuffix;
 
-    @Autowired
-    private InternalUserInterceptor internalUserInterceptor;
+    private final InternalUserInterceptor internalUserInterceptor;
+
+    public InterceptorConfig(InternalUserInterceptor interceptor) {
+        this.internalUserInterceptor = interceptor;
+    }
 
     /**
      * Set up the interceptors to run against endpoints when the endpoints are called

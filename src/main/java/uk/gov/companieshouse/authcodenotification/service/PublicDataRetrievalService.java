@@ -1,34 +1,35 @@
 package uk.gov.companieshouse.authcodenotification.service;
 
-import uk.gov.companieshouse.api.error.ApiErrorResponseException;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Map;
+import java.util.function.Supplier;
 import org.springframework.stereotype.Service;
+import uk.gov.companieshouse.api.ApiClient;
+import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
-import uk.gov.companieshouse.authcodenotification.client.ApiClientService;
 import uk.gov.companieshouse.authcodenotification.exception.EntityNotFoundException;
 import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 import uk.gov.companieshouse.authcodenotification.utils.ApiLogger;
 import uk.gov.companieshouse.logging.util.DataMap;
-
-import java.util.Map;
 
 @Service
 public class PublicDataRetrievalService {
 
     private static final String COMPANY_PROFILE_URI = "/company/%s";
 
-    @Autowired
-    private ApiClientService apiClientService;
+    private final Supplier<ApiClient> apiClientSupplier;
 
-    public CompanyProfileApi getCompanyProfile(String requestId, String companyNumber)
-            throws ServiceException {
+    public PublicDataRetrievalService(final Supplier<ApiClient> apiClientSupplier) {
+        this.apiClientSupplier  = apiClientSupplier;
+    }
+
+    public CompanyProfileApi getCompanyProfile(String requestId, String companyNumber) throws ServiceException {
         var dataMap = new DataMap.Builder().companyNumber(companyNumber).build();
         try {
             ApiLogger.infoContext(requestId, "Retrieving company profile data",  dataMap.getLogMap());
 
-            var companyProfileApi = apiClientService
-                    .getApiClient()
+            var companyProfileApi = apiClientSupplier
+                    .get()
                     .company()
                     .get(String.format(COMPANY_PROFILE_URI, companyNumber))
                     .execute()
@@ -37,6 +38,7 @@ public class PublicDataRetrievalService {
             ApiLogger.infoContext(requestId, "Successfully retrieved company profile data",  dataMap.getLogMap());
 
             return companyProfileApi;
+
         } catch (ApiErrorResponseException e) {
             if (e.getStatusCode() == 404) {
                 var message = "Unable to find company profile, HTTP exception status: " + e.getStatusCode();

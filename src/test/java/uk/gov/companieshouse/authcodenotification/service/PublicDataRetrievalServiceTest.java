@@ -1,7 +1,15 @@
 package uk.gov.companieshouse.authcodenotification.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpResponseException;
+import java.io.IOException;
+import java.util.function.Supplier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,17 +23,9 @@ import uk.gov.companieshouse.api.handler.company.request.CompanyGet;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
-import uk.gov.companieshouse.authcodenotification.client.ApiClientService;
+import uk.gov.companieshouse.authcodenotification.config.ApiClientConfig;
 import uk.gov.companieshouse.authcodenotification.exception.EntityNotFoundException;
 import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
-
-import java.io.IOException;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PublicDataRetrievalServiceTest {
@@ -41,7 +41,10 @@ class PublicDataRetrievalServiceTest {
     private PublicDataRetrievalService publicDataRetrievalService;
 
     @Mock
-    private ApiClientService apiClientService;
+    private ApiClientConfig apiClientService;
+
+    @Mock
+    private Supplier<ApiClient> apiClientSupplier;
 
     @Mock
     private ApiClient apiClient;
@@ -60,7 +63,7 @@ class PublicDataRetrievalServiceTest {
 
     @BeforeEach
     void setup() {
-        when(apiClientService.getApiClient()).thenReturn(apiClient);
+        when(apiClientSupplier.get()).thenReturn(apiClient);
         when(apiClient.company()).thenReturn(companyResourceHandler);
         when(companyResourceHandler.get(COMPANY_PROFILE_URI)).thenReturn(companyGet);
     }
@@ -74,7 +77,7 @@ class PublicDataRetrievalServiceTest {
         CompanyProfileApi returnedCompanyProfileApi = publicDataRetrievalService.getCompanyProfile(REQUEST_ID, COMPANY_NUMBER);
 
         assertEquals(companyProfileApi, returnedCompanyProfileApi);
-        verify(apiClientService, times(1)).getApiClient();
+        verify(apiClientSupplier, times(1)).get();
     }
 
     @Test
