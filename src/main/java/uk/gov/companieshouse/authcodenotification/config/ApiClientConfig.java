@@ -1,7 +1,6 @@
 package uk.gov.companieshouse.authcodenotification.config;
 
 import java.util.function.Supplier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.gov.companieshouse.api.ApiClient;
@@ -13,13 +12,10 @@ import uk.gov.companieshouse.sdk.manager.ApiSdkManager;
 public class ApiClientConfig {
 
     @Bean
-    public Supplier<InternalApiClient> getInternalApiClient(@Value("${application.oracle-query.api-url}") String oracleQueryApiUrl) {
-        ApiLogger.info("getInternalApiClient(oracleQueryApiYUrl=%s) method called.".formatted(oracleQueryApiUrl));
+    public Supplier<InternalApiClient> getInternalApiClient() {
+        ApiLogger.info("getInternalApiClient() method called.");
 
-        InternalApiClient apiClient = ApiSdkManager.getPrivateSDK();
-        apiClient.setBasePath(oracleQueryApiUrl);
-
-        return () -> apiClient;
+        return ApiSdkManager::getPrivateSDK;
     }
 
     @Bean

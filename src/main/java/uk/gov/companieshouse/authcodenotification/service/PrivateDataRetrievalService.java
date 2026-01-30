@@ -2,6 +2,7 @@ package uk.gov.companieshouse.authcodenotification.service;
 
 import java.util.Map;
 import java.util.function.Supplier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.api.InternalApiClient;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
@@ -18,9 +19,11 @@ public class PrivateDataRetrievalService {
     private static final String REGISTERED_EMAIL_ADDRESS_URI_SUFFIX = "/company/%s/registered-email-address";
 
     private final Supplier<InternalApiClient> internalApiClient;
+    private final String oracleQueryApiUrl;
 
-    public PrivateDataRetrievalService(final Supplier<InternalApiClient> internalApiClient) {
+    public PrivateDataRetrievalService(final Supplier<InternalApiClient> internalApiClient, @Value("${application.oracle-query.api-url}") String oracleQueryApiUrl) {
         this.internalApiClient = internalApiClient;
+        this.oracleQueryApiUrl = oracleQueryApiUrl;
     }
 
     public RegisteredEmailAddressJson getCompanyRegisteredEmailAddress(String requestId, String companyNumber) throws ServiceException {
@@ -28,8 +31,10 @@ public class PrivateDataRetrievalService {
         try {
             ApiLogger.infoContext(requestId, "Retrieving company registered email address from database", logDataMap.getLogMap());
 
-            var registeredEmailAddress = internalApiClient
-                    .get()
+            var apiClient = internalApiClient.get();
+            apiClient.setBasePath(oracleQueryApiUrl);
+
+            var registeredEmailAddress = apiClient
                     .privateCompanyResourceHandler()
                     .getCompanyRegisteredEmailAddress(String.format(REGISTERED_EMAIL_ADDRESS_URI_SUFFIX, companyNumber))
                     .execute()
