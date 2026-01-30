@@ -1,20 +1,5 @@
 package uk.gov.companieshouse.authcodenotification.email;
 
-import org.apache.avro.Schema;
-import org.apache.kafka.clients.producer.RecordMetadata;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
-import uk.gov.companieshouse.kafka.producer.CHKafkaProducer;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
@@ -24,6 +9,20 @@ import static org.mockito.Mockito.when;
 import static uk.gov.companieshouse.authcodenotification.TestUtils.buildEmailContent;
 import static uk.gov.companieshouse.authcodenotification.TestUtils.getDummyEmailData;
 import static uk.gov.companieshouse.authcodenotification.TestUtils.getDummySchema;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import org.apache.avro.Schema;
+import org.apache.kafka.clients.producer.RecordMetadata;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
+import uk.gov.companieshouse.kafka.producer.CHKafkaProducer;
 
 @ExtendWith(MockitoExtension.class)
 class KafkaEmailClientTest {
@@ -66,40 +65,32 @@ class KafkaEmailClientTest {
     }
 
     @Test
-    void checkFutureIsCalledWhenSendingEmailToKafka()
-            throws ServiceException, ExecutionException, InterruptedException {
+    void checkFutureIsCalledWhenSendingEmailToKafka() throws ServiceException, ExecutionException, InterruptedException {
         when(producer.sendAndReturnFuture(any())).thenReturn(future);
-        kafkaEmailClient = new KafkaEmailClient(producer,
-                avroSerializer, testSchema);
+        kafkaEmailClient = new KafkaEmailClient(producer, avroSerializer, testSchema);
         kafkaEmailClient.sendEmailToKafka(REQUEST_ID, emailContent);
         verify(future, times(1)).get();
     }
 
     @Test
-    void checkServiceExceptionIsThrownWhenSerializerThrowsIOException()
-            throws IOException {
+    void checkServiceExceptionIsThrownWhenSerializerThrowsIOException() throws IOException {
         doThrow(IOException.class).when(faultyAvroSerializer).serialize(emailContent, testSchema);
-        kafkaEmailClient = new KafkaEmailClient(producer,
-                faultyAvroSerializer, testSchema);
+        kafkaEmailClient = new KafkaEmailClient(producer, faultyAvroSerializer, testSchema);
         assertThrows(ServiceException.class, () -> kafkaEmailClient.sendEmailToKafka(REQUEST_ID, emailContent));
     }
 
     @Test
-    void checkServiceExceptionIsThrownWhenFutureThrowsExecutionException()
-            throws ExecutionException, InterruptedException {
+    void checkServiceExceptionIsThrownWhenFutureThrowsExecutionException() throws ExecutionException, InterruptedException {
         when(producer.sendAndReturnFuture(any())).thenReturn(future);
-        kafkaEmailClient = new KafkaEmailClient(producer,
-                avroSerializer, testSchema);
+        kafkaEmailClient = new KafkaEmailClient(producer, avroSerializer, testSchema);
         doThrow(ExecutionException.class).when(future).get();
         assertThrows(ServiceException.class, () -> kafkaEmailClient.sendEmailToKafka(REQUEST_ID, emailContent));
     }
 
     @Test
-    void checkServiceExceptionIsThrownWhenFutureThrowsInterruptedException()
-            throws ExecutionException, InterruptedException {
+    void checkServiceExceptionIsThrownWhenFutureThrowsInterruptedException() throws ExecutionException, InterruptedException {
         when(producer.sendAndReturnFuture(any())).thenReturn(future);
-        kafkaEmailClient = new KafkaEmailClient(producer,
-                avroSerializer, testSchema);
+        kafkaEmailClient = new KafkaEmailClient(producer, avroSerializer, testSchema);
         doThrow(InterruptedException.class).when(future).get();
         assertThrows(ServiceException.class, () -> kafkaEmailClient.sendEmailToKafka(REQUEST_ID, emailContent));
     }

@@ -10,20 +10,21 @@ import uk.gov.companieshouse.authcodenotification.email.KafkaRestClient;
 import uk.gov.companieshouse.kafka.producer.Acks;
 import uk.gov.companieshouse.kafka.producer.CHKafkaProducer;
 import uk.gov.companieshouse.kafka.producer.ProducerConfig;
-import uk.gov.companieshouse.kafka.producer.ProducerConfigHelper;
-
 
 @Configuration
 public class KafkaConfiguration {
 
-    @Value("${spring.kafka.schema.registry-url}")
-    private String schemaRegistryUrl;
+    private final String schemaRegistryUrl;
+    private final String emailSchemaUri;
+    private final String maximumRetryAttempts;
 
-    @Value("${spring.kafka.email.schema-uri}")
-    private String emailSchemaUri;
-
-    @Value("${spring.kafka.producer.maximum-retry-attempts}")
-    private String maximumRetryAttempts;
+    public KafkaConfiguration(@Value("${spring.kafka.schema.registry-url}") String schemaRegistryUrl,
+                              @Value("${spring.kafka.email.schema-uri}") String emailSchemaUri,
+                              @Value("${spring.kafka.producer.maximum-retry-attempts}") String maximumRetryAttempts) {
+        this.schemaRegistryUrl = schemaRegistryUrl;
+        this.emailSchemaUri = emailSchemaUri;
+        this.maximumRetryAttempts = maximumRetryAttempts;
+    }
 
     @Bean
     public Schema fetchSchema(KafkaRestClient restClient) throws JSONException {
@@ -33,7 +34,7 @@ public class KafkaConfiguration {
     }
 
     @Bean
-    public CHKafkaProducer buildKafkaProducer(@Value("${spring.kafka.bootstrap-servers}") String bootstrapServers) {
+    public ProducerConfig buildKafkaConfig(@Value("${spring.kafka.bootstrap-servers}") String bootstrapServers) {
         var config = new ProducerConfig();
         config.setRoundRobinPartitioner(true);
         config.setAcks(Acks.WAIT_FOR_ALL);
@@ -41,6 +42,11 @@ public class KafkaConfiguration {
         config.setEnableIdempotence(false);
         config.setBrokerAddresses(bootstrapServers.split(","));
 
-        return new CHKafkaProducer(config);
+        return config;
+    }
+
+    @Bean
+    public CHKafkaProducer buildKafkaProducer(ProducerConfig producerConfig) {
+        return new CHKafkaProducer(producerConfig);
     }
 }
