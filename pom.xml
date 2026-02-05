@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>auth-code-notification</artifactId>
-  <version>unversioned</version>
+  <version>latest</version>
   <name>auth-code-notification</name>
 
   <properties>
@@ -35,15 +35,16 @@
     <spring-boot-maven-plugin.version>3.5.7</spring-boot-maven-plugin.version>
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
     <jib-maven-plugin.version>3.5.1</jib-maven-plugin.version>
+    <opentelemetry-instrumentation.version>2.24.0</opentelemetry-instrumentation.version>
+    <commons-lang3.version>3.20.0</commons-lang3.version>
 
     <!-- Spring Boot -->
-    <spring-boot-dependencies.version>3.5.7</spring-boot-dependencies.version>
+    <spring-boot-dependencies.version>3.5.10</spring-boot-dependencies.version>
 
     <avro.version>1.12.1</avro.version>
     <json.version>20251224</json.version>
     <grpc.version>1.78.0</grpc.version>
     <tomcat.version>11.0.15</tomcat.version>
-    <log4j2.version>2.25.3</log4j2.version>
     <encoder.version>1.4.0</encoder.version>
 
     <!-- Force version of kafka for compatibility with ch-kafka -->
@@ -53,15 +54,13 @@
     <mockito-core.version>5.21.0</mockito-core.version>
 
     <!-- internal dependencies -->
-    <api-sdk-java.version>6.6.1</api-sdk-java.version>
-    <api-sdk-manager-java-library.version>3.0.14</api-sdk-manager-java-library.version>
+    <api-sdk-java.version>6.6.3</api-sdk-java.version>
+    <api-sdk-manager-java-library.version>3.0.15</api-sdk-manager-java-library.version>
     <api-security-java.version>2.0.18</api-security-java.version>
     <ch-kafka.version>3.0.6</ch-kafka.version>
-    <private-api-sdk-java.version>4.0.433</private-api-sdk-java.version>
+    <private-api-sdk-java.version>4.0.450</private-api-sdk-java.version>
     <rest-service-common-library-version>2.0.9</rest-service-common-library-version>
-    <structured-logging.version>3.0.46</structured-logging.version>
-    <opentelemetry-instrumentation.version>2.23.0</opentelemetry-instrumentation.version>
-    <commons-lang3.version>3.20.0</commons-lang3.version>
+    <structured-logging.version>3.0.48</structured-logging.version>
 
     <!-- Sonar -->
     <sonar.coverage.jacoco.xmlReportPaths>
@@ -87,7 +86,6 @@
 
   <dependencyManagement>
     <dependencies>
-
       <dependency>
         <groupId>io.opentelemetry.instrumentation</groupId>
         <artifactId>opentelemetry-instrumentation-bom</artifactId>
@@ -110,39 +108,6 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-
-      <!-- CVE-2025-52520(7.5), CVE-2025-61795(5.3), CVE-2025-53506(7.5), CVE-2025-55754(9.6), CVE-2025-48989(7.5), CVE-2025-55752(7.5) -->
-      <dependency>
-        <groupId>org.apache.tomcat.embed</groupId>
-        <artifactId>tomcat-embed-core</artifactId>
-        <version>${tomcat.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.apache.tomcat.embed</groupId>
-        <artifactId>tomcat-embed-el</artifactId>
-        <version>${tomcat.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.apache.tomcat.embed</groupId>
-        <artifactId>tomcat-embed-websocket</artifactId>
-        <version>${tomcat.version}</version>
-      </dependency>
-
-      <!-- CVE-2025-68161(6.3) -->
-      <dependency>
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-to-slf4j</artifactId>
-        <version>${log4j2.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-api</artifactId>
-        <version>${log4j2.version}</version>
-      </dependency>
-
     </dependencies>
   </dependencyManagement>
 
@@ -171,13 +136,6 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-validation</artifactId>
-    </dependency>
-
-    <!-- CVE-2014-11407 -->
-    <dependency>
-      <groupId>io.grpc</groupId>
-      <artifactId>grpc-context</artifactId>
-      <version>${grpc.version}</version>
     </dependency>
 
     <dependency>
@@ -273,6 +231,52 @@
       <artifactId>commons-lang3</artifactId>
       <version>${commons-lang3.version}</version>
     </dependency>
+
+    <!--the following transitive dependencies are added specifically to avoid vulnerabilities-->
+
+    <!-- CVE-2025-52520(7.5), CVE-2025-61795(5.3), CVE-2025-53506(7.5), CVE-2025-55754(9.6), CVE-2025-48989(7.5), CVE-2025-55752(7.5) -->
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-core</artifactId>
+      <version>${tomcat.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-el</artifactId>
+      <version>${tomcat.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-websocket</artifactId>
+      <version>${tomcat.version}</version>
+    </dependency>
+
+    <!-- CVE-2014-11407 -->
+    <dependency>
+      <groupId>io.grpc</groupId>
+      <artifactId>grpc-context</artifactId>
+      <version>${grpc.version}</version>
+    </dependency>
+
+    <!-- override assertj-core to fix CVE-2026-24400 - transitive dependency from spring-boot-starter-test which depends on spring-boot-dependencies -->
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>3.27.7</version>
+      <scope>test</scope>
+    </dependency>
+
+<!--    &lt;!&ndash; override lz4-java to fix CVE-2025-12183 - transitive dependency from ch-kafka which depends on kafka-clients &ndash;&gt;-->
+<!--    <dependency>-->
+<!--      <groupId>at.yawk.lz4</groupId>-->
+<!--      <artifactId>lz4-java</artifactId>-->
+<!--      <version>1.10.3</version>-->
+<!--      <scope>compile</scope>-->
+<!--    </dependency>-->
+
+    <!--end transitive dependencies-->
 
   </dependencies>
 
