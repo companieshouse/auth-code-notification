@@ -218,6 +218,13 @@
       </exclusions>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.20.0</version>
+      <scope>compile</scope>
+    </dependency>
+
     <!-- test dependencies -->
     <dependency>
       <groupId>org.mockito</groupId>
@@ -266,14 +273,6 @@
       <artifactId>assertj-core</artifactId>
       <version>3.27.7</version>
       <scope>test</scope>
-    </dependency>
-
-    <!-- override commons-lang3 to fix CVE-2025-48924 - transitive dependency from structured-logging 3.0.48 -->
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>3.20.0</version>
-      <scope>compile</scope>
     </dependency>
 
     <!-- override log4j-api to fix CVE-2025-68161 - transitive dependency from private-api-sdk-java 4.0.450 -->
