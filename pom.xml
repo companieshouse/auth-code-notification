@@ -276,6 +276,14 @@
       <scope>compile</scope>
     </dependency>
 
+    <!-- override log4j-api to fix CVE-2025-68161 - transitive dependency from private-api-sdk-java 4.0.450 -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
+      <version>2.25.3</version>
+      <scope>compile</scope>
+    </dependency>
+
     <!--end transitive dependencies-->
 
   </dependencies>
