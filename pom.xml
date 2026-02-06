@@ -36,7 +36,6 @@
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
     <jib-maven-plugin.version>3.5.1</jib-maven-plugin.version>
     <opentelemetry-instrumentation.version>2.24.0</opentelemetry-instrumentation.version>
-    <commons-lang3.version>3.20.0</commons-lang3.version>
 
     <!-- Spring Boot -->
     <spring-boot-dependencies.version>3.5.10</spring-boot-dependencies.version>
@@ -210,6 +209,13 @@
       <artifactId>sonar-maven-plugin</artifactId>
       <version>${sonar-maven-plugin.version}</version>
       <scope>test</scope>
+      <exclusions>
+        <!-- CVE-2025-48924 -->
+        <exclusion>
+          <groupId>commons-lang</groupId>
+          <artifactId>commons-lang</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- test dependencies -->
@@ -224,12 +230,6 @@
       <groupId>uk.gov.companieshouse</groupId>
       <artifactId>rest-service-common-library</artifactId>
       <version>${rest-service-common-library-version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>${commons-lang3.version}</version>
     </dependency>
 
     <!--the following transitive dependencies are added specifically to avoid vulnerabilities-->
@@ -268,13 +268,13 @@
       <scope>test</scope>
     </dependency>
 
-<!--    &lt;!&ndash; override lz4-java to fix CVE-2025-12183 - transitive dependency from ch-kafka which depends on kafka-clients &ndash;&gt;-->
-<!--    <dependency>-->
-<!--      <groupId>at.yawk.lz4</groupId>-->
-<!--      <artifactId>lz4-java</artifactId>-->
-<!--      <version>1.10.3</version>-->
-<!--      <scope>compile</scope>-->
-<!--    </dependency>-->
+    <!-- override commons-lang3 to fix CVE-2025-48924 - transitive dependency from structured-logging 3.0.48 -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.20.0</version>
+      <scope>compile</scope>
+    </dependency>
 
     <!--end transitive dependencies-->
 
