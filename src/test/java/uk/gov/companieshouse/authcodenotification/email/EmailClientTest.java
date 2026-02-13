@@ -35,7 +35,7 @@ import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.authcodenotification.exception.EmailClientException;
 
 @ExtendWith(MockitoExtension.class)
-public class EmailClientTest {
+class EmailClientTest {
 
     private static final String REQUEST_ID = "requestId";
     private static final String APP_ID = "app_id";
@@ -82,7 +82,7 @@ public class EmailClientTest {
     }
 
     @Test
-    public void givenValidContent_whenSendEmailCalled_thenResponseOk() throws JsonProcessingException, ApiErrorResponseException {
+    void givenValidContent_whenSendEmailCalled_thenResponseOk() throws JsonProcessingException, ApiErrorResponseException {
         Map<String, Object> data = new HashMap<>();
         data.put("subject", "This is the email subject");
         data.put("to", "sendto@emailaddress.com");
@@ -112,7 +112,7 @@ public class EmailClientTest {
     }
 
     @Test
-    public void givenBadRequest_whenSendEmailCalled_thenExceptionRaised() throws JsonProcessingException, ApiErrorResponseException {
+    void givenBadRequest_whenSendEmailCalled_thenExceptionRaised() throws JsonProcessingException, ApiErrorResponseException {
         Map<String, Object> data = new HashMap<>();
         data.put("subject", "This is the email subject");
         data.put("to", "sendto@emailaddress.com");
@@ -149,7 +149,7 @@ public class EmailClientTest {
 
 
     @Test
-    public void givenParsingError_whenSendEmailCalled_thenRaisedException() throws JsonProcessingException, ApiErrorResponseException {
+    void givenParsingError_whenSendEmailCalled_thenRaisedException() throws JsonProcessingException {
         Map<String, Object> data = new HashMap<>();
         data.put("subject", "This is the email subject");
         data.put("to", "sendto@emailaddress.com");

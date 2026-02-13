@@ -28,7 +28,7 @@ public class EmailClient {
         this.objectMapper = mapper;
     }
 
-    public <T> ApiResponse<Void> sendEmail(final String requestId, final EmailContent content) throws EmailClientException {
+    public ApiResponse<Void> sendEmail(final String requestId, final EmailContent content) throws EmailClientException {
         LOGGER.debug("sendEmail(requestId=%s, content=%s) method called.".formatted(requestId, content));
 
         try {
