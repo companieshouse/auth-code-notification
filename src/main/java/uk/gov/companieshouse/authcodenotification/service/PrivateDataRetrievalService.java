@@ -2,6 +2,7 @@ package uk.gov.companieshouse.authcodenotification.service;
 
 import java.util.Map;
 import java.util.function.Supplier;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.api.InternalApiClient;
@@ -21,7 +22,8 @@ public class PrivateDataRetrievalService {
     private final Supplier<InternalApiClient> internalApiClient;
     private final String oracleQueryApiUrl;
 
-    public PrivateDataRetrievalService(final Supplier<InternalApiClient> internalApiClient, @Value("${application.oracle-query.api-url}") String oracleQueryApiUrl) {
+    public PrivateDataRetrievalService(@Qualifier("internalApiClient") final Supplier<InternalApiClient> internalApiClient,
+            @Value("${application.oracle-query.api-url}") String oracleQueryApiUrl) {
         this.internalApiClient = internalApiClient;
         this.oracleQueryApiUrl = oracleQueryApiUrl;
     }

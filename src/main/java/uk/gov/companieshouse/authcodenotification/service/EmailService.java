@@ -8,8 +8,8 @@ import java.util.function.Supplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import uk.gov.companieshouse.authcodenotification.email.EmailClient;
 import uk.gov.companieshouse.authcodenotification.email.EmailContent;
-import uk.gov.companieshouse.authcodenotification.email.KafkaEmailClient;
 import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 import uk.gov.companieshouse.authcodenotification.utils.ApiLogger;
 import uk.gov.companieshouse.logging.util.DataMap;
@@ -26,30 +26,28 @@ public class EmailService {
     @Value("${application.email-service.overseas-entities-template}")
     private String overseasEntitiesTemplate;
 
-    private final KafkaEmailClient kafkaEmailClient;
+    private final EmailClient emailClient;
     private final Supplier<LocalDateTime> dateTimeSupplier;
 
     @Autowired
-    public EmailService(final KafkaEmailClient kafkaEmailClient, final Supplier<LocalDateTime> dateTimeSupplier) {
-        this.kafkaEmailClient = kafkaEmailClient;
+    public EmailService(final EmailClient emailClient, final Supplier<LocalDateTime> dateTimeSupplier) {
+        this.emailClient = emailClient;
         this.dateTimeSupplier = dateTimeSupplier;
     }
 
     public void sendAuthCodeEmail(String requestId, String authCode, String companyName, String companyNumber, String emailAddress)
             throws ServiceException {
 
-        Map<String, Object> emailContentData = constructCommonEmailMap(
-              authCode, companyName, companyNumber, emailAddress);
+        Map<String, Object> emailContentData = constructCommonEmailMap(authCode, companyName, companyNumber, emailAddress);
 
         var emailContent = constructEmailContent(overseasEntitiesTemplate, emailAddress, emailContentData);
         var logDataMap = new DataMap.Builder().companyNumber(companyNumber).build();
 
-        ApiLogger.infoContext(requestId, "Calling Kafka client to send auth code email", logDataMap.getLogMap());
-        kafkaEmailClient.sendEmailToKafka(requestId, emailContent);
+        ApiLogger.infoContext(requestId, "Calling CHS Kafka API client to send auth code email", logDataMap.getLogMap());
+        emailClient.sendEmail(requestId, emailContent);
 
-        ApiLogger.infoContext(requestId, "Successfully called Kafka client to send auth code email", logDataMap.getLogMap());
+        ApiLogger.infoContext(requestId, "Successfully called CHS Kafka API client to send auth code email", logDataMap.getLogMap());
     }
-
 
     private EmailContent constructEmailContent(String templateName, String emailAddress, Map<String, Object> data) {
         return new EmailContent.Builder()

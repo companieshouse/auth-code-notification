@@ -1,5 +1,6 @@
 # Spring actuator end-points config
 spring:
+
   kafka:
     bootstrap-servers: ${KAFKA_BROKER_ADDR:kafka3:9092}
     schema:
@@ -13,6 +14,10 @@ spring:
         topic: ${EMAIL_SEND_QUEUE_TOPIC:email-send}
 
 application:
+
+  chs-kafka-api:
+    url: ${CHS_KAFKA_API_URL:http://api.chs.local:4001}
+    key: ${CHS_API_KEY:default_api_key_change_me}
 
   data-field:
     encryption-key: ${DATA_FIELD_ENCRYPTION_KEY:default_encryption_key_change_me}

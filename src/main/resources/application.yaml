@@ -13,26 +13,27 @@ spring:
         topic: ${EMAIL_SEND_QUEUE_TOPIC:email-send}
 
 application:
-
+  chs-kafka-api:
+    url: ${CHS_KAFKA_API_URL}
+    key: ${CHS_API_KEY}
   data-field:
     encryption-key: ${DATA_FIELD_ENCRYPTION_KEY:default_encryption_key_change_me}
-
   email-service:
     subject: ${EMAIL_SUBJECT:Your Companies House authentication code}
     sender-app-id: ${EMAIL_SENDER_APP_ID:auth_code_notification}
     overseas-entities-template: ${EMAIL_AUTH_CODE_TEMPLATE_OVERSEAS_ENTITIES:auth_code_request_overseas_entities}
-
   oracle-query:
     api-url: ${ORACLE_QUERY_API_URL:http://oracle-query-api:8080}
 
 management:
   endpoints:
-    enabled-by-default: false
     web:
       base-path: /auth-code-notification/
       path-mapping:
         health: healthcheck
+    access:
+      default: read_only
   endpoint:
     health:
-      enabled: true
       show-details: never
+      access: read_only

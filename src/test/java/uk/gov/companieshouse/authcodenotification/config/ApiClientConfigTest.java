@@ -23,14 +23,20 @@ class ApiClientConfigTest {
     }
 
     @Test
-    void getInternalApiClientSupplier() {
-        Supplier<InternalApiClient> internalApiClientSupplier = underTest.getInternalApiClient();
-        assertThat(internalApiClientSupplier, is(notNullValue()));
+    void testApiClientSupplier() {
+        Supplier<ApiClient> supplier = underTest.getApiClient();
+        assertThat(supplier, is(notNullValue()));
     }
 
     @Test
-    void testApiClientSupplier() {
-        Supplier<ApiClient> apiClientSupplier = underTest.getApiClient();
-        assertThat(apiClientSupplier, is(notNullValue()));
+    void getInternalApiClientSupplier() {
+        Supplier<InternalApiClient> supplier = underTest.getInternalApiClient();
+        assertThat(supplier, is(notNullValue()));
+    }
+
+    @Test
+    void getKafkaApiClientSupplier() {
+        Supplier<InternalApiClient> supplier = underTest.getKafkaApiClient("http://chs-kafka-api:8080", "test-chs-api-key");
+        assertThat(supplier, is(notNullValue()));
     }
 }
