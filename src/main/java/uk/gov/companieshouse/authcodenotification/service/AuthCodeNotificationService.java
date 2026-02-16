@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.authcodenotification.service;
 
+import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,8 +9,6 @@ import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 import uk.gov.companieshouse.authcodenotification.utils.ApiLogger;
 import uk.gov.companieshouse.authcodenotification.utils.Encrypter;
 import uk.gov.companieshouse.logging.util.DataMap;
-
-import java.util.Map;
 
 @Service
 public class AuthCodeNotificationService {
@@ -21,11 +20,8 @@ public class AuthCodeNotificationService {
     private String aesKeyString;
 
     private final PrivateDataRetrievalService privateDataRetrievalService;
-
     private final PublicDataRetrievalService publicDataRetrievalService;
-
     private final EmailService emailService;
-
     private final Encrypter encrypter;
 
     @Autowired
@@ -42,6 +38,7 @@ public class AuthCodeNotificationService {
     public void sendAuthCodeEmail(String requestId, String authCode, String companyNumber) throws ServiceException {
         var logDataMap = new DataMap.Builder().companyNumber(companyNumber).build();
         ApiLogger.infoContext(requestId, "Processing send auth code email request", logDataMap.getLogMap());
+
         var logMap = logDataMap.getLogMap();
 
         String encryptedAuthCode = encryptAuthCode(requestId, authCode, logMap);
@@ -55,6 +52,7 @@ public class AuthCodeNotificationService {
     private String encryptAuthCode(String requestId, String authCode, Map<String, Object> logMap) throws ServiceException {
         try {
             String encryptedAuthCode = encrypter.encrypt(authCode, aesKeyString);
+
             if (StringUtils.isBlank(encryptedAuthCode)) {
                 ApiLogger.errorContext(requestId, BLANK_ENCRYPTED_AUTH_CODE_MESSAGE, null, logMap);
                 throw new ServiceException(BLANK_ENCRYPTED_AUTH_CODE_MESSAGE);
@@ -62,6 +60,7 @@ public class AuthCodeNotificationService {
             ApiLogger.infoContext(requestId, "Successfully encrypted auth code to " + encryptedAuthCode, logMap);
 
             return encryptedAuthCode;
+
         } catch (Exception e) {
             ApiLogger.errorContext(requestId, ENCRYPTION_ERROR_MESSAGE, e, logMap);
             throw new ServiceException(ENCRYPTION_ERROR_MESSAGE, e);
@@ -77,6 +76,7 @@ public class AuthCodeNotificationService {
         }
 
         ApiLogger.infoContext(requestId, "Successfully retrieved overseas entity email address", logMap);
+
         return emailAddress;
     }
 
@@ -89,6 +89,8 @@ public class AuthCodeNotificationService {
         }
 
         ApiLogger.infoContext(requestId, "Successfully retrieved company name", logMap);
+
         return companyName;
     }
+
 }

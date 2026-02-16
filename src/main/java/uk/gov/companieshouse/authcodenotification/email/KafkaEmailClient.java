@@ -42,6 +42,7 @@ public class KafkaEmailClient {
             message.setTimestamp(emailContent.getCreatedAt().atZone(ZoneId.systemDefault()).toEpochSecond());
 
             Future<RecordMetadata> future = producer.sendAndReturnFuture(message);
+
             future.get();
 
         } catch (IOException | ExecutionException e) {
