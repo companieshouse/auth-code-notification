@@ -8,7 +8,6 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
-import uk.gov.companieshouse.authcodenotification.email.KafkaRestClient;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
@@ -23,11 +22,6 @@ public class ApplicationConfiguration {
     @Bean
     public Supplier<LocalDateTime> dateTimeNow() {
         return LocalDateTime::now;
-    }
-
-    @Bean
-    public KafkaRestClient kafkaRestClient(RestTemplate restTemplate) {
-        return new KafkaRestClient(restTemplate);
     }
 
     @Bean
