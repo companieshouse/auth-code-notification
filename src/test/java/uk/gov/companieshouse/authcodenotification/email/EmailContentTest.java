@@ -14,7 +14,8 @@ class EmailContentTest {
     private static final String EMAIL_ADDRESS = "test@test.com";
     private static final LocalDateTime CREATED_AT =
             LocalDateTime.of(2020, 1, 1, 0, 0);
-   @Test
+
+    @Test
     void emailBuilderTest() {
         EmailContent emailContent = new EmailContent.Builder()
                 .withOriginatingAppId(ORIGINATING_APP_ID)

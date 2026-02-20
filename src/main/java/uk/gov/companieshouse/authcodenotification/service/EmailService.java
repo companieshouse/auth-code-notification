@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.authcodenotification.email.EmailClient;
 import uk.gov.companieshouse.authcodenotification.email.EmailContent;
-import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 import uk.gov.companieshouse.authcodenotification.utils.ApiLogger;
 import uk.gov.companieshouse.logging.util.DataMap;
 
@@ -35,9 +34,7 @@ public class EmailService {
         this.dateTimeSupplier = dateTimeSupplier;
     }
 
-    public void sendAuthCodeEmail(String requestId, String authCode, String companyName, String companyNumber, String emailAddress)
-            throws ServiceException {
-
+    public void sendAuthCodeEmail(String requestId, String authCode, String companyName, String companyNumber, String emailAddress) {
         Map<String, Object> emailContentData = constructCommonEmailMap(authCode, companyName, companyNumber, emailAddress);
 
         var emailContent = constructEmailContent(overseasEntitiesTemplate, emailAddress, emailContentData);

@@ -24,6 +24,22 @@ class ApiLoggerTest {
     }
 
     @Test
+    void testDebugLoggingDoesNotModifyLogMap() {
+        ApiLogger.debug(TEST_MESSAGE, logMap);
+
+        assertEquals(1, logMap.size());
+        assertEquals(LOG_MAP_VALUE, logMap.get(LOG_MAP_KEY));
+    }
+
+    @Test
+    void testDebugStringLoggingDoesNotModifyLogMap() {
+        ApiLogger.debugContext(CONTEXT, TEST_MESSAGE);
+
+        assertEquals(1, logMap.size());
+        assertEquals(LOG_MAP_VALUE, logMap.get(LOG_MAP_KEY));
+    }
+
+    @Test
     void testDebugContextLoggingDoesNotModifyLogMap() {
         ApiLogger.debugContext(CONTEXT, TEST_MESSAGE, logMap);
 
@@ -48,6 +64,22 @@ class ApiLoggerTest {
     }
 
     @Test
+    void testErrorLoggingDoesNotModifyLogMap() {
+        ApiLogger.error(TEST_MESSAGE, new Exception(TEST_MESSAGE), logMap);
+
+        assertEquals(1, logMap.size());
+        assertEquals(LOG_MAP_VALUE, logMap.get(LOG_MAP_KEY));
+    }
+
+    @Test
+    void testErrorExceptionLoggingDoesNotModifyLogMap() {
+        ApiLogger.errorContext(TEST_MESSAGE, new Exception(TEST_MESSAGE));
+
+        assertEquals(1, logMap.size());
+        assertEquals(LOG_MAP_VALUE, logMap.get(LOG_MAP_KEY));
+    }
+
+    @Test
     void testErrorContextLoggingDoesNotModifyLogMap() {
         ApiLogger.errorContext(CONTEXT, TEST_MESSAGE, new Exception("TEST"), logMap);
 
@@ -56,8 +88,8 @@ class ApiLoggerTest {
     }
 
     @Test
-    void testErrorLoggingDoesNotModifyLogMap() {
-        ApiLogger.error(TEST_MESSAGE, new Exception(TEST_MESSAGE), logMap);
+    void testErrorContextWithNullLoggingDoesNotModifyLogMap() {
+        ApiLogger.errorContext(CONTEXT, TEST_MESSAGE, new Exception("TEST"), null);
 
         assertEquals(1, logMap.size());
         assertEquals(LOG_MAP_VALUE, logMap.get(LOG_MAP_KEY));

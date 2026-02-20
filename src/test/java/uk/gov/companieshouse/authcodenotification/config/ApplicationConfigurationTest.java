@@ -12,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.client.RestTemplate;
-import uk.gov.companieshouse.authcodenotification.email.KafkaRestClient;
 import uk.gov.companieshouse.logging.Logger;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,14 +36,6 @@ class ApplicationConfigurationTest {
         Supplier<LocalDateTime> localDateTimeSupplier = underTest.dateTimeNow();
 
         assertThat(localDateTimeSupplier, is(notNullValue()));
-    }
-
-    @Test
-    void testKafkaRestClient() {
-        RestTemplate restTemplate = new RestTemplateBuilder().build();
-        KafkaRestClient kafkaRestClient = underTest.kafkaRestClient(restTemplate);
-
-        assertThat(kafkaRestClient, is(notNullValue()));
     }
 
     @Test

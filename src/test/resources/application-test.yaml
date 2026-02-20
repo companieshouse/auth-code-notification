@@ -1,18 +1,3 @@
-# Spring actuator end-points config
-spring:
-
-  kafka:
-    bootstrap-servers: ${KAFKA_BROKER_ADDR:kafka3:9092}
-    schema:
-      registry-url: ${SCHEMA_REGISTRY_URL:http://chs-kafka-schemas}
-    email:
-      schema-uri: ${EMAIL_SCHEMA_URI:/subjects/email-send/versions/latest}
-    producer:
-      maximum-retry-attempts: ${KAFKA_PRODUCER_MAXIMUM_RETRY_ATTEMPTS:3}
-    messaging:
-      email-send:
-        topic: ${EMAIL_SEND_QUEUE_TOPIC:email-send}
-
 application:
 
   chs-kafka-api:
