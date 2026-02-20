@@ -19,7 +19,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.companieshouse.authcodenotification.email.EmailClient;
 import uk.gov.companieshouse.authcodenotification.email.EmailContent;
-import uk.gov.companieshouse.authcodenotification.exception.ServiceException;
 
 @ExtendWith(MockitoExtension.class)
 class EmailServiceTest {
@@ -48,7 +47,7 @@ class EmailServiceTest {
     }
 
     @Test
-    void sendAuthCodeEmail() throws ServiceException {
+    void sendAuthCodeEmail() {
         when(dateTimeSupplier.get()).thenReturn(LOCAL_DATE_TIME);
 
         emailService.sendAuthCodeEmail(
