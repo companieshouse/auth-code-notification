@@ -35,7 +35,7 @@
     <spring-boot-maven-plugin.version>3.5.7</spring-boot-maven-plugin.version>
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
     <jib-maven-plugin.version>3.5.1</jib-maven-plugin.version>
-    <opentelemetry-instrumentation.version>2.24.0</opentelemetry-instrumentation.version>
+    <opentelemetry-instrumentation.version>2.25.0</opentelemetry-instrumentation.version>
 
     <!-- Spring Boot -->
     <spring-boot-dependencies.version>3.5.10</spring-boot-dependencies.version>
