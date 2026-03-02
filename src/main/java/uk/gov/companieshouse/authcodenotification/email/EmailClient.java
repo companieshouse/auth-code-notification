@@ -42,7 +42,7 @@ public class EmailClient {
             sendEmail.setEmailAddress(content.getEmailAddress());
 
             var emailData = objectMapper.writeValueAsString(sendEmail);
-            LOGGER.info("Preparing to send JSON model to CHS Kafka API: %s".formatted(emailData));
+            LOGGER.debug("Preparing to send JSON model to CHS Kafka API: %s".formatted(emailData));
 
             var apiClient = internalApiClientSupplier.get();
             apiClient.getHttpClient().setRequestId(requestId);

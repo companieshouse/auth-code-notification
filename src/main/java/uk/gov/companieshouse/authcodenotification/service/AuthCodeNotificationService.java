@@ -44,6 +44,7 @@ public class AuthCodeNotificationService {
         String encryptedAuthCode = encryptAuthCode(requestId, authCode, logMap);
         String emailAddress = getOverseasEntityEmailAddress(requestId, companyNumber, logMap);
         String companyName = getCompanyName(requestId, companyNumber, logMap);
+
         emailService.sendAuthCodeEmail(requestId, encryptedAuthCode, companyName, companyNumber, emailAddress);
 
         ApiLogger.infoContext(requestId, "Finished processing send auth code email request", logDataMap.getLogMap());
