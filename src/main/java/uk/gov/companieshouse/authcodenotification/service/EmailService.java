@@ -34,8 +34,7 @@ public class EmailService {
     }
 
     public void sendAuthCodeEmail(String requestId, String authCode, String companyName, String companyNumber, String emailAddress) {
-//        var emailData = new EmailData(emailSubject, emailAddress, authCode, companyName, companyNumber);
-        var emailData = new EmailData(emailSubject, "jbishop2@companieshouse.gov.uk", authCode, companyName, companyNumber);
+        var emailData = new EmailData(emailSubject, emailAddress, authCode, companyName, companyNumber);
 
         var emailContent = new EmailContent.Builder()
                 .withOriginatingAppId(originatingAppId)
