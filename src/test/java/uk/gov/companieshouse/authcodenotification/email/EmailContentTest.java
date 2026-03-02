@@ -17,11 +17,13 @@ class EmailContentTest {
 
     @Test
     void emailBuilderTest() {
+        EmailData emailData = TestUtils.getDummyEmailData();
+
         EmailContent emailContent = new EmailContent.Builder()
                 .withOriginatingAppId(ORIGINATING_APP_ID)
                 .withEmailAddress(EMAIL_ADDRESS)
                 .withCreatedAt(CREATED_AT)
-                .withData(TestUtils.getDummyEmailData())
+                .withData(emailData)
                 .withMessageId(MESSAGE_ID)
                 .withMessageType(MESSAGE_TYPE)
                 .build();
@@ -29,7 +31,7 @@ class EmailContentTest {
         assertEquals(ORIGINATING_APP_ID, emailContent.getOriginatingAppId());
         assertEquals(MESSAGE_ID, emailContent.getMessageId());
         assertEquals(MESSAGE_TYPE, emailContent.getMessageType());
-        assertEquals(TestUtils.getDummyEmailData(), emailContent.getData());
+        assertEquals(emailData, emailContent.getData());
         assertEquals(EMAIL_ADDRESS, emailContent.getEmailAddress());
         assertEquals(CREATED_AT, emailContent.getCreatedAt());
     }

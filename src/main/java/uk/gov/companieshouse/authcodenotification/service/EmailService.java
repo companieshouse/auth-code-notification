@@ -1,8 +1,6 @@
 package uk.gov.companieshouse.authcodenotification.service;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 import java.util.function.Supplier;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.authcodenotification.email.EmailClient;
 import uk.gov.companieshouse.authcodenotification.email.EmailContent;
+import uk.gov.companieshouse.authcodenotification.email.EmailData;
 import uk.gov.companieshouse.authcodenotification.utils.ApiLogger;
 import uk.gov.companieshouse.logging.util.DataMap;
 
@@ -35,36 +34,23 @@ public class EmailService {
     }
 
     public void sendAuthCodeEmail(String requestId, String authCode, String companyName, String companyNumber, String emailAddress) {
-        Map<String, Object> emailContentData = constructCommonEmailMap(authCode, companyName, companyNumber, emailAddress);
+        var emailData = new EmailData(emailSubject, emailAddress, authCode, companyName, companyNumber);
 
-        var emailContent = constructEmailContent(overseasEntitiesTemplate, emailAddress, emailContentData);
+        var emailContent = new EmailContent.Builder()
+                .withOriginatingAppId(originatingAppId)
+                .withMessageType(overseasEntitiesTemplate)
+                .withMessageId(UUID.randomUUID().toString())
+                .withData(emailData)
+                .withEmailAddress(emailAddress)
+                .withCreatedAt(dateTimeSupplier.get())
+                .build();
+
         var logDataMap = new DataMap.Builder().companyNumber(companyNumber).build();
-
         ApiLogger.infoContext(requestId, "Calling CHS Kafka API client to send auth code email", logDataMap.getLogMap());
+
         emailClient.sendEmail(requestId, emailContent);
 
         ApiLogger.infoContext(requestId, "Successfully called CHS Kafka API client to send auth code email", logDataMap.getLogMap());
     }
 
-    private EmailContent constructEmailContent(String templateName, String emailAddress, Map<String, Object> data) {
-        return new EmailContent.Builder()
-                .withOriginatingAppId(originatingAppId)
-                .withCreatedAt(dateTimeSupplier.get())
-                .withMessageType(templateName)
-                .withMessageId(UUID.randomUUID().toString())
-                .withEmailAddress(emailAddress)
-                .withData(data)
-                .build();
-    }
-
-    private Map<String, Object> constructCommonEmailMap(String authCode, String companyName, String companyNumber, String emailAddress) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("subject", emailSubject);
-        data.put("to", emailAddress);
-        data.put("auth_code", authCode);
-        data.put("company_name", companyName);
-        data.put("company_number", companyNumber);
-
-        return data;
-    }
 }
