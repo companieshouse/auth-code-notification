@@ -1,22 +1,20 @@
 package uk.gov.companieshouse.authcodenotification;
 
-import org.apache.avro.Schema;
-import uk.gov.companieshouse.authcodenotification.email.EmailContent;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
+import org.apache.avro.Schema;
+import uk.gov.companieshouse.authcodenotification.email.EmailContent;
+import uk.gov.companieshouse.authcodenotification.email.EmailData;
 
 /**
  * A home for reusable 'helper' methods for our unit tests
  */
 public class TestUtils {
     public static EmailContent buildEmailContent(String appId, String messageId, String messageType,
-                                                 Map<String, Object> data, String recipient,
+                                                 EmailData data, String recipient,
                                                  LocalDateTime createdAt) {
         return new EmailContent.Builder()
                 .withOriginatingAppId(appId)
@@ -28,15 +26,13 @@ public class TestUtils {
                 .build();
     }
 
-    public static Map<String, Object> getDummyEmailData() {
-        Map<String, Object> data = new HashMap<>();
-        data.put("to", "example@test.co.uk");
-        data.put("subject", "Test email submitted");
-        data.put("full_name", "Joe Bloggs");
-        data.put("company_name", "TEST COMPANY");
-        data.put("company_number", "00001111");
-        data.put("reason", "Testing this");
-        return data;
+    public static EmailData getDummyEmailData() {
+        var to = "example@test.co.uk";
+        var subject = "Test email submitted";
+        var authCode = "OU812";
+        var companyName = "TEST COMPANY";
+        var companyNumber = "00001111";
+        return new EmailData(subject, to, authCode, companyName, companyNumber);
     }
 
     public static Schema getDummySchema(URL url) throws IOException {

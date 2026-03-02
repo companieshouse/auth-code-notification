@@ -7,7 +7,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.function.Supplier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.companieshouse.authcodenotification.email.EmailClient;
 import uk.gov.companieshouse.authcodenotification.email.EmailContent;
+import uk.gov.companieshouse.authcodenotification.email.EmailData;
 
 @ExtendWith(MockitoExtension.class)
 class EmailServiceTest {
@@ -66,13 +66,13 @@ class EmailServiceTest {
         assertEquals(EMAIL_ADDRESS, emailContent.getEmailAddress());
         assertEquals(LOCAL_DATE_TIME, emailContent.getCreatedAt());
 
-        Map<String, Object> data = emailContent.getData();
+        EmailData data = emailContent.getData();
 
-        assertEquals(EMAIL_ADDRESS, data.get("to"));
-        assertEquals(FORMATTED_EMAIL_SUBJECT, data.get("subject"));
-        assertEquals("Company: " + COMPANY_NUMBER, data.get("company_name"));
-        assertEquals(COMPANY_NUMBER, data.get("company_number"));
-        assertEquals(AUTH_CODE, data.get("auth_code"));
+        assertEquals(EMAIL_ADDRESS, data.getTo());
+        assertEquals(FORMATTED_EMAIL_SUBJECT, data.getSubject());
+        assertEquals("Company: " + COMPANY_NUMBER, data.getCompanyName());
+        assertEquals(COMPANY_NUMBER, data.getCompanyNumber());
+        assertEquals(AUTH_CODE, data.getAuthCode());
     }
 
 }

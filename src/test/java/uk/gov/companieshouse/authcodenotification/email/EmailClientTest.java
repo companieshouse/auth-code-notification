@@ -16,7 +16,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpResponseException.Builder;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -70,7 +69,7 @@ class EmailClientTest {
         underTest = new EmailClient(apiClientSupplier, objectMapper);
     }
 
-    private EmailContent constructEmailContent(final Map<String, Object> data) {
+    private EmailContent constructEmailContent(final EmailData data) {
         return new EmailContent.Builder()
                 .withOriginatingAppId(APP_ID)
                 .withCreatedAt(dateTimeNow.get())
@@ -83,16 +82,18 @@ class EmailClientTest {
 
     @Test
     void givenValidContent_whenSendEmailCalled_thenResponseOk() throws JsonProcessingException, ApiErrorResponseException {
-        Map<String, Object> data = new HashMap<>();
-        data.put("subject", "This is the email subject");
-        data.put("to", "sendto@emailaddress.com");
-        data.put("auth_code", "OU812");
-        data.put("company_name", "My Company Name");
-        data.put("company_number", "00006400");
+        var subject = "This is the email subject";
+        var to = "sendto@emailaddress.com";
+        var authCode = "OU812";
+        var companyName = "My Company Name";
+        var companyNumber = "00006400";
+
+        var data = new EmailData(subject, to, authCode, companyName, companyNumber);
+        var json = new ObjectMapper().writeValueAsString(data);
 
         EmailContent content = constructEmailContent(data);
 
-        when(objectMapper.writeValueAsString(any(Map.class))).thenReturn("{\"json\": \"data\"}");
+        when(objectMapper.writeValueAsString(data)).thenReturn(json);
         when(apiClientSupplier.get()).thenReturn(apiClient);
         when(apiClient.getHttpClient()).thenReturn(httpClient);
         when(apiClient.sendEmailHandler()).thenReturn(privateSendEmailHandler);
@@ -113,16 +114,18 @@ class EmailClientTest {
 
     @Test
     void givenBadRequest_whenSendEmailCalled_thenExceptionRaised() throws JsonProcessingException, ApiErrorResponseException {
-        Map<String, Object> data = new HashMap<>();
-        data.put("subject", "This is the email subject");
-        data.put("to", "sendto@emailaddress.com");
-        data.put("auth_code", "OU812");
-        data.put("company_name", "My Company Name");
-        data.put("company_number", "00006400");
+        var subject = "This is the email subject";
+        var to = "sendto@emailaddress.com";
+        var authCode = "OU812";
+        var companyName = "My Company Name";
+        var companyNumber = "00006400";
+
+        var data = new EmailData(subject, to, authCode, companyName, companyNumber);
+        var json = new ObjectMapper().writeValueAsString(data);
 
         EmailContent content = constructEmailContent(data);
 
-        when(objectMapper.writeValueAsString(any(Map.class))).thenReturn("{\"json\": \"data\"}");
+        when(objectMapper.writeValueAsString(data)).thenReturn(json);
         when(apiClientSupplier.get()).thenReturn(apiClient);
         when(apiClient.getHttpClient()).thenReturn(httpClient);
         when(apiClient.sendEmailHandler()).thenReturn(privateSendEmailHandler);
@@ -150,22 +153,23 @@ class EmailClientTest {
 
     @Test
     void givenParsingError_whenSendEmailCalled_thenRaisedException() throws JsonProcessingException {
-        Map<String, Object> data = new HashMap<>();
-        data.put("subject", "This is the email subject");
-        data.put("to", "sendto@emailaddress.com");
-        data.put("auth_code", "OU812");
-        data.put("company_name", "My Company Name");
-        data.put("company_number", "00006400");
+        var subject = "This is the email subject";
+        var to = "sendto@emailaddress.com";
+        var authCode = "OU812";
+        var companyName = "My Company Name";
+        var companyNumber = "00006400";
+
+        var data = new EmailData(subject, to, authCode, companyName, companyNumber);
 
         EmailContent content = constructEmailContent(data);
 
-        when(objectMapper.writeValueAsString(any(Map.class))).thenThrow(new JsonProcessingException("Error parsing JSON") {});
+        when(objectMapper.writeValueAsString(data)).thenThrow(new JsonProcessingException("Error parsing JSON") {});
 
         EmailClientException expectedException = assertThrows(EmailClientException.class, () ->
                 underTest.sendEmail(REQUEST_ID, content)
         );
 
-        verify(objectMapper, times(1)).writeValueAsString(any(Map.class));
+        verify(objectMapper, times(1)).writeValueAsString(data);
         verifyNoInteractions(apiClientSupplier);
         verifyNoInteractions(apiClient);
         verifyNoInteractions(httpClient);

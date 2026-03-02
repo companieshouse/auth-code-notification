@@ -1,14 +1,15 @@
 package uk.gov.companieshouse.authcodenotification.email;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 
 public class EmailContent {
+
     public static final class Builder {
+
         private String originatingAppId;
         private String messageId;
         private String messageType;
-        private Map<String, Object> data;
+        private EmailData data;
         private String emailAddress;
         private LocalDateTime createdAt;
 
@@ -27,7 +28,7 @@ public class EmailContent {
             return this;
         }
 
-        public Builder withData(Map<String, Object> val) {
+        public Builder withData(EmailData val) {
             data = val;
             return this;
         }
@@ -50,7 +51,7 @@ public class EmailContent {
     private final String originatingAppId;
     private final String messageId;
     private final String messageType;
-    private final Map<String, Object> data;
+    private final EmailData data;
     private final String emailAddress;
     private final LocalDateTime createdAt;
 
@@ -75,7 +76,7 @@ public class EmailContent {
         return messageType;
     }
 
-    public Map<String, Object> getData() {
+    public EmailData getData() {
         return data;
     }
 
