@@ -11,12 +11,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpResponseException.Builder;
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.UUID;
 import java.util.function.Supplier;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +21,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 import uk.gov.companieshouse.api.InternalApiClient;
 import uk.gov.companieshouse.api.chskafka.SendEmail;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
@@ -81,7 +80,7 @@ class EmailClientTest {
     }
 
     @Test
-    void givenValidContent_whenSendEmailCalled_thenResponseOk() throws JsonProcessingException, ApiErrorResponseException {
+    void givenValidContent_whenSendEmailCalled_thenResponseOk() throws JacksonException, ApiErrorResponseException {
         var subject = "This is the email subject";
         var to = "sendto@emailaddress.com";
         var authCode = "OU812";
@@ -113,7 +112,7 @@ class EmailClientTest {
     }
 
     @Test
-    void givenBadRequest_whenSendEmailCalled_thenExceptionRaised() throws JsonProcessingException, ApiErrorResponseException {
+    void givenBadRequest_whenSendEmailCalled_thenExceptionRaised() throws JacksonException, ApiErrorResponseException {
         var subject = "This is the email subject";
         var to = "sendto@emailaddress.com";
         var authCode = "OU812";
@@ -152,7 +151,7 @@ class EmailClientTest {
 
 
     @Test
-    void givenParsingError_whenSendEmailCalled_thenRaisedException() throws JsonProcessingException {
+    void givenParsingError_whenSendEmailCalled_thenRaisedException() throws JacksonException {
         var subject = "This is the email subject";
         var to = "sendto@emailaddress.com";
         var authCode = "OU812";
@@ -163,7 +162,7 @@ class EmailClientTest {
 
         EmailContent content = constructEmailContent(data);
 
-        when(objectMapper.writeValueAsString(data)).thenThrow(new JsonProcessingException("Error parsing JSON") {});
+        when(objectMapper.writeValueAsString(data)).thenThrow(new JacksonException("Error parsing JSON") {});
 
         EmailClientException expectedException = assertThrows(EmailClientException.class, () ->
                 underTest.sendEmail(REQUEST_ID, content)
