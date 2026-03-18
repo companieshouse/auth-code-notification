@@ -2,11 +2,11 @@ package uk.gov.companieshouse.authcodenotification.email;
 
 import static uk.gov.companieshouse.authcodenotification.AuthCodeNotificationApplication.APPLICATION_NAME_SPACE;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.function.Supplier;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 import uk.gov.companieshouse.api.InternalApiClient;
 import uk.gov.companieshouse.api.chskafka.SendEmail;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
@@ -57,7 +57,7 @@ public class EmailClient {
 
             return response;
 
-        } catch(JsonProcessingException ex) {
+        } catch(JacksonException ex) {
             LOGGER.error("Error creating payload", ex);
             throw new EmailClientException("Error creating payload for CHS Kafka API: ", ex);
 
