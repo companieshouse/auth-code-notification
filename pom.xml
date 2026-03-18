@@ -38,7 +38,7 @@
     <opentelemetry-instrumentation.version>2.25.0</opentelemetry-instrumentation.version>
 
     <!-- Spring Boot -->
-    <spring-boot-dependencies.version>3.5.10</spring-boot-dependencies.version>
+    <spring-boot-dependencies.version>3.5.11</spring-boot-dependencies.version>
 
     <avro.version>1.12.1</avro.version>
     <json.version>20251224</json.version>
@@ -121,6 +121,7 @@
 
   <dependencies>
 
+    <!-- Spring Boot -->
     <dependency>
       <groupId>io.opentelemetry.instrumentation</groupId>
       <artifactId>opentelemetry-spring-boot-starter</artifactId>
