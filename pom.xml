@@ -313,11 +313,11 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- override log4j-api to fix CVE-2025-68161 - transitive dependency from private-api-sdk-java 4.0.450 -->
+    <!-- override log4j-api to fix CVE-2025-68161, CVE-2026-34477, CVE-2026-34479 - transitive dependency from private-api-sdk-java 4.0.450 -->
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-api</artifactId>
-      <version>2.25.3</version>
+      <version>2.25.4</version>
       <scope>compile</scope>
     </dependency>
 
