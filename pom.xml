@@ -38,18 +38,18 @@
     <opentelemetry-instrumentation.version>2.25.0</opentelemetry-instrumentation.version>
 
     <!-- Spring Boot -->
-    <spring-boot-dependencies.version>4.0.3</spring-boot-dependencies.version>
+    <spring-boot-dependencies.version>4.0.6</spring-boot-dependencies.version>
 
     <avro.version>1.12.1</avro.version>
     <json.version>20251224</json.version>
     <grpc.version>1.78.0</grpc.version>
     <okhttp.version>5.3.2</okhttp.version>
-    <tomcat.version>11.0.18</tomcat.version>
+    <tomcat.version>11.0.22</tomcat.version>
     <encoder.version>1.4.0</encoder.version>
-    <jackson.version>3.1.0</jackson.version>
+    <jackson.version>3.1.1</jackson.version>
 
     <!-- Force version of kafka for compatibility with ch-kafka -->
-    <kafka-clients.version>3.9.1</kafka-clients.version>
+    <kafka-clients.version>3.9.2</kafka-clients.version>
     <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
     <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
     <mockito-core.version>5.21.0</mockito-core.version>
@@ -123,6 +123,13 @@
         <groupId>org.jetbrains.kotlin</groupId>
         <artifactId>kotlin-stdlib</artifactId>
         <version>2.2.21</version>
+      </dependency>
+
+      <!-- CVE-2025-67030 - transitive (test scope) via sonar-maven-plugin -->
+      <dependency>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-utils</artifactId>
+        <version>3.6.1</version>
       </dependency>
 
     </dependencies>
@@ -214,6 +221,11 @@
         <exclusion>
           <groupId>commons-lang</groupId>
           <artifactId>commons-lang</artifactId>
+        </exclusion>
+        <!-- org.lz4:lz4-java is abandoned at 1.8.0; replaced by at.yawk.lz4 fork below -->
+        <exclusion>
+          <groupId>org.lz4</groupId>
+          <artifactId>lz4-java</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -307,6 +319,14 @@
       <artifactId>log4j-api</artifactId>
       <version>2.25.3</version>
       <scope>compile</scope>
+    </dependency>
+
+    <!-- CVE-2025-12183, CVE-2025-66566 - upstream org.lz4:lz4-java abandoned at 1.8.0; community fork -->
+    <dependency>
+      <groupId>at.yawk.lz4</groupId>
+      <artifactId>lz4-java</artifactId>
+      <version>1.10.2</version>
+      <scope>runtime</scope>
     </dependency>
 
     <!--end transitive dependencies-->
