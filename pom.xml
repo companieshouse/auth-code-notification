@@ -32,7 +32,7 @@
     <maven-surefire.version>3.5.2</maven-surefire.version>
     <maven-surefire-plugin.version>${maven-surefire.version}</maven-surefire-plugin.version>
     <maven-failsafe-plugin.version>${maven-surefire.version}</maven-failsafe-plugin.version>
-    <spring-boot-maven-plugin.version>3.5.7</spring-boot-maven-plugin.version>
+    <spring-boot-maven-plugin.version>4.0.6</spring-boot-maven-plugin.version>
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
     <jib-maven-plugin.version>3.5.1</jib-maven-plugin.version>
     <opentelemetry-instrumentation.version>2.25.0</opentelemetry-instrumentation.version>
