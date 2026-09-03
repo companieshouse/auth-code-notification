@@ -35,7 +35,8 @@
     <spring-boot-maven-plugin.version>4.0.6</spring-boot-maven-plugin.version>
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
     <jib-maven-plugin.version>3.5.1</jib-maven-plugin.version>
-    <opentelemetry-instrumentation.version>2.25.0</opentelemetry-instrumentation.version>
+    <opentelemetry.version>2.31.1</opentelemetry.version>
+    <opentelemetry.logback.appender.version>2.31.1-alpha</opentelemetry.logback.appender.version>
 
     <!-- Spring Boot -->
     <spring-boot-dependencies.version>4.0.6</spring-boot-dependencies.version>
@@ -91,7 +92,7 @@
       <dependency>
         <groupId>io.opentelemetry.instrumentation</groupId>
         <artifactId>opentelemetry-instrumentation-bom</artifactId>
-        <version>${opentelemetry-instrumentation.version}</version>
+        <version>${opentelemetry.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -139,8 +140,15 @@
 
     <!-- Spring Boot -->
     <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-opentelemetry</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>io.opentelemetry.instrumentation</groupId>
-      <artifactId>opentelemetry-spring-boot-starter</artifactId>
+      <artifactId>opentelemetry-logback-appender-1.0</artifactId>
+      <version>${opentelemetry.logback.appender.version}</version>
+      <scope>compile</scope>
     </dependency>
 
     <dependency>
