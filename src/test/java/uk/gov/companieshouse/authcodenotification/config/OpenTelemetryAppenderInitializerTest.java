@@ -1,6 +1,8 @@
 package uk.gov.companieshouse.authcodenotification.config;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 import io.opentelemetry.api.OpenTelemetry;
 import org.junit.jupiter.api.Test;
@@ -8,10 +10,18 @@ import org.junit.jupiter.api.Test;
 class OpenTelemetryAppenderInitializerTest {
 
     @Test
-    void afterPropertiesSetDoesNotThrow() {
+    void afterPropertiesSetDelegatesToInstallAppender() {
+        OpenTelemetry openTelemetry = OpenTelemetry.noop();
         OpenTelemetryAppenderInitializer initializer =
-                new OpenTelemetryAppenderInitializer(OpenTelemetry.noop());
+                spy(new OpenTelemetryAppenderInitializer(openTelemetry));
 
-        assertDoesNotThrow(initializer::afterPropertiesSet);
+        // Stub out the seam so the real static
+        // OpenTelemetryAppender.install(...) call, and its global
+        // JVM logging side effect, is never invoked in this test.
+        doNothing().when(initializer).installAppender(openTelemetry);
+
+        initializer.afterPropertiesSet();
+
+        verify(initializer).installAppender(openTelemetry);
     }
 }
