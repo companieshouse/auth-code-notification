@@ -62,7 +62,7 @@
     <ch-kafka.version>3.0.6</ch-kafka.version>
     <private-api-sdk-java.version>4.0.450</private-api-sdk-java.version>
     <rest-service-common-library-version>2.0.9</rest-service-common-library-version>
-    <structured-logging.version>3.0.48</structured-logging.version>
+    <structured-logging.version>4.0.4</structured-logging.version>
 
     <!-- Sonar -->
     <sonar.coverage.jacoco.xmlReportPaths>
