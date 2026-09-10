@@ -13,11 +13,11 @@ import org.springframework.stereotype.Component;
     name = "enabled",
     havingValue = "true"
 )
-class OpenTelemetryAppenderInitializer implements InitializingBean {
+public class OpenTelemetryAppenderInitializer implements InitializingBean {
 
     private final OpenTelemetry openTelemetry;
 
-    OpenTelemetryAppenderInitializer(OpenTelemetry openTelemetry) {
+    public OpenTelemetryAppenderInitializer(OpenTelemetry openTelemetry) {
         this.openTelemetry = openTelemetry;
     }
 
