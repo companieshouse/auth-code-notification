@@ -35,11 +35,6 @@
     <spring-boot-maven-plugin.version>4.0.6</spring-boot-maven-plugin.version>
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
     <jib-maven-plugin.version>3.5.1</jib-maven-plugin.version>
-    <opentelemetry.version>2.31.1</opentelemetry.version>
-    <opentelemetry.logback.appender.version>2.31.1-alpha</opentelemetry.logback.appender.version>
-
-    <!-- Spring Boot -->
-    <spring-boot-dependencies.version>4.0.6</spring-boot-dependencies.version>
 
     <avro.version>1.12.1</avro.version>
     <json.version>20251224</json.version>
@@ -49,20 +44,9 @@
     <encoder.version>1.4.0</encoder.version>
     <jackson.version>3.1.1</jackson.version>
 
-    <!-- Force version of kafka for compatibility with ch-kafka -->
-    <kafka-clients.version>3.9.2</kafka-clients.version>
     <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
     <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
     <mockito-core.version>5.21.0</mockito-core.version>
-
-    <!-- internal dependencies -->
-    <api-sdk-java.version>6.6.3</api-sdk-java.version>
-    <api-sdk-manager-java-library.version>3.0.15</api-sdk-manager-java-library.version>
-    <api-security-java.version>2.0.18</api-security-java.version>
-    <ch-kafka.version>3.0.6</ch-kafka.version>
-    <private-api-sdk-java.version>4.0.450</private-api-sdk-java.version>
-    <rest-service-common-library-version>2.0.9</rest-service-common-library-version>
-    <structured-logging.version>4.0.4</structured-logging.version>
 
     <!-- Sonar -->
     <sonar.coverage.jacoco.xmlReportPaths>
@@ -92,15 +76,7 @@
       <dependency>
         <groupId>io.opentelemetry.instrumentation</groupId>
         <artifactId>opentelemetry-instrumentation-bom</artifactId>
-        <version>${opentelemetry.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>tools.jackson</groupId>
-        <artifactId>jackson-bom</artifactId>
-        <version>${jackson.version}</version>
+        <version>2.31.1</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -108,30 +84,38 @@
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
-        <version>${spring-boot-dependencies.version}</version>
+        <version>4.1.1</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
 
+      <!-- OVERRIDE -->
+
+      <!-- override tomcat-embed-core to fix CVE-2026-65183(8.1), CVE-2026-65905(9.8), CVE-2026-65927(7.5), CVE-2026-66299(5.3), CVE-2026-66422(8.1), CVE-2026-68763(7.5), CVE-2026-68525(9.1), CVE-2026-68569(8.1), CVE-2026-73180(6.8), CVE-2026-65182(9.1), CVE-2026-65637(9.8) - transitive dependency from spring-boot-starter-web 4.1.1 -->
       <dependency>
-            <groupId>org.apache.kafka</groupId>
-            <artifactId>kafka-clients</artifactId>
-            <version>${kafka-clients.version}</version>
-            <scope>compile</scope>
+        <groupId>org.apache.tomcat.embed</groupId>
+        <artifactId>tomcat-embed-core</artifactId>
+        <version>11.0.25</version>
+        <scope>compile</scope>
       </dependency>
 
+      <!-- override tomcat-embed-websocket to fix CVE-2026-65183(8.1), CVE-2026-65905(9.8), CVE-2026-65927(7.5), CVE-2026-66299(5.3), CVE-2026-66422(8.1), CVE-2026-68763(7.5), CVE-2026-68525(9.1), CVE-2026-68569(8.1), CVE-2026-73180(6.8), CVE-2026-65182(9.1), CVE-2026-65637(9.8) - transitive dependency from spring-boot-starter-web 4.1.1 -->
       <dependency>
-        <groupId>org.jetbrains.kotlin</groupId>
-        <artifactId>kotlin-stdlib</artifactId>
-        <version>2.2.21</version>
+        <groupId>org.apache.tomcat.embed</groupId>
+        <artifactId>tomcat-embed-websocket</artifactId>
+        <version>11.0.25</version>
+        <scope>compile</scope>
       </dependency>
 
-      <!-- CVE-2025-67030 - transitive (test scope) via sonar-maven-plugin -->
+      <!-- override lz4-java - transitive dependency from ch-kafka 4.0.4 -->
       <dependency>
-        <groupId>org.codehaus.plexus</groupId>
-        <artifactId>plexus-utils</artifactId>
-        <version>3.6.1</version>
+        <groupId>at.yawk.lz4</groupId>
+        <artifactId>lz4-java</artifactId>
+        <version>1.11.3</version>
+        <scope>compile</scope>
       </dependency>
+
+      <!-- OVERRIDE END -->
 
     </dependencies>
   </dependencyManagement>
@@ -147,7 +131,7 @@
     <dependency>
       <groupId>io.opentelemetry.instrumentation</groupId>
       <artifactId>opentelemetry-logback-appender-1.0</artifactId>
-      <version>${opentelemetry.logback.appender.version}</version>
+      <version>2.31.1-alpha</version>
       <scope>compile</scope>
     </dependency>
 
@@ -189,53 +173,10 @@
       <version>${json.version}</version>
     </dependency>
 
-    <!-- Companies House dependencies -->
-    <dependency>
-      <groupId>uk.gov.companieshouse</groupId>
-      <artifactId>structured-logging</artifactId>
-      <version>${structured-logging.version}</version>
-      <scope>compile</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>uk.gov.companieshouse</groupId>
-      <artifactId>api-sdk-manager-java-library</artifactId>
-      <version>${api-sdk-manager-java-library.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>uk.gov.companieshouse</groupId>
-      <artifactId>api-sdk-java</artifactId>
-      <version>${api-sdk-java.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>uk.gov.companieshouse</groupId>
-      <artifactId>private-api-sdk-java</artifactId>
-      <version>${private-api-sdk-java.version}</version>
-    </dependency>
-
     <dependency>
       <groupId>org.apache.avro</groupId>
       <artifactId>avro</artifactId>
       <version>${avro.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>uk.gov.companieshouse</groupId>
-      <artifactId>ch-kafka</artifactId>
-      <version>${ch-kafka.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>commons-lang</groupId>
-          <artifactId>commons-lang</artifactId>
-        </exclusion>
-        <!-- org.lz4:lz4-java is abandoned at 1.8.0; replaced by at.yawk.lz4 fork below -->
-        <exclusion>
-          <groupId>org.lz4</groupId>
-          <artifactId>lz4-java</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -245,23 +186,10 @@
     </dependency>
 
     <dependency>
-      <groupId>uk.gov.companieshouse</groupId>
-      <artifactId>api-security-java</artifactId>
-      <version>${api-security-java.version}</version>
-    </dependency>
-
-    <dependency>
       <groupId>org.sonarsource.scanner.maven</groupId>
       <artifactId>sonar-maven-plugin</artifactId>
-      <version>${sonar-maven-plugin.version}</version>
+      <version>5.8.0.7211</version>
       <scope>test</scope>
-      <exclusions>
-        <!-- CVE-2025-48924 -->
-        <exclusion>
-          <groupId>commons-lang</groupId>
-          <artifactId>commons-lang</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -271,6 +199,50 @@
       <scope>compile</scope>
     </dependency>
 
+    <!-- Companies House dependencies -->
+    <dependency>
+      <groupId>uk.gov.companieshouse</groupId>
+      <artifactId>structured-logging</artifactId>
+      <version>4.0.4</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>uk.gov.companieshouse</groupId>
+      <artifactId>api-sdk-manager-java-library</artifactId>
+      <version>3.0.31</version>
+    </dependency>
+
+    <dependency>
+      <groupId>uk.gov.companieshouse</groupId>
+      <artifactId>api-sdk-java</artifactId>
+      <version>7.2.4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>uk.gov.companieshouse</groupId>
+      <artifactId>private-api-sdk-java</artifactId>
+      <version>7.2.27</version>
+    </dependency>
+
+    <dependency>
+      <groupId>uk.gov.companieshouse</groupId>
+      <artifactId>ch-kafka</artifactId>
+      <version>4.0.4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>uk.gov.companieshouse</groupId>
+      <artifactId>api-security-java</artifactId>
+      <version>2.0.29</version>
+    </dependency>
+
+    <dependency>
+      <groupId>uk.gov.companieshouse</groupId>
+      <artifactId>rest-service-common-library</artifactId>
+      <version>2.0.14</version>
+    </dependency>
+
     <!-- test dependencies -->
     <dependency>
       <groupId>org.mockito</groupId>
@@ -278,66 +250,6 @@
       <version>${mockito-core.version}</version>
       <scope>test</scope>
     </dependency>
-
-    <dependency>
-      <groupId>uk.gov.companieshouse</groupId>
-      <artifactId>rest-service-common-library</artifactId>
-      <version>${rest-service-common-library-version}</version>
-    </dependency>
-
-    <!--the following transitive dependencies are added specifically to avoid vulnerabilities-->
-
-    <!-- CVE-2025-52520(7.5), CVE-2025-61795(5.3), CVE-2025-53506(7.5), CVE-2025-55754(9.6), CVE-2025-48989(7.5), CVE-2025-55752(7.5) -->
-    <dependency>
-      <groupId>org.apache.tomcat.embed</groupId>
-      <artifactId>tomcat-embed-core</artifactId>
-      <version>${tomcat.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.tomcat.embed</groupId>
-      <artifactId>tomcat-embed-el</artifactId>
-      <version>${tomcat.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.tomcat.embed</groupId>
-      <artifactId>tomcat-embed-websocket</artifactId>
-      <version>${tomcat.version}</version>
-    </dependency>
-
-    <!-- CVE-2014-11407 -->
-    <dependency>
-      <groupId>io.grpc</groupId>
-      <artifactId>grpc-context</artifactId>
-      <version>${grpc.version}</version>
-    </dependency>
-
-    <!-- override assertj-core to fix CVE-2026-24400 - transitive dependency from spring-boot-starter-test which depends on spring-boot-dependencies -->
-    <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
-      <version>3.27.7</version>
-      <scope>test</scope>
-    </dependency>
-
-    <!-- override log4j-api to fix CVE-2025-68161, CVE-2026-34477, CVE-2026-34479 - transitive dependency from private-api-sdk-java 4.0.450 -->
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-api</artifactId>
-      <version>2.25.4</version>
-      <scope>compile</scope>
-    </dependency>
-
-    <!-- CVE-2025-12183, CVE-2025-66566 - upstream org.lz4:lz4-java abandoned at 1.8.0; community fork -->
-    <dependency>
-      <groupId>at.yawk.lz4</groupId>
-      <artifactId>lz4-java</artifactId>
-      <version>1.10.2</version>
-      <scope>runtime</scope>
-    </dependency>
-
-    <!--end transitive dependencies-->
 
   </dependencies>
 
