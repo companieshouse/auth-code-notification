@@ -107,7 +107,7 @@
         <scope>compile</scope>
       </dependency>
 
-      <!-- override lz4-java - transitive dependency from ch-kafka 4.0.4 -->
+      <!-- override lz4-java - transitive dependency from ch-kafka 4.0.4  -->
       <dependency>
         <groupId>at.yawk.lz4</groupId>
         <artifactId>lz4-java</artifactId>
