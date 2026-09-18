@@ -222,8 +222,7 @@
     <dependency>
       <groupId>uk.gov.companieshouse</groupId>
       <artifactId>private-api-sdk-java</artifactId>
-      <version>4.0.450</version>
-<!--      <version>7.2.27</version>-->
+      <version>7.2.27</version>
     </dependency>
 
     <dependency>
