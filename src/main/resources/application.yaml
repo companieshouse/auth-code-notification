@@ -37,7 +37,7 @@ management:
       export:
         otlp:
           endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT}/v1/traces
+  otlp:
     metrics:
       export:
-        otlp:
-          endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT}/v1/metrics
+        url: ${OTEL_EXPORTER_OTLP_ENDPOINT}/v1/metrics
