@@ -37,7 +37,7 @@
     <jib-maven-plugin.version>3.5.1</jib-maven-plugin.version>
 
     <avro.version>1.12.1</avro.version>
-    <json.version>20251224</json.version>
+    <json.version>20260814</json.version>
     <grpc.version>1.78.0</grpc.version>
     <okhttp.version>5.3.2</okhttp.version>
     <tomcat.version>11.0.22</tomcat.version>
